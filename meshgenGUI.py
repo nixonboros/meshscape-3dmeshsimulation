@@ -286,12 +286,17 @@ def bushes_advanced_settings_window():
 # MAIN WINDOW
 root = ctk.CTk()
 root.title("3D Mesh Generation")
-root.geometry("800x600")
+root.geometry("1100x600")
 ctk.set_appearance_mode("light")
 root.columnconfigure(0, weight=1)
 
+# Left Section
+left_section = ctk.CTkFrame(root)
+left_section.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+left_section.columnconfigure(0, weight=1)
+
 # FRAME FOR TITLE LABEL
-frame_title = ctk.CTkFrame(root, fg_color="#3b8ed0")
+frame_title = ctk.CTkFrame(left_section, fg_color="#3b8ed0")
 frame_title.grid(row=0, column=0, columnspan=2, padx=10, pady=(10, 20), sticky="ew")
 frame_title.columnconfigure(0, weight=1)
 
@@ -305,11 +310,11 @@ title_label = ctk.CTkLabel(
 title_label.grid(row=0, column=0, pady=(10, 10))
 
 # PRESETS DROPDOWN MENU
-presets_label = ctk.CTkLabel(root, text="Preset:")
+presets_label = ctk.CTkLabel(left_section, text="Preset:")
 presets_label.grid(row=1, column=0, padx=20, pady=(10, 0), sticky="w")
 
 presets_optionmenu = ctk.CTkOptionMenu(
-    root,
+    left_section,
     values=["None"],
     width=200,
     fg_color="#a8adad",
@@ -320,7 +325,7 @@ presets_optionmenu.grid(row=1, column=0, padx=(70, 10), pady=(10, 0), sticky="w"
 
 # CREATE PRESET BUTTON
 create_preset_button = ctk.CTkButton(
-    root,
+    left_section,
     text="+",
     command=create_new_preset,
     width=30,
@@ -331,7 +336,7 @@ create_preset_button.grid(row=1, column=0, padx=(285, 0), pady=(10, 0), sticky="
 
 # DELETE PRESET BUTTON
 delete_preset_button = ctk.CTkButton(
-    root,
+    left_section,
     text="-",
     command=delete_preset,  # adding delelte confirmation window
     width=30,
@@ -343,7 +348,7 @@ delete_preset_button.grid(row=1, column=0, padx=(320, 0), pady=(10, 0), sticky="
 ############################################################################################################
 
 # TABVIEW
-tabview = ctk.CTkTabview(root)
+tabview = ctk.CTkTabview(left_section)
 tabview.grid(row=2, column=0, columnspan=2, sticky="nsew", padx=10)
 
 tabview.add("Mesh")
@@ -351,15 +356,29 @@ tabview.add("Objects")
 
 tabview.set("Mesh")
 
-tabview.tab("Mesh").rowconfigure(0, weight=1)
 tabview.tab("Mesh").columnconfigure(0, weight=1)
-tabview.tab("Objects").rowconfigure(0, weight=1)
 tabview.tab("Objects").columnconfigure(0, weight=1)
 
 ############################################################################################################
 
+# Right Section
+right_section = ctk.CTkFrame(root, fg_color="#dbdbdb")
+right_section.grid(row=0, column=1, padx=(0, 10), pady=10, sticky="new")
+right_section.columnconfigure(0, weight=1)
+
+root.columnconfigure(1, weight=1)
+
+# Visualisation Frame
+frame_visualisation = ctk.CTkFrame(right_section, height=300, fg_color="white")
+frame_visualisation.grid(row=0, column=0, pady=10, padx=10, sticky="nsew")
+frame_visualisation.columnconfigure(0, weight=1)
+
+############################################################################################################
+
 # FRAME_BASE_OBJECTS
-frame_base_objects = ctk.CTkScrollableFrame(tabview.tab("Objects"), height=350)
+frame_base_objects = ctk.CTkScrollableFrame(
+    tabview.tab("Objects"), height=350, fg_color="#cfcfcf"
+)
 frame_base_objects.grid(row=0, column=0, sticky="ew")
 frame_base_objects.columnconfigure(0, weight=1)
 
@@ -418,7 +437,7 @@ trees_slider = ctk.CTkSlider(
     frame_trees,
     from_=0,
     to=100,
-    width=520,  # make scalable to window
+    width=330,  # make scalable to window
     command=lambda value: update_slider_label(trees_slider_label, "Tree Amount", value),
 )
 trees_slider.set(50)
@@ -453,7 +472,7 @@ rocks_slider = ctk.CTkSlider(
     frame_rocks,
     from_=0,
     to=100,
-    width=520,  # make scalable to window
+    width=330,  # make scalable to window
     command=lambda value: update_slider_label(rocks_slider_label, "Rock Amount", value),
 )
 rocks_slider.set(50)
@@ -488,7 +507,7 @@ sticks_slider = ctk.CTkSlider(
     frame_sticks,
     from_=0,
     to=100,
-    width=520,  # make scalable to window
+    width=330,  # make scalable to window
     command=lambda value: update_slider_label(
         sticks_slider_label, "Stick Amount", value
     ),
@@ -525,7 +544,7 @@ pebbles_slider = ctk.CTkSlider(
     frame_pebbles,
     from_=0,
     to=100,
-    width=520,  # make scalable to window
+    width=330,  # make scalable to window
     command=lambda value: update_slider_label(
         pebbles_slider_label, "Pebble Amount", value
     ),
@@ -562,7 +581,7 @@ bushes_slider = ctk.CTkSlider(
     frame_bushes,
     from_=0,
     to=100,
-    width=520,  # make scalable to window
+    width=330,  # make scalable to window
     command=lambda value: update_slider_label(
         bushes_slider_label, "Bush Amount", value
     ),
@@ -577,7 +596,9 @@ bushes_edit_button = ctk.CTkButton(
 ############################################################################################################
 
 # FRAME_BASE_MESH
-frame_base_mesh = ctk.CTkScrollableFrame(tabview.tab("Mesh"), height=350)
+frame_base_mesh = ctk.CTkScrollableFrame(
+    tabview.tab("Mesh"), height=350, fg_color="#cfcfcf"
+)
 frame_base_mesh.grid(
     row=0,
     column=0,
@@ -592,10 +613,10 @@ sizeX_slider = ctk.CTkSlider(
     frame_base_mesh,
     from_=10,
     to=100,
-    width=610,
+    width=420,
     command=lambda value: update_slider_label(sizeX_label, "Size X", value),
 )
-sizeX_slider.grid(row=0, column=1, sticky="e", padx=(10, 0))
+sizeX_slider.grid(row=0, column=1, sticky="w", padx=(10, 0))
 sizeX_slider.set(10)
 
 # SIZE Y
@@ -606,10 +627,10 @@ SizeY_slider = ctk.CTkSlider(
     frame_base_mesh,
     from_=10,
     to=100,
-    width=610,
+    width=420,
     command=lambda value: update_slider_label(SizeY_label, "Size Y", value),
 )
-SizeY_slider.grid(row=1, column=1, sticky="e", padx=(10, 0))
+SizeY_slider.grid(row=1, column=1, sticky="w", padx=(10, 0))
 SizeY_slider.set(10)
 
 # MIN VERTICES X
@@ -622,12 +643,12 @@ minVerticesX_slider = ctk.CTkSlider(
     frame_base_mesh,
     from_=5,
     to=100,
-    width=610,
+    width=420,
     command=lambda value: update_slider_label(
         minVerticesX_label, "Min  Vertices X", value
     ),
 )
-minVerticesX_slider.grid(row=2, column=1, sticky="e", padx=(10, 0), pady=(20, 0))
+minVerticesX_slider.grid(row=2, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
 minVerticesX_slider.set(5)
 
 # MAX VERTICES X
@@ -644,12 +665,12 @@ maxVerticesX_slider = ctk.CTkSlider(
     frame_base_mesh,
     from_=10,
     to=100,
-    width=610,
+    width=420,
     command=lambda value: update_slider_label(
         maxVerticesX_label, "Max Vertices X", value
     ),
 )
-maxVerticesX_slider.grid(row=3, column=1, sticky="e", padx=(10, 0))
+maxVerticesX_slider.grid(row=3, column=1, sticky="w", padx=(10, 0))
 maxVerticesX_slider.set(10)
 
 # MIN VERTICES Y
@@ -662,12 +683,12 @@ minVerticesY_slider = ctk.CTkSlider(
     frame_base_mesh,
     from_=5,
     to=100,
-    width=610,
+    width=420,
     command=lambda value: update_slider_label(
         minVerticesY_label, "Min  Vertices Y", value
     ),
 )
-minVerticesY_slider.grid(row=4, column=1, sticky="e", padx=(10, 0), pady=(20, 0))
+minVerticesY_slider.grid(row=4, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
 minVerticesY_slider.set(5)
 
 # MAX VERTICES Y
@@ -680,12 +701,12 @@ maxVerticesY_slider = ctk.CTkSlider(
     frame_base_mesh,
     from_=10,
     to=100,
-    width=610,
+    width=420,
     command=lambda value: update_slider_label(
         maxVerticesY_label, "Max Vertices Y", value
     ),
 )
-maxVerticesY_slider.grid(row=5, column=1, sticky="e", padx=(10, 0))
+maxVerticesY_slider.grid(row=5, column=1, sticky="w", padx=(10, 0))
 maxVerticesY_slider.set(10)
 
 # MAX HEIGHT
@@ -698,10 +719,10 @@ maxHeight_slider = ctk.CTkSlider(
     frame_base_mesh,
     from_=1,
     to=100,
-    width=610,
+    width=420,
     command=lambda value: update_slider_label(maxHeight_label, "Max Height", value),
 )
-maxHeight_slider.grid(row=6, column=1, sticky="e", padx=(10, 0), pady=(20, 0))
+maxHeight_slider.grid(row=6, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
 maxHeight_slider.set(1)
 
 # SMOOTHNESS
@@ -714,10 +735,10 @@ smoothness_slider = ctk.CTkSlider(
     frame_base_mesh,
     from_=1,
     to=100,
-    width=610,
+    width=420,
     command=lambda value: update_slider_label(smoothness_label, "Smoothness", value),
 )
-smoothness_slider.grid(row=7, column=1, sticky="e", padx=(10, 0), pady=(20, 0))
+smoothness_slider.grid(row=7, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
 smoothness_slider.set(1)
 
 
@@ -749,8 +770,10 @@ bind_toggle_switch_and_cursor(frame_bushes, add_bushes_switch, toggle_bushes_vis
 ############################################################################################################
 
 # GENERATE MESH BUTTON
-genmesh_button = ctk.CTkButton(root, text="Generate Mesh", width=200, height=40)
-genmesh_button.grid(row=4, column=0, columnspan=2, pady=(20, 10), sticky="s")
+genmesh_button = ctk.CTkButton(
+    root, text="Generate Mesh", width=200, height=40, fg_color="#3b8ed0"
+)
+genmesh_button.grid(row=4, column=0, columnspan=2, pady=(0, 10), sticky="s")
 root.rowconfigure(2, weight=1)
 
 root.mainloop()
