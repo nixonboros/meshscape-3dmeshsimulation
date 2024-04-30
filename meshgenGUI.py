@@ -12,12 +12,12 @@ def toggle_visibility(
         slider_label.grid(row=1, column=0, padx=(10, 0), pady=(0, 10), sticky="w")
         slider.grid(row=1, column=1, padx=10, pady=(0, 10), sticky="ew")
         edit_button.grid(row=1, column=2, padx=(0, 10), pady=(0, 10), sticky="e")
-        frame.configure(fg_color="#b8bbbb")
+        frame.configure(fg_color="#d1d1d1")
     else:
         slider.grid_forget()
         slider_label.grid_forget()
         edit_button.grid_forget()
-        frame.configure(fg_color="#bfc2c2")
+        frame.configure(fg_color="#dfe1e1")
 
 
 def toggle_trees_visibility(*args):
@@ -142,6 +142,8 @@ def trees_advanced_settings_window():
         from_=0,
         to=100,
         width=260,
+        button_color="#62a5d9",
+        button_hover_color="#4e84ae",
         command=lambda value: update_slider_label(
             density_label, "Trees Density", value
         ),
@@ -153,6 +155,8 @@ def trees_advanced_settings_window():
         from_=0,
         to=100,
         width=260,
+        button_color="#62a5d9",
+        button_hover_color="#4e84ae",
         command=lambda value: update_slider_label(
             trunk_width_label, "Trunk Width", value
         ),
@@ -164,6 +168,8 @@ def trees_advanced_settings_window():
         from_=0,
         to=100,
         width=260,
+        button_color="#62a5d9",
+        button_hover_color="#4e84ae",
         command=lambda value: update_slider_label(leaf_size_label, "Leaf Size", value),
     )
     leaf_size_slider.grid(row=3, column=1, padx=10, pady=10, sticky="e")
@@ -174,6 +180,8 @@ def trees_advanced_settings_window():
         text="Save Settings",
         command=save_trees_settings,
         width=50,
+        fg_color="#62a5d9",
+        hover_color="#4e84ae",
     )
     save_button.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="se")
 
@@ -199,6 +207,8 @@ def rocks_advanced_settings_window():
         text="Save Settings",
         command=save_rocks_settings,
         width=50,
+        fg_color="#62a5d9",
+        hover_color="#4e84ae",
     )
     save_button.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="se")
 
@@ -224,6 +234,8 @@ def sticks_advanced_settings_window():
         text="Save Settings",
         command=save_sticks_settings,
         width=50,
+        fg_color="#62a5d9",
+        hover_color="#4e84ae",
     )
     save_button.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="se")
 
@@ -249,6 +261,8 @@ def pebbles_advanced_settings_window():
         text="Save Settings",
         command=save_pebbles_settings,
         width=50,
+        fg_color="#62a5d9",
+        hover_color="#4e84ae",
     )
     save_button.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="se")
 
@@ -274,6 +288,8 @@ def bushes_advanced_settings_window():
         text="Save Settings",
         command=save_bushes_settings,
         width=50,
+        fg_color="#62a5d9",
+        hover_color="#4e84ae",
     )
     save_button.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="se")
 
@@ -286,7 +302,7 @@ def bushes_advanced_settings_window():
 # MAIN WINDOW
 root = ctk.CTk()
 root.title("3D Mesh Generation")
-root.geometry("1100x620")
+root.geometry("1100x600")
 ctk.set_appearance_mode("light")
 root.columnconfigure(0, weight=1)
 
@@ -299,7 +315,7 @@ root.rowconfigure(0, weight=1)
 left_section.grid_columnconfigure(0, minsize=600)
 
 # FRAME FOR TITLE LABEL
-frame_title = ctk.CTkFrame(left_section, fg_color="#3b8ed0")
+frame_title = ctk.CTkFrame(left_section, fg_color="#62a5d9")
 frame_title.grid(row=0, column=0, columnspan=2, padx=10, pady=(10, 20), sticky="ew")
 frame_title.columnconfigure(0, weight=1)
 
@@ -307,7 +323,7 @@ frame_title.columnconfigure(0, weight=1)
 title_label = ctk.CTkLabel(
     frame_title,
     text="3D Mesh Generation",
-    font=ctk.CTkFont(weight="bold", size=24),
+    font=ctk.CTkFont(size=24),
     text_color="white",
 )
 title_label.grid(row=0, column=0, pady=(10, 10))
@@ -320,9 +336,10 @@ presets_optionmenu = ctk.CTkOptionMenu(
     left_section,
     values=["None"],
     width=200,
-    fg_color="#a8adad",
-    button_color="#838b8b",
-    button_hover_color="#5b6161",
+    fg_color="#b9bdbd",
+    button_color="#9ca2a2",
+    button_hover_color="#838b8b",
+    text_color="#323434",
 )
 presets_optionmenu.grid(row=1, column=0, padx=(70, 10), pady=(10, 0), sticky="w")
 
@@ -332,8 +349,9 @@ create_preset_button = ctk.CTkButton(
     text="+",
     command=create_new_preset,
     width=30,
-    fg_color="#838B8B",
-    hover_color="#5b6161",
+    fg_color="#9ca2a2",
+    hover_color="#838b8b",
+    text_color="#323434",
 )
 create_preset_button.grid(row=1, column=0, padx=(285, 0), pady=(10, 0), sticky="w")
 
@@ -343,15 +361,24 @@ delete_preset_button = ctk.CTkButton(
     text="-",
     command=delete_preset,  # adding delelte confirmation window
     width=30,
-    fg_color="#838B8B",
-    hover_color="#5b6161",
+    fg_color="#9ca2a2",
+    hover_color="#838b8b",
+    text_color="#323434",
 )
 delete_preset_button.grid(row=1, column=0, padx=(320, 0), pady=(10, 0), sticky="w")
 
 ############################################################################################################
 
 # TABVIEW
-tabview = ctk.CTkTabview(left_section)
+tabview = ctk.CTkTabview(
+    left_section,
+    fg_color="#f2f3f3",
+    segmented_button_fg_color="#9ca2a2",
+    segmented_button_selected_color="#62a5d9",
+    segmented_button_selected_hover_color="#4e84ae",
+    segmented_button_unselected_color="#9ca2a2",
+    segmented_button_unselected_hover_color="#838b8b",
+)
 tabview.grid(row=2, column=0, columnspan=2, sticky="nsew", padx=10)
 
 tabview.add("Mesh")
@@ -373,7 +400,7 @@ root.columnconfigure(1, weight=1)
 
 # Visualisation Frame
 frame_visualisation = ctk.CTkFrame(
-    right_section, width=450, height=300, fg_color="white"
+    right_section, width=450, height=560, fg_color="white"
 )
 frame_visualisation.grid(row=0, column=0, pady=10, padx=10, sticky="nsew")
 frame_visualisation.columnconfigure(0, weight=1)
@@ -382,38 +409,38 @@ frame_visualisation.columnconfigure(0, weight=1)
 
 # FRAME_BASE_OBJECTS
 frame_base_objects = ctk.CTkScrollableFrame(
-    tabview.tab("Objects"), height=350, fg_color="#cfcfcf"
+    tabview.tab("Objects"), height=350, fg_color="#f2f3f3"
 )
 frame_base_objects.grid(row=0, column=0, sticky="ew")
 frame_base_objects.columnconfigure(0, weight=1)
 
 # FRAME_TREES
 frame_trees = ctk.CTkFrame(
-    frame_base_objects, border_width=0, fg_color="#bfc2c2", corner_radius=20
+    frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
 )
 frame_trees.grid(row=0, column=0, sticky="ew")
 
 # FRAME_ROCKS
 frame_rocks = ctk.CTkFrame(
-    frame_base_objects, border_width=0, fg_color="#bfc2c2", corner_radius=20
+    frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
 )
 frame_rocks.grid(row=1, column=0, pady=(10, 0), sticky="ew")
 
 # FRAME_STICKS
 frame_sticks = ctk.CTkFrame(
-    frame_base_objects, border_width=0, fg_color="#bfc2c2", corner_radius=20
+    frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
 )
 frame_sticks.grid(row=2, column=0, pady=(10, 0), sticky="ew")
 
 # FRAME_PEBBLES
 frame_pebbles = ctk.CTkFrame(
-    frame_base_objects, border_width=0, fg_color="#bfc2c2", corner_radius=20
+    frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
 )
 frame_pebbles.grid(row=3, column=0, pady=(10, 0), sticky="ew")
 
 # FRAME_BUSHES
 frame_bushes = ctk.CTkFrame(
-    frame_base_objects, border_width=0, fg_color="#bfc2c2", corner_radius=20
+    frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
 )
 frame_bushes.grid(row=4, column=0, pady=(10, 10), sticky="ew")
 
@@ -443,13 +470,20 @@ trees_slider = ctk.CTkSlider(
     from_=0,
     to=100,
     width=330,  # make scalable to window
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(trees_slider_label, "Tree Amount", value),
 )
 trees_slider.set(50)
 
 # TREE EDIT BUTTON
 trees_edit_button = ctk.CTkButton(
-    frame_trees, text="Edit", command=trees_advanced_settings_window, width=50
+    frame_trees,
+    text="Edit",
+    command=trees_advanced_settings_window,
+    width=50,
+    fg_color="#62a5d9",
+    hover_color="#4e84ae",
 )
 
 ############################################################################################################
@@ -478,13 +512,20 @@ rocks_slider = ctk.CTkSlider(
     from_=0,
     to=100,
     width=330,  # make scalable to window
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(rocks_slider_label, "Rock Amount", value),
 )
 rocks_slider.set(50)
 
 # ROCK EDIT BUTTON
 rocks_edit_button = ctk.CTkButton(
-    frame_rocks, text="Edit", command=rocks_advanced_settings_window, width=50
+    frame_rocks,
+    text="Edit",
+    command=rocks_advanced_settings_window,
+    width=50,
+    fg_color="#62a5d9",
+    hover_color="#4e84ae",
 )
 
 ############################################################################################################
@@ -513,6 +554,8 @@ sticks_slider = ctk.CTkSlider(
     from_=0,
     to=100,
     width=330,  # make scalable to window
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(
         sticks_slider_label, "Stick Amount", value
     ),
@@ -521,7 +564,12 @@ sticks_slider.set(50)
 
 # STICKS EDIT BUTTON
 sticks_edit_button = ctk.CTkButton(
-    frame_sticks, text="Edit", command=sticks_advanced_settings_window, width=50
+    frame_sticks,
+    text="Edit",
+    command=sticks_advanced_settings_window,
+    width=50,
+    fg_color="#62a5d9",
+    hover_color="#4e84ae",
 )
 
 ############################################################################################################
@@ -550,6 +598,8 @@ pebbles_slider = ctk.CTkSlider(
     from_=0,
     to=100,
     width=330,  # make scalable to window
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(
         pebbles_slider_label, "Pebble Amount", value
     ),
@@ -558,7 +608,12 @@ pebbles_slider.set(50)
 
 # PEBBLES EDIT BUTTON
 pebbles_edit_button = ctk.CTkButton(
-    frame_pebbles, text="Edit", command=pebbles_advanced_settings_window, width=50
+    frame_pebbles,
+    text="Edit",
+    command=pebbles_advanced_settings_window,
+    width=50,
+    fg_color="#62a5d9",
+    hover_color="#4e84ae",
 )
 
 ############################################################################################################
@@ -587,6 +642,8 @@ bushes_slider = ctk.CTkSlider(
     from_=0,
     to=100,
     width=330,  # make scalable to window
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(
         bushes_slider_label, "Bush Amount", value
     ),
@@ -595,14 +652,19 @@ bushes_slider.set(50)
 
 # BUSHES EDIT BUTTON
 bushes_edit_button = ctk.CTkButton(
-    frame_bushes, text="Edit", command=bushes_advanced_settings_window, width=50
+    frame_bushes,
+    text="Edit",
+    command=bushes_advanced_settings_window,
+    width=50,
+    fg_color="#62a5d9",
+    hover_color="#4e84ae",
 )
 
 ############################################################################################################
 
 # FRAME_BASE_MESH
 frame_base_mesh = ctk.CTkScrollableFrame(
-    tabview.tab("Mesh"), height=350, fg_color="#cfcfcf"
+    tabview.tab("Mesh"), height=350, fg_color="#f2f3f3"
 )
 frame_base_mesh.grid(
     row=0,
@@ -619,6 +681,8 @@ sizeX_slider = ctk.CTkSlider(
     from_=10,
     to=100,
     width=400,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(sizeX_label, "Size X", value),
 )
 sizeX_slider.grid(row=0, column=1, sticky="w", padx=(10, 0))
@@ -633,6 +697,8 @@ SizeY_slider = ctk.CTkSlider(
     from_=10,
     to=100,
     width=400,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(SizeY_label, "Size Y", value),
 )
 SizeY_slider.grid(row=1, column=1, sticky="w", padx=(10, 0))
@@ -649,6 +715,8 @@ minVerticesX_slider = ctk.CTkSlider(
     from_=5,
     to=100,
     width=400,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(
         minVerticesX_label, "Min  Vertices X", value
     ),
@@ -671,6 +739,8 @@ maxVerticesX_slider = ctk.CTkSlider(
     from_=10,
     to=100,
     width=400,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(
         maxVerticesX_label, "Max Vertices X", value
     ),
@@ -689,6 +759,8 @@ minVerticesY_slider = ctk.CTkSlider(
     from_=5,
     to=100,
     width=400,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(
         minVerticesY_label, "Min  Vertices Y", value
     ),
@@ -707,6 +779,8 @@ maxVerticesY_slider = ctk.CTkSlider(
     from_=10,
     to=100,
     width=400,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(
         maxVerticesY_label, "Max Vertices Y", value
     ),
@@ -725,6 +799,8 @@ maxHeight_slider = ctk.CTkSlider(
     from_=1,
     to=100,
     width=400,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(maxHeight_label, "Max Height", value),
 )
 maxHeight_slider.grid(row=6, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
@@ -741,6 +817,8 @@ smoothness_slider = ctk.CTkSlider(
     from_=1,
     to=100,
     width=400,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(smoothness_label, "Smoothness", value),
 )
 smoothness_slider.grid(row=7, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
@@ -776,9 +854,14 @@ bind_toggle_switch_and_cursor(frame_bushes, add_bushes_switch, toggle_bushes_vis
 
 # GENERATE MESH BUTTON
 genmesh_button = ctk.CTkButton(
-    root, text="Generate Mesh", width=200, height=40, fg_color="#3b8ed0"
+    left_section,
+    text="Generate Mesh",
+    width=200,
+    height=40,
+    fg_color="#62a5d9",
+    hover_color="#4e84ae",
 )
-genmesh_button.grid(row=4, column=0, columnspan=2, pady=(0, 10), sticky="s")
-root.rowconfigure(2, weight=1)
+genmesh_button.grid(row=3, column=0, columnspan=2, pady=(10, 10), sticky="s")
+left_section.rowconfigure(2, weight=1)
 
 root.mainloop()
