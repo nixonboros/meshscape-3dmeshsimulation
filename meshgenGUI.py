@@ -286,14 +286,17 @@ def bushes_advanced_settings_window():
 # MAIN WINDOW
 root = ctk.CTk()
 root.title("3D Mesh Generation")
-root.geometry("1100x600")
+root.geometry("1100x620")
 ctk.set_appearance_mode("light")
 root.columnconfigure(0, weight=1)
 
 # Left Section
 left_section = ctk.CTkFrame(root)
 left_section.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-left_section.columnconfigure(0, weight=1)
+root.rowconfigure(0, weight=1)
+
+# Set the minimum width for the left section
+left_section.grid_columnconfigure(0, minsize=600)
 
 # FRAME FOR TITLE LABEL
 frame_title = ctk.CTkFrame(left_section, fg_color="#3b8ed0")
@@ -369,7 +372,9 @@ right_section.columnconfigure(0, weight=1)
 root.columnconfigure(1, weight=1)
 
 # Visualisation Frame
-frame_visualisation = ctk.CTkFrame(right_section, height=300, fg_color="white")
+frame_visualisation = ctk.CTkFrame(
+    right_section, width=450, height=300, fg_color="white"
+)
 frame_visualisation.grid(row=0, column=0, pady=10, padx=10, sticky="nsew")
 frame_visualisation.columnconfigure(0, weight=1)
 
@@ -606,28 +611,28 @@ frame_base_mesh.grid(
 )
 
 # SIZE X
-sizeX_label = ctk.CTkLabel(frame_base_mesh, text="Size X: 10", width=100, anchor="w")
+sizeX_label = ctk.CTkLabel(frame_base_mesh, text="Size X: 10", width=120, anchor="w")
 sizeX_label.grid(row=0, column=0, sticky="w")
 
 sizeX_slider = ctk.CTkSlider(
     frame_base_mesh,
     from_=10,
     to=100,
-    width=420,
+    width=400,
     command=lambda value: update_slider_label(sizeX_label, "Size X", value),
 )
 sizeX_slider.grid(row=0, column=1, sticky="w", padx=(10, 0))
 sizeX_slider.set(10)
 
 # SIZE Y
-SizeY_label = ctk.CTkLabel(frame_base_mesh, text="Size Y: 10", width=100, anchor="w")
+SizeY_label = ctk.CTkLabel(frame_base_mesh, text="Size Y: 10", width=120, anchor="w")
 SizeY_label.grid(row=1, column=0, sticky="w")
 
 SizeY_slider = ctk.CTkSlider(
     frame_base_mesh,
     from_=10,
     to=100,
-    width=420,
+    width=400,
     command=lambda value: update_slider_label(SizeY_label, "Size Y", value),
 )
 SizeY_slider.grid(row=1, column=1, sticky="w", padx=(10, 0))
@@ -635,7 +640,7 @@ SizeY_slider.set(10)
 
 # MIN VERTICES X
 minVerticesX_label = ctk.CTkLabel(
-    frame_base_mesh, text="Min  Vertices X: 5", width=100, anchor="w"
+    frame_base_mesh, text="Min  Vertices X: 5", width=120, anchor="w"
 )
 minVerticesX_label.grid(row=2, column=0, sticky="w", pady=(20, 0))
 
@@ -643,7 +648,7 @@ minVerticesX_slider = ctk.CTkSlider(
     frame_base_mesh,
     from_=5,
     to=100,
-    width=420,
+    width=400,
     command=lambda value: update_slider_label(
         minVerticesX_label, "Min  Vertices X", value
     ),
@@ -653,7 +658,7 @@ minVerticesX_slider.set(5)
 
 # MAX VERTICES X
 maxVerticesX_label = ctk.CTkLabel(
-    frame_base_mesh, text="Max Vertices X: 10", width=100, anchor="w"
+    frame_base_mesh, text="Max Vertices X: 10", width=120, anchor="w"
 )
 maxVerticesX_label.grid(
     row=3,
@@ -665,7 +670,7 @@ maxVerticesX_slider = ctk.CTkSlider(
     frame_base_mesh,
     from_=10,
     to=100,
-    width=420,
+    width=400,
     command=lambda value: update_slider_label(
         maxVerticesX_label, "Max Vertices X", value
     ),
@@ -675,7 +680,7 @@ maxVerticesX_slider.set(10)
 
 # MIN VERTICES Y
 minVerticesY_label = ctk.CTkLabel(
-    frame_base_mesh, text="Min  Vertices Y: 5", width=100, anchor="w"
+    frame_base_mesh, text="Min  Vertices Y: 5", width=120, anchor="w"
 )
 minVerticesY_label.grid(row=4, column=0, sticky="w", pady=(20, 0))
 
@@ -683,7 +688,7 @@ minVerticesY_slider = ctk.CTkSlider(
     frame_base_mesh,
     from_=5,
     to=100,
-    width=420,
+    width=400,
     command=lambda value: update_slider_label(
         minVerticesY_label, "Min  Vertices Y", value
     ),
@@ -693,7 +698,7 @@ minVerticesY_slider.set(5)
 
 # MAX VERTICES Y
 maxVerticesY_label = ctk.CTkLabel(
-    frame_base_mesh, text="Max Vertices Y: 10", width=100, anchor="w"
+    frame_base_mesh, text="Max Vertices Y: 10", width=120, anchor="w"
 )
 maxVerticesY_label.grid(row=5, column=0, sticky="w")
 
@@ -701,7 +706,7 @@ maxVerticesY_slider = ctk.CTkSlider(
     frame_base_mesh,
     from_=10,
     to=100,
-    width=420,
+    width=400,
     command=lambda value: update_slider_label(
         maxVerticesY_label, "Max Vertices Y", value
     ),
@@ -711,7 +716,7 @@ maxVerticesY_slider.set(10)
 
 # MAX HEIGHT
 maxHeight_label = ctk.CTkLabel(
-    frame_base_mesh, text="Max Height: 1", width=100, anchor="w"
+    frame_base_mesh, text="Max Height: 1", width=120, anchor="w"
 )
 maxHeight_label.grid(row=6, column=0, sticky="w", pady=(20, 0))
 
@@ -719,7 +724,7 @@ maxHeight_slider = ctk.CTkSlider(
     frame_base_mesh,
     from_=1,
     to=100,
-    width=420,
+    width=400,
     command=lambda value: update_slider_label(maxHeight_label, "Max Height", value),
 )
 maxHeight_slider.grid(row=6, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
@@ -727,7 +732,7 @@ maxHeight_slider.set(1)
 
 # SMOOTHNESS
 smoothness_label = ctk.CTkLabel(
-    frame_base_mesh, text="Smoothness: 1", width=100, anchor="w"
+    frame_base_mesh, text="Smoothness: 1", width=120, anchor="w"
 )
 smoothness_label.grid(row=7, column=0, sticky="w", pady=(20, 0))
 
@@ -735,7 +740,7 @@ smoothness_slider = ctk.CTkSlider(
     frame_base_mesh,
     from_=1,
     to=100,
-    width=420,
+    width=400,
     command=lambda value: update_slider_label(smoothness_label, "Smoothness", value),
 )
 smoothness_slider.grid(row=7, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
