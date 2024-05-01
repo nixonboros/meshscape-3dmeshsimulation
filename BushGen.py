@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import random
+import matplotlib.tri as mtri
 
 def generate_bush_points(center, min_radius, max_radius, num_points, length, density, lumpiness):
     # Generate spherical coordinates
