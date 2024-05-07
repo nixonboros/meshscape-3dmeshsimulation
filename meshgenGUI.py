@@ -1,4 +1,7 @@
 import customtkinter as ctk
+import json
+from tkinter import filedialog
+import os
 
 
 def update_slider_label(label, text, value):
@@ -108,25 +111,104 @@ def toggle_mushrooms_visibility(*args):
     )
 
 
-def create_new_preset():
-    dialog = ctk.CTkInputDialog(
-        text="Enter the name of the new preset:", title="Create New Preset"
-    )  # modal dialog for preset creation
-    preset_name = dialog.get_input()
-    if preset_name:
-        current_values = presets_optionmenu.cget("values")
-        current_values.append(preset_name)
-        presets_optionmenu.configure(values=current_values)
+# Save preset function
+def save_preset():
+    # Get all parameter values
+    preset_data = {
+        "noise_type": noise_type_dropdown.get(),
+        "width": width_slider.get(),
+        "height": height_slider.get(),
+        "scale": scale_slider.get(),
+        "octaves": octaves_slider.get(),
+        "persistence": persistence_slider.get(),
+        "lacunarity": lacunarity_slider.get(),
+        "resolution_factor": resolution_factor_slider.get(),
+        "base_elevation": base_elevation_slider.get(),
+        "min_height": min_height_slider.get(),
+        "max_height": max_height_slider.get(),
+        "smoothness": smoothness_slider.get(),
+        "minVerticesX": minVerticesX_slider.get(),
+        "maxVerticesX": maxVerticesX_slider.get(),
+        "minVerticesY": minVerticesY_slider.get(),
+        "maxVerticesY": maxVerticesY_slider.get(),
+        "add_trees": add_trees_switch.get(),
+        "trees_density": trees_slider.get(),
+        "add_rocks": add_rocks_switch.get(),
+        "rocks_density": rocks_slider.get(),
+        "add_sticks": add_sticks_switch.get(),
+        "sticks_density": sticks_slider.get(),
+        "add_logs": add_logs_switch.get(),
+        "logs_density": logs_slider.get(),
+        "add_bushes": add_bushes_switch.get(),
+        "bushes_density": bushes_slider.get(),
+        "add_boulders": add_boulders_switch.get(),
+        "boulders_density": boulders_slider.get(),
+        "add_volcano": add_volcano_switch.get(),
+        "volcano_density": volcano_slider.get(),
+        "add_mushroom": add_mushroom_switch.get(),
+        "mushroom_density": mushroom_slider.get(),
+    }
+    # Open a file dialog for saving
+    file_path = filedialog.asksaveasfilename(
+        defaultextension=".json", filetypes=[("JSON files", "*.json")]
+    )
+    if file_path:
+        with open(file_path, "w") as f:
+            json.dump(preset_data, f)
+        # Update the option menu
+        preset_name = os.path.basename(file_path)[:-5]
+        presets_optionmenu.configure(
+            values=presets_optionmenu.cget("values") + [preset_name]
+        )
         presets_optionmenu.set(preset_name)
 
 
-def delete_preset():
-    selected_preset = presets_optionmenu.get()
-    if selected_preset != "None":
-        current_values = presets_optionmenu.cget("values")
-        current_values.remove(selected_preset)
-        presets_optionmenu.configure(values=current_values)
-        presets_optionmenu.set("None")
+# Load preset function
+def load_preset():
+    # Open a file dialog for loading
+    file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
+    if file_path:
+        with open(file_path, "r") as f:
+            preset_data = json.load(f)
+        # Update all parameter values
+        noise_type_dropdown.set(preset_data["noise_type"])
+        width_slider.set(preset_data["width"])
+        height_slider.set(preset_data["height"])
+        scale_slider.set(preset_data["scale"])
+        octaves_slider.set(preset_data["octaves"])
+        persistence_slider.set(preset_data["persistence"])
+        lacunarity_slider.set(preset_data["lacunarity"])
+        resolution_factor_slider.set(preset_data["resolution_factor"])
+        base_elevation_slider.set(preset_data["base_elevation"])
+        min_height_slider.set(preset_data["min_height"])
+        max_height_slider.set(preset_data["max_height"])
+        smoothness_slider.set(preset_data["smoothness"])
+        minVerticesX_slider.set(preset_data["minVerticesX"])
+        maxVerticesX_slider.set(preset_data["maxVerticesX"])
+        minVerticesY_slider.set(preset_data["minVerticesY"])
+        maxVerticesY_slider.set(preset_data["maxVerticesY"])
+        add_trees_switch.set(preset_data["add_trees"])
+        trees_slider.set(preset_data["trees_density"])
+        add_rocks_switch.set(preset_data["add_rocks"])
+        rocks_slider.set(preset_data["rocks_density"])
+        add_sticks_switch.set(preset_data["add_sticks"])
+        sticks_slider.set(preset_data["sticks_density"])
+        add_logs_switch.set(preset_data["add_logs"])
+        logs_slider.set(preset_data["logs_density"])
+        add_bushes_switch.set(preset_data["add_bushes"])
+        bushes_slider.set(preset_data["bushes_density"])
+        add_boulders_switch.set(preset_data["add_boulders"])
+        boulders_slider.set(preset_data["boulders_density"])
+        add_volcano_switch.set(preset_data["add_volcano"])
+        volcano_slider.set(preset_data["volcano_density"])
+        add_mushroom_switch.set(preset_data["add_mushroom"])
+        mushroom_slider.set(preset_data["mushroom_density"])
+        # Update the option menu
+        preset_name = os.path.basename(file_path)[:-5]
+        presets_optionmenu.configure(
+            values=presets_optionmenu.cget("values") + [preset_name]
+        )
+        presets_optionmenu.set(preset_name)
 
 
 def trees_advanced_settings_window():
@@ -390,38 +472,35 @@ presets_label.grid(row=1, column=0, padx=20, pady=(10, 0), sticky="w")
 
 presets_optionmenu = ctk.CTkOptionMenu(
     left_section,
-    values=["None"],
+    values=["Default"],
     width=200,
     fg_color="#b9bdbd",
     button_color="#9ca2a2",
     button_hover_color="#838b8b",
-    text_color="#323434",
 )
 presets_optionmenu.grid(row=1, column=0, padx=(70, 10), pady=(10, 0), sticky="w")
 
-# CREATE PRESET BUTTON
+# SAVE PRESET BUTTON
 create_preset_button = ctk.CTkButton(
     left_section,
-    text="+",
-    command=create_new_preset,
-    width=30,
+    text="Save",
+    command=save_preset,
+    width=50,
     fg_color="#9ca2a2",
     hover_color="#838b8b",
-    text_color="#323434",
 )
 create_preset_button.grid(row=1, column=0, padx=(285, 0), pady=(10, 0), sticky="w")
 
-# DELETE PRESET BUTTON
-delete_preset_button = ctk.CTkButton(
+# LOAD PRESET BUTTON
+load_preset_button = ctk.CTkButton(
     left_section,
-    text="-",
-    command=delete_preset,  # adding delelte confirmation window
-    width=30,
+    text="Load",
+    command=load_preset,
+    width=50,
     fg_color="#9ca2a2",
     hover_color="#838b8b",
-    text_color="#323434",
 )
-delete_preset_button.grid(row=1, column=0, padx=(320, 0), pady=(10, 0), sticky="w")
+load_preset_button.grid(row=1, column=0, padx=(340, 0), pady=(10, 0), sticky="w")
 
 ############################################################################################################
 
@@ -887,7 +966,6 @@ noise_type_dropdown = ctk.CTkOptionMenu(
     fg_color="#b9bdbd",
     button_color="#9ca2a2",
     button_hover_color="#838b8b",
-    text_color="#323434",
 )
 noise_type_dropdown.grid(row=0, column=1, sticky="w", padx=(15, 0))
 noise_type_dropdown.set("Perlin")
