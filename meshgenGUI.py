@@ -74,6 +74,7 @@ def toggle_bushes_visibility(*args):
         frame_bushes,
     )
 
+
 def toggle_boulders_visibility(*args):
     toggle_visibility(
         "boulders",
@@ -82,6 +83,28 @@ def toggle_boulders_visibility(*args):
         boulders_slider_label,
         boulders_edit_button,
         frame_boulders,
+    )
+
+
+def toggle_volcanos_visibility(*args):
+    toggle_visibility(
+        "volcano",
+        add_volcano_switch,
+        volcano_slider,
+        volcano_slider_label,
+        volcano_edit_button,
+        frame_volcanos,
+    )
+
+
+def toggle_mushrooms_visibility(*args):
+    toggle_visibility(
+        "mushroom",
+        add_mushroom_switch,
+        mushroom_slider,
+        mushroom_slider_label,
+        mushroom_edit_button,
+        frame_mushrooms,
     )
 
 
@@ -115,74 +138,7 @@ def trees_advanced_settings_window():
     trees_advanced_settings_window.geometry("450x300")
     trees_advanced_settings_window.grab_set()
 
-    # EXAMPLE DROPDOWN FOR TREES SHAPE
-    shape_label = ctk.CTkLabel(
-        trees_advanced_settings_window, text="Tree Shape:", width=100, anchor="w"
-    )
-    shape_label.grid(row=0, column=0, padx=10, pady=10, sticky="w")
-    shape_optionmenu = ctk.CTkOptionMenu(
-        trees_advanced_settings_window,
-        values=["Mixed", "Spherical", "Conical"],
-        width=260,
-        fg_color="#a8adad",
-        button_color="#838b8b",
-        button_hover_color="#5b6161",
-    )
-    shape_optionmenu.grid(row=0, column=1, padx=10, pady=10, sticky="w")
-
-    # EXAMPLE LABELS FOR ADVANCED TREES SETTINGS
-    density_label = ctk.CTkLabel(
-        trees_advanced_settings_window, text="Trees Density: 50", width=100, anchor="w"
-    )
-    density_label.grid(row=1, column=0, padx=10, pady=10, sticky="w")
-
-    trunk_width_label = ctk.CTkLabel(
-        trees_advanced_settings_window, text="Trunk Width: 50", width=100, anchor="w"
-    )
-    trunk_width_label.grid(row=2, column=0, padx=10, pady=10, sticky="w")
-
-    leaf_size_label = ctk.CTkLabel(
-        trees_advanced_settings_window, text="Leaf Size: 50", width=100, anchor="w"
-    )
-    leaf_size_label.grid(row=3, column=0, padx=10, pady=10, sticky="w")
-
-    # EXAMPLE SLIDERS FOR ADVANCED TREES SETTINGS
-    density_slider = ctk.CTkSlider(
-        trees_advanced_settings_window,
-        from_=0,
-        to=100,
-        width=260,
-        button_color="#62a5d9",
-        button_hover_color="#4e84ae",
-        command=lambda value: update_slider_label(
-            density_label, "Trees Density", value
-        ),
-    )
-    density_slider.grid(row=1, column=1, padx=10, pady=10, sticky="e")
-
-    trunk_width_slider = ctk.CTkSlider(
-        trees_advanced_settings_window,
-        from_=0,
-        to=100,
-        width=260,
-        button_color="#62a5d9",
-        button_hover_color="#4e84ae",
-        command=lambda value: update_slider_label(
-            trunk_width_label, "Trunk Width", value
-        ),
-    )
-    trunk_width_slider.grid(row=2, column=1, padx=10, pady=10, sticky="e")
-
-    leaf_size_slider = ctk.CTkSlider(
-        trees_advanced_settings_window,
-        from_=0,
-        to=100,
-        width=260,
-        button_color="#62a5d9",
-        button_hover_color="#4e84ae",
-        command=lambda value: update_slider_label(leaf_size_label, "Leaf Size", value),
-    )
-    leaf_size_slider.grid(row=3, column=1, padx=10, pady=10, sticky="e")
+    # add tree advanced settings here
 
     # SAVE BUTTON FOR ADVANCED TREES SETTINGS
     save_button = ctk.CTkButton(
@@ -306,7 +262,9 @@ def bushes_advanced_settings_window():
     bushes_advanced_settings_window.rowconfigure(4, weight=1)
     bushes_advanced_settings_window.columnconfigure(0, weight=1)
 
+
 ############################################################################################################
+
 
 def boulders_advanced_settings_window():
     def save_boulders_settings():
@@ -337,6 +295,66 @@ def boulders_advanced_settings_window():
 
 ############################################################################################################
 
+
+def volcano_advanced_settings_window():
+    def save_volcano_settings():
+        # add saving function
+        volcano_advanced_settings_window.destroy()
+
+    volcano_advanced_settings_window = ctk.CTkToplevel(root)
+    volcano_advanced_settings_window.title("Advanced Volcano Settings")
+    volcano_advanced_settings_window.geometry("450x300")
+    volcano_advanced_settings_window.grab_set()
+
+    # add volcano advanced settings here
+
+    # SAVE BUTTON
+    save_button = ctk.CTkButton(
+        volcano_advanced_settings_window,
+        text="Save Settings",
+        command=save_volcano_settings,
+        width=50,
+        fg_color="#62a5d9",
+        hover_color="#4e84ae",
+    )
+    save_button.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="se")
+
+    volcano_advanced_settings_window.rowconfigure(4, weight=1)
+    volcano_advanced_settings_window.columnconfigure(0, weight=1)
+
+
+############################################################################################################
+
+
+def mushroom_advanced_settings_window():
+    def save_mushroom_settings():
+        # add saving function
+        mushroom_advanced_settings_window.destroy()
+
+    mushroom_advanced_settings_window = ctk.CTkToplevel(root)
+    mushroom_advanced_settings_window.title("Advanced Mushroom Settings")
+    mushroom_advanced_settings_window.geometry("450x300")
+    mushroom_advanced_settings_window.grab_set()
+
+    # add mushroom advanced settings here
+
+    # SAVE BUTTON
+    save_button = ctk.CTkButton(
+        mushroom_advanced_settings_window,
+        text="Save Settings",
+        command=save_mushroom_settings,
+        width=50,
+        fg_color="#62a5d9",
+        hover_color="#4e84ae",
+    )
+    save_button.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="se")
+
+    mushroom_advanced_settings_window.rowconfigure(4, weight=1)
+    mushroom_advanced_settings_window.columnconfigure(0, weight=1)
+
+
+############################################################################################################
+
 # MAIN WINDOW
 root = ctk.CTk()
 root.title("MeshScape")
@@ -361,7 +379,7 @@ frame_title.columnconfigure(0, weight=1)
 title_label = ctk.CTkLabel(
     frame_title,
     text="MeshScape",
-    font=ctk.CTkFont(size=24),
+    font=ctk.CTkFont(size=24, weight="bold"),
     text_color="white",
 )
 title_label.grid(row=0, column=0, pady=(10, 10))
@@ -488,7 +506,18 @@ frame_bushes.grid(row=4, column=0, pady=(10, 0), sticky="ew")
 frame_boulders = ctk.CTkFrame(
     frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
 )
-frame_boulders.grid(row=5, column=0, pady=(10, 10), sticky="ew")
+frame_boulders.grid(row=5, column=0, pady=(10, 0), sticky="ew")
+
+frame_volcanos = ctk.CTkFrame(
+    frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
+)
+frame_volcanos.grid(row=6, column=0, pady=(10, 0), sticky="ew")
+
+frame_mushrooms = ctk.CTkFrame(
+    frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
+)
+frame_mushrooms.grid(row=7, column=0, pady=(10, 10), sticky="ew")
+
 
 ############################################################################################################
 
@@ -516,6 +545,7 @@ trees_slider = ctk.CTkSlider(
     from_=0,
     to=100,
     width=330,  # make scalable to window
+    number_of_steps=100,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(trees_slider_label, "Density", value),
@@ -558,6 +588,7 @@ rocks_slider = ctk.CTkSlider(
     from_=0,
     to=100,
     width=330,  # make scalable to window
+    number_of_steps=100,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(rocks_slider_label, "Density", value),
@@ -600,11 +631,10 @@ sticks_slider = ctk.CTkSlider(
     from_=0,
     to=100,
     width=330,  # make scalable to window
+    number_of_steps=100,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
-    command=lambda value: update_slider_label(
-        sticks_slider_label, "Density", value
-    ),
+    command=lambda value: update_slider_label(sticks_slider_label, "Density", value),
 )
 sticks_slider.set(50)
 
@@ -636,19 +666,16 @@ logs_switch = ctk.CTkSwitch(
 logs_switch.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
 # LOGS SLIDERS
-logs_slider_label = ctk.CTkLabel(
-    frame_logs, text="Density: 50", width=125, anchor="w"
-)
+logs_slider_label = ctk.CTkLabel(frame_logs, text="Density: 50", width=125, anchor="w")
 logs_slider = ctk.CTkSlider(
     frame_logs,
     from_=0,
     to=100,
     width=330,  # make scalable to window
+    number_of_steps=100,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
-    command=lambda value: update_slider_label(
-        logs_slider_label, "Density", value
-    ),
+    command=lambda value: update_slider_label(logs_slider_label, "Density", value),
 )
 logs_slider.set(50)
 
@@ -688,11 +715,10 @@ bushes_slider = ctk.CTkSlider(
     from_=0,
     to=100,
     width=330,  # make scalable to window
+    number_of_steps=100,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
-    command=lambda value: update_slider_label(
-        bushes_slider_label, "Density", value
-    ),
+    command=lambda value: update_slider_label(bushes_slider_label, "Density", value),
 )
 bushes_slider.set(50)
 
@@ -723,7 +749,7 @@ boulders_switch = ctk.CTkSwitch(
 )
 boulders_switch.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
-# USHES SLIDERS
+# BOULDER SLIDERS
 boulders_slider_label = ctk.CTkLabel(
     frame_boulders, text="Density: 50", width=125, anchor="w"
 )
@@ -732,15 +758,14 @@ boulders_slider = ctk.CTkSlider(
     from_=0,
     to=100,
     width=330,  # make scalable to window
+    number_of_steps=100,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
-    command=lambda value: update_slider_label(
-        boulders_slider_label, "Density", value
-    ),
+    command=lambda value: update_slider_label(boulders_slider_label, "Density", value),
 )
 boulders_slider.set(50)
 
-# boulders EDIT BUTTON
+# BOULDERS EDIT BUTTON
 boulders_edit_button = ctk.CTkButton(
     frame_boulders,
     text="Edit",
@@ -749,6 +774,235 @@ boulders_edit_button = ctk.CTkButton(
     fg_color="#62a5d9",
     hover_color="#4e84ae",
 )
+
+############################################################################################################
+
+# ENABLE/DISABLE ADD VOLCANO SWITCH
+add_volcano_switch = ctk.StringVar(value="off")
+add_volcano_switch.trace_add(
+    "write", toggle_volcanos_visibility
+)  # bind toggle_slider_visibility function to switch variable
+volcano_switch = ctk.CTkSwitch(
+    frame_volcanos,
+    text="Volcano",
+    command=toggle_volcanos_visibility,
+    variable=add_volcano_switch,
+    onvalue="on",
+    offvalue="off",
+)
+volcano_switch.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+
+# VOLCANO SLIDERS
+volcano_slider_label = ctk.CTkLabel(
+    frame_volcanos, text="Density: 50", width=125, anchor="w"
+)
+volcano_slider = ctk.CTkSlider(
+    frame_volcanos,
+    from_=0,
+    to=100,
+    width=330,  # make scalable to window
+    number_of_steps=100,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
+    command=lambda value: update_slider_label(volcano_slider_label, "Density", value),
+)
+volcano_slider.set(50)
+
+# VOLCANO EDIT BUTTON
+volcano_edit_button = ctk.CTkButton(
+    frame_volcanos,
+    text="Edit",
+    command=volcano_advanced_settings_window,
+    width=50,
+    fg_color="#62a5d9",
+    hover_color="#4e84ae",
+)
+
+############################################################################################################
+
+# ENABLE/DISABLE ADD MUSHROOM SWITCH
+add_mushroom_switch = ctk.StringVar(value="off")
+add_mushroom_switch.trace_add(
+    "write", toggle_mushrooms_visibility
+)  # bind toggle_slider_visibility function to switch variable
+mushroom_switch = ctk.CTkSwitch(
+    frame_mushrooms,
+    text="Mushroom",
+    command=toggle_mushrooms_visibility,
+    variable=add_mushroom_switch,
+    onvalue="on",
+    offvalue="off",
+)
+mushroom_switch.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+
+# MUSHROOM SLIDERS
+mushroom_slider_label = ctk.CTkLabel(
+    frame_mushrooms, text="Density: 50", width=125, anchor="w"
+)
+mushroom_slider = ctk.CTkSlider(
+    frame_mushrooms,
+    from_=0,
+    to=100,
+    width=330,  # make scalable to window
+    number_of_steps=100,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
+    command=lambda value: update_slider_label(mushroom_slider_label, "Density", value),
+)
+mushroom_slider.set(50)
+
+# MUSHROOM EDIT BUTTON
+mushroom_edit_button = ctk.CTkButton(
+    frame_mushrooms,
+    text="Edit",
+    command=mushroom_advanced_settings_window,
+    width=50,
+    fg_color="#62a5d9",
+    hover_color="#4e84ae",
+)
+
+
+############################################################################################################
+
+# FRAME_BASE_NOISE
+frame_base_noise = ctk.CTkScrollableFrame(
+    tabview.tab("Noise"), height=350, fg_color="#f2f3f3"
+)
+frame_base_noise.grid(
+    row=0,
+    column=0,
+    sticky="ew",
+)
+
+# NOISE TYPE
+noise_type_label = ctk.CTkLabel(
+    frame_base_noise, width=135, text="Noise Type: ", anchor="w"
+)
+noise_type_label.grid(row=0, column=0, sticky="w")
+
+noise_type_dropdown = ctk.CTkOptionMenu(
+    frame_base_noise,
+    values=["Perlin", "Simplex", "Value", "Cellular"],
+    width=100,
+    fg_color="#b9bdbd",
+    button_color="#9ca2a2",
+    button_hover_color="#838b8b",
+    text_color="#323434",
+)
+noise_type_dropdown.grid(row=0, column=1, sticky="w", padx=(15, 0))
+noise_type_dropdown.set("Perlin")
+
+# WIDTH
+width_label = ctk.CTkLabel(
+    frame_base_noise, text="Mesh Width: 500", width=135, anchor="w"
+)
+width_label.grid(row=1, column=0, sticky="w", pady=(20, 0))
+
+width_slider = ctk.CTkSlider(
+    frame_base_noise,
+    from_=100,
+    to=1000,
+    width=400,
+    number_of_steps=9,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
+    command=lambda value: update_slider_label(width_label, "Mesh Width", value),
+)
+width_slider.grid(row=1, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
+width_slider.set(500)
+
+# HEIGHT
+height_label = ctk.CTkLabel(
+    frame_base_noise, text="Mesh Height: 500", width=135, anchor="w"
+)
+height_label.grid(row=2, column=0, sticky="w")
+
+height_slider = ctk.CTkSlider(
+    frame_base_noise,
+    from_=100,
+    to=1000,
+    width=400,
+    number_of_steps=9,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
+    command=lambda value: update_slider_label(height_label, "Mesh Height", value),
+)
+height_slider.grid(row=2, column=1, sticky="w", padx=(10, 0))
+height_slider.set(500)
+
+# SCALE
+scale_label = ctk.CTkLabel(
+    frame_base_noise, text="Zoom Scale: 1", width=135, anchor="w"
+)
+scale_label.grid(row=3, column=0, sticky="w", pady=(20, 0))
+
+scale_slider = ctk.CTkSlider(
+    frame_base_noise,
+    from_=1,
+    to=10,
+    width=400,
+    number_of_steps=9,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
+    command=lambda value: update_slider_label(scale_label, "Zoom Scale", value),
+)
+scale_slider.grid(row=3, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
+scale_slider.set(1)
+
+# OCTAVES
+octaves_label = ctk.CTkLabel(frame_base_noise, text="Octaves: 5", width=135, anchor="w")
+octaves_label.grid(row=4, column=0, sticky="w", pady=(20, 0))
+
+octaves_slider = ctk.CTkSlider(
+    frame_base_noise,
+    from_=1,
+    to=10,
+    width=400,
+    number_of_steps=9,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
+    command=lambda value: update_slider_label(octaves_label, "Octaves", value),
+)
+octaves_slider.grid(row=4, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
+octaves_slider.set(5)
+
+# PERSISTENCE
+persistence_label = ctk.CTkLabel(
+    frame_base_noise, text="Persistence: 5", width=135, anchor="w"
+)
+persistence_label.grid(row=5, column=0, sticky="w")
+
+persistence_slider = ctk.CTkSlider(
+    frame_base_noise,
+    from_=1,
+    to=10,
+    width=400,
+    number_of_steps=9,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
+    command=lambda value: update_slider_label(persistence_label, "Persistence", value),
+)
+persistence_slider.grid(row=5, column=1, sticky="w", padx=(10, 0))
+persistence_slider.set(5)
+
+# LACUNARITY
+lacunarity_label = ctk.CTkLabel(
+    frame_base_noise, text="Lacunarity: 5", width=135, anchor="w"
+)
+lacunarity_label.grid(row=6, column=0, sticky="w")
+
+lacunarity_slider = ctk.CTkSlider(
+    frame_base_noise,
+    from_=1,
+    to=10,
+    width=400,
+    number_of_steps=9,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
+    command=lambda value: update_slider_label(lacunarity_label, "Lacunarity", value),
+)
+lacunarity_slider.grid(row=6, column=1, sticky="w", padx=(10, 0))
+lacunarity_slider.set(5)
 
 ############################################################################################################
 
@@ -762,64 +1016,133 @@ frame_base_terrain.grid(
     sticky="ew",
 )
 
-# SIZE X
-sizeX_label = ctk.CTkLabel(frame_base_terrain, text="Size X: 10", width=120, anchor="w")
-sizeX_label.grid(row=0, column=0, sticky="w")
+# RESOLUTION FACTOR
+resolution_factor_label = ctk.CTkLabel(
+    frame_base_terrain, text="Resolution Factor: 5", width=135, anchor="w"
+)
+resolution_factor_label.grid(row=0, column=0, sticky="w")
 
-sizeX_slider = ctk.CTkSlider(
+resolution_factor_slider = ctk.CTkSlider(
     frame_base_terrain,
-    from_=10,
-    to=100,
+    from_=1,
+    to=10,
     width=400,
+    number_of_steps=9,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
-    command=lambda value: update_slider_label(sizeX_label, "Size X", value),
+    command=lambda value: update_slider_label(
+        resolution_factor_label, "Resolution Factor", value
+    ),
 )
-sizeX_slider.grid(row=0, column=1, sticky="w", padx=(10, 0))
-sizeX_slider.set(10)
+resolution_factor_slider.grid(row=0, column=1, sticky="w", padx=(10, 0))
+resolution_factor_slider.set(5)
 
-# SIZE Y
-SizeY_label = ctk.CTkLabel(frame_base_terrain, text="Size Y: 10", width=120, anchor="w")
-SizeY_label.grid(row=1, column=0, sticky="w")
+# BASE ELEVATION
+base_elevation_label = ctk.CTkLabel(
+    frame_base_terrain, text="Base Elevation: 50", width=135, anchor="w"
+)
+base_elevation_label.grid(row=1, column=0, sticky="w", pady=(20, 0))
 
-SizeY_slider = ctk.CTkSlider(
+base_elevation_slider = ctk.CTkSlider(
     frame_base_terrain,
-    from_=10,
+    from_=0,
     to=100,
     width=400,
+    number_of_steps=100,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
-    command=lambda value: update_slider_label(SizeY_label, "Size Y", value),
+    command=lambda value: update_slider_label(
+        base_elevation_label, "Base Elevation", value
+    ),
 )
-SizeY_slider.grid(row=1, column=1, sticky="w", padx=(10, 0))
-SizeY_slider.set(10)
+base_elevation_slider.grid(row=1, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
+base_elevation_slider.set(50)
+
+# MIN HEIGHT
+min_height_label = ctk.CTkLabel(
+    frame_base_terrain, text="Min  Height: 500", width=135, anchor="w"
+)
+min_height_label.grid(row=2, column=0, sticky="w", pady=(20, 0))
+
+min_height_slider = ctk.CTkSlider(
+    frame_base_terrain,
+    from_=10,
+    to=1000,
+    width=400,
+    number_of_steps=99,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
+    command=lambda value: update_slider_label(min_height_label, "Min  Height", value),
+)
+min_height_slider.grid(row=2, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
+min_height_slider.set(500)
+
+# MAX HEIGHT
+max_height_label = ctk.CTkLabel(
+    frame_base_terrain, text="Max Height: 500", width=135, anchor="w"
+)
+max_height_label.grid(row=3, column=0, sticky="w")
+
+max_height_slider = ctk.CTkSlider(
+    frame_base_terrain,
+    from_=10,
+    to=1000,
+    width=400,
+    number_of_steps=99,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
+    command=lambda value: update_slider_label(max_height_label, "Max Height", value),
+)
+max_height_slider.grid(row=3, column=1, sticky="w", padx=(10, 0))
+max_height_slider.set(500)
+
+
+# SMOOTHNESS
+smoothness_label = ctk.CTkLabel(
+    frame_base_terrain, text="Smoothness: 5", width=135, anchor="w"
+)
+smoothness_label.grid(row=4, column=0, sticky="w", pady=(20, 0))
+
+smoothness_slider = ctk.CTkSlider(
+    frame_base_terrain,
+    from_=0,
+    to=10,
+    width=400,
+    number_of_steps=10,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
+    command=lambda value: update_slider_label(smoothness_label, "Smoothness", value),
+)
+smoothness_slider.grid(row=4, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
+smoothness_slider.set(5)
 
 # MIN VERTICES X
 minVerticesX_label = ctk.CTkLabel(
-    frame_base_terrain, text="Min  Vertices X: 5", width=120, anchor="w"
+    frame_base_terrain, text="Min  Vertices X: 50", width=135, anchor="w"
 )
-minVerticesX_label.grid(row=2, column=0, sticky="w", pady=(20, 0))
+minVerticesX_label.grid(row=5, column=0, sticky="w", pady=(20, 0))
 
 minVerticesX_slider = ctk.CTkSlider(
     frame_base_terrain,
-    from_=5,
+    from_=10,
     to=100,
     width=400,
+    number_of_steps=9,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(
         minVerticesX_label, "Min  Vertices X", value
     ),
 )
-minVerticesX_slider.grid(row=2, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
-minVerticesX_slider.set(5)
+minVerticesX_slider.grid(row=5, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
+minVerticesX_slider.set(50)
 
 # MAX VERTICES X
 maxVerticesX_label = ctk.CTkLabel(
-    frame_base_terrain, text="Max Vertices X: 10", width=120, anchor="w"
+    frame_base_terrain, text="Max Vertices X: 10", width=135, anchor="w"
 )
 maxVerticesX_label.grid(
-    row=3,
+    row=6,
     column=0,
     sticky="w",
 )
@@ -829,91 +1152,57 @@ maxVerticesX_slider = ctk.CTkSlider(
     from_=10,
     to=100,
     width=400,
+    number_of_steps=9,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(
         maxVerticesX_label, "Max Vertices X", value
     ),
 )
-maxVerticesX_slider.grid(row=3, column=1, sticky="w", padx=(10, 0))
-maxVerticesX_slider.set(10)
+maxVerticesX_slider.grid(row=6, column=1, sticky="w", padx=(10, 0))
+maxVerticesX_slider.set(50)
 
 # MIN VERTICES Y
 minVerticesY_label = ctk.CTkLabel(
-    frame_base_terrain, text="Min  Vertices Y: 5", width=120, anchor="w"
+    frame_base_terrain, text="Min  Vertices Y: 50", width=135, anchor="w"
 )
-minVerticesY_label.grid(row=4, column=0, sticky="w", pady=(20, 0))
+minVerticesY_label.grid(row=7, column=0, sticky="w", pady=(20, 0))
 
 minVerticesY_slider = ctk.CTkSlider(
     frame_base_terrain,
     from_=5,
     to=100,
     width=400,
+    number_of_steps=9,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(
         minVerticesY_label, "Min  Vertices Y", value
     ),
 )
-minVerticesY_slider.grid(row=4, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
-minVerticesY_slider.set(5)
+minVerticesY_slider.grid(row=7, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
+minVerticesY_slider.set(50)
 
 # MAX VERTICES Y
 maxVerticesY_label = ctk.CTkLabel(
-    frame_base_terrain, text="Max Vertices Y: 10", width=120, anchor="w"
+    frame_base_terrain, text="Max Vertices Y: 50", width=135, anchor="w"
 )
-maxVerticesY_label.grid(row=5, column=0, sticky="w")
+maxVerticesY_label.grid(row=8, column=0, sticky="w")
 
 maxVerticesY_slider = ctk.CTkSlider(
     frame_base_terrain,
     from_=10,
     to=100,
     width=400,
+    number_of_steps=9,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(
         maxVerticesY_label, "Max Vertices Y", value
     ),
 )
-maxVerticesY_slider.grid(row=5, column=1, sticky="w", padx=(10, 0))
-maxVerticesY_slider.set(10)
-
-# MAX HEIGHT
-maxHeight_label = ctk.CTkLabel(
-    frame_base_terrain, text="Max Height: 1", width=120, anchor="w"
-)
-maxHeight_label.grid(row=6, column=0, sticky="w", pady=(20, 0))
-
-maxHeight_slider = ctk.CTkSlider(
-    frame_base_terrain,
-    from_=1,
-    to=100,
-    width=400,
-    button_color="#62a5d9",
-    button_hover_color="#4e84ae",
-    command=lambda value: update_slider_label(maxHeight_label, "Max Height", value),
-)
-maxHeight_slider.grid(row=6, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
-maxHeight_slider.set(1)
-
-# SMOOTHNESS
-smoothness_label = ctk.CTkLabel(
-    frame_base_terrain, text="Smoothness: 1", width=120, anchor="w"
-)
-smoothness_label.grid(row=7, column=0, sticky="w", pady=(20, 0))
-
-smoothness_slider = ctk.CTkSlider(
-    frame_base_terrain,
-    from_=1,
-    to=100,
-    width=400,
-    button_color="#62a5d9",
-    button_hover_color="#4e84ae",
-    command=lambda value: update_slider_label(smoothness_label, "Smoothness", value),
-)
-smoothness_slider.grid(row=7, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
-smoothness_slider.set(1)
-
+maxVerticesY_slider.grid(row=8, column=1, sticky="w", padx=(10, 0))
+maxVerticesY_slider.set(50)
 
 ############################################################################################################
 
@@ -935,11 +1224,17 @@ def bind_toggle_switch_and_cursor(frame, switch_variable, toggle_function):
 bind_toggle_switch_and_cursor(frame_trees, add_trees_switch, toggle_trees_visibility)
 bind_toggle_switch_and_cursor(frame_rocks, add_rocks_switch, toggle_rocks_visibility)
 bind_toggle_switch_and_cursor(frame_sticks, add_sticks_switch, toggle_sticks_visibility)
-bind_toggle_switch_and_cursor(
-    frame_logs, add_logs_switch, toggle_logs_visibility
-)
+bind_toggle_switch_and_cursor(frame_logs, add_logs_switch, toggle_logs_visibility)
 bind_toggle_switch_and_cursor(frame_bushes, add_bushes_switch, toggle_bushes_visibility)
-bind_toggle_switch_and_cursor(frame_boulders, add_boulders_switch, toggle_boulders_visibility)
+bind_toggle_switch_and_cursor(
+    frame_boulders, add_boulders_switch, toggle_boulders_visibility
+)
+bind_toggle_switch_and_cursor(
+    frame_volcanos, add_volcano_switch, toggle_volcanos_visibility
+)
+bind_toggle_switch_and_cursor(
+    frame_mushrooms, add_mushroom_switch, toggle_mushrooms_visibility
+)
 
 ############################################################################################################
 
