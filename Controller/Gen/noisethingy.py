@@ -46,9 +46,17 @@ def save_image(image_array, file_name='noise_image.png'):
     img = Image.fromarray(image_array)
     img.save(file_name)
 
-# Example usage
-width, height = 600, 400
-noise_type = 'perlin'  # Change to 'perlin', 'simplex', 'value', 'cellular'
-noise_img = generate_noise_image(width, height, scale=200, octaves=1, persistence=100, lacunarity=0.2, seed=np.random.randint(0, 100), noise_type=noise_type)
-#save_image(noise_img, f'~\\Desktop\\{noise_type}_noise.png')  # Adjust path as necessary
-save_image(noise_img, f'noise.png')  # Adjust path as necessary
+def export_image():
+    # Example usage
+    width, height = 600, 400
+    noise_type = 'perlin'  # Change to 'perlin', 'simplex', 'value', 'cellular'
+    noise_img = generate_noise_image(width, height, scale=200, octaves=1, persistence=100, lacunarity=0.2, seed=np.random.randint(0, 100), noise_type=noise_type)
+    #save_image(noise_img, f'~\\Desktop\\{noise_type}_noise.png')  # Adjust path as necessary
+    save_image(noise_img, f'noise.png')  # Adjust path as necessary
+
+## Example usage
+#width, height = 600, 400
+#noise_type = 'perlin'  # Change to 'perlin', 'simplex', 'value', 'cellular'
+#noise_img = generate_noise_image(width, height, scale=200, octaves=1, persistence=100, lacunarity=0.2, seed=np.random.randint(0, 100), noise_type=noise_type)
+##save_image(noise_img, f'~\\Desktop\\{noise_type}_noise.png')  # Adjust path as necessary
+#save_image(noise_img, f'noise.png')  # Adjust path as necessary
