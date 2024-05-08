@@ -6,11 +6,26 @@ import numpy as np
 import os
 import webbrowser as wb
 
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D, art3d
+import matplotlib
+matplotlib.use("TkAgg")
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from stl import mesh
+import customtkinter as ctk
+import tkinter as tk
+
+import vtk
+from vtk.tk.vtkTkRenderWindowInteractor import vtkTkRenderWindowInteractor
+
 from Controller.Gen.noisethingy import *
+from Controller.Gen.noise_mesh_gen import *
 
 
 def generate_noise():
-    export_image(
+    
+    noise_image_location = export_image(
         int(width_slider.get()),
         int(height_slider.get()),
         int(scale_slider.get()),
@@ -20,7 +35,20 @@ def generate_noise():
         np.random.randint(0, 100),
         noise_type_dropdown.get(),
     )
+    
+   # print(int(resolution_factor_slider.get()))
+   # print(float(base_elevation_slider.get()/200))
+   # print(float((max_height_slider.get()-min_height_slider.get())/200))
+   # print(float(min_height_slider.get()/200))
+    generate_mesh_noise(
+        int(resolution_factor_slider.get()),
+        float(base_elevation_slider.get()/200),
+        float((max_height_slider.get()-min_height_slider.get())/200),
+        float(min_height_slider.get()/200),
+        noise_image_location
+    )
 
+    visualize_stl()
 
 def update_slider_label(label, text, value):
     label.configure(text=f"{text}: {int(value)}")
@@ -460,7 +488,7 @@ def mushroom_advanced_settings_window():
 # MAIN WINDOW
 root = ctk.CTk()
 root.title("MeshScape")
-root.geometry("1100x600")
+root.geometry("1150x600")
 ctk.set_appearance_mode("light")
 root.columnconfigure(0, weight=1)
 
@@ -547,7 +575,7 @@ tabview.tab("Terrain").columnconfigure(0, weight=1)
 tabview.tab("Objects").columnconfigure(0, weight=1)
 
 ############################################################################################################
-
+'''
 # Right Section
 right_section = ctk.CTkFrame(root, fg_color="#dbdbdb")
 right_section.grid(row=0, column=1, padx=(0, 10), pady=10, sticky="new")
@@ -561,6 +589,56 @@ frame_visualisation = ctk.CTkFrame(
 )
 frame_visualisation.grid(row=0, column=0, pady=10, padx=10, sticky="nsew")
 frame_visualisation.columnconfigure(0, weight=1)
+'''
+
+# Load your STL file
+
+
+# Visualization function
+def visualize_stl():
+    try:
+        your_mesh = mesh.Mesh.from_file('exported_mesh.stl')
+        fig = plt.Figure(figsize=(5, 5.6))
+        ax = fig.add_subplot(111, projection='3d')
+        ax.add_collection3d(art3d.Poly3DCollection(your_mesh.vectors, alpha=0.5))  # Reduced opacity to improve rendering performance
+
+        # Auto scale to the mesh size
+        scale = np.concatenate(your_mesh.points).flatten()
+        ax.auto_scale_xyz(scale, scale, scale)
+
+        # Hide axes
+        ax.set_axis_off()
+
+        # Clear existing canvas if it exists
+        for widget in frame_visualisation.winfo_children():
+            widget.destroy()
+
+        # Create a new canvas
+        canvas = FigureCanvasTkAgg(fig, master=frame_visualisation)
+        canvas.draw()
+        widget = canvas.get_tk_widget()
+        widget.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+
+        # Improve responsiveness by reducing redraw frequency during interactions
+        def on_move(event):
+            canvas.draw_idle()
+
+        fig.canvas.mpl_connect('motion_notify_event', on_move)
+
+    except Exception as e:
+        print(e)  # It's good practice to print or log the exception message
+
+# Setup right section and frame visualization
+right_section = ctk.CTkFrame(root, fg_color="#dbdbdb")
+right_section.grid(row=0, column=1, padx=(0, 10), pady=10, sticky="nsew")
+right_section.columnconfigure(0, weight=1)
+
+frame_visualisation = ctk.CTkFrame(right_section, width=190, height=560, fg_color="white")
+frame_visualisation.grid(row=0, column=0, pady=10, padx=10, sticky="nsew")
+frame_visualisation.columnconfigure(0, weight=1)
+
+visualize_stl()
+
 
 ############################################################################################################
 
@@ -992,41 +1070,41 @@ noise_type_dropdown.set("Perlin")
 
 # WIDTH
 width_label = ctk.CTkLabel(
-    frame_base_noise, text="Mesh Width: 500", width=135, anchor="w"
+    frame_base_noise, text="Mesh Width: 15", width=135, anchor="w"
 )
 width_label.grid(row=1, column=0, sticky="w", pady=(20, 0))
 
 width_slider = ctk.CTkSlider(
     frame_base_noise,
-    from_=100,
-    to=1000,
+    from_=10,
+    to=50,
     width=400,
-    number_of_steps=9,
+    number_of_steps=50,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(width_label, "Mesh Width", value),
 )
 width_slider.grid(row=1, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
-width_slider.set(500)
+width_slider.set(15)
 
 # HEIGHT
 height_label = ctk.CTkLabel(
-    frame_base_noise, text="Mesh Height: 500", width=135, anchor="w"
+    frame_base_noise, text="Mesh Height: 15", width=135, anchor="w"
 )
 height_label.grid(row=2, column=0, sticky="w")
 
 height_slider = ctk.CTkSlider(
     frame_base_noise,
-    from_=100,
-    to=1000,
+    from_=10,
+    to=50,
     width=400,
-    number_of_steps=9,
+    number_of_steps=50,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(height_label, "Mesh Height", value),
 )
 height_slider.grid(row=2, column=1, sticky="w", padx=(10, 0))
-height_slider.set(500)
+height_slider.set(15)
 
 # SCALE
 scale_label = ctk.CTkLabel(
@@ -1116,16 +1194,16 @@ frame_base_terrain.grid(
 
 # RESOLUTION FACTOR
 resolution_factor_label = ctk.CTkLabel(
-    frame_base_terrain, text="Resolution Factor: 5", width=135, anchor="w"
+    frame_base_terrain, text="Resolution Factor: 10", width=135, anchor="w"
 )
 resolution_factor_label.grid(row=0, column=0, sticky="w")
 
 resolution_factor_slider = ctk.CTkSlider(
     frame_base_terrain,
     from_=1,
-    to=10,
+    to=20,
     width=400,
-    number_of_steps=9,
+    number_of_steps=20,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(
@@ -1133,18 +1211,18 @@ resolution_factor_slider = ctk.CTkSlider(
     ),
 )
 resolution_factor_slider.grid(row=0, column=1, sticky="w", padx=(10, 0))
-resolution_factor_slider.set(5)
+resolution_factor_slider.set(10)
 
 # BASE ELEVATION
 base_elevation_label = ctk.CTkLabel(
-    frame_base_terrain, text="Base Elevation: 50", width=135, anchor="w"
+    frame_base_terrain, text="Base Elevation: 100", width=135, anchor="w"
 )
 base_elevation_label.grid(row=1, column=0, sticky="w", pady=(20, 0))
 
 base_elevation_slider = ctk.CTkSlider(
     frame_base_terrain,
     from_=0,
-    to=100,
+    to=500,
     width=400,
     number_of_steps=100,
     button_color="#62a5d9",
@@ -1154,47 +1232,47 @@ base_elevation_slider = ctk.CTkSlider(
     ),
 )
 base_elevation_slider.grid(row=1, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
-base_elevation_slider.set(50)
+base_elevation_slider.set(100)
 
 # MIN HEIGHT
 min_height_label = ctk.CTkLabel(
-    frame_base_terrain, text="Min  Height: 500", width=135, anchor="w"
+    frame_base_terrain, text="Min  Height: 100", width=135, anchor="w"
 )
 min_height_label.grid(row=2, column=0, sticky="w", pady=(20, 0))
 
 min_height_slider = ctk.CTkSlider(
     frame_base_terrain,
-    from_=10,
-    to=1000,
+    from_=0,
+    to=500,
     width=400,
-    number_of_steps=99,
+    number_of_steps=100,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(min_height_label, "Min  Height", value),
 )
 min_height_slider.grid(row=2, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
-min_height_slider.set(500)
+min_height_slider.set(100)
 
 # MAX HEIGHT
 max_height_label = ctk.CTkLabel(
-    frame_base_terrain, text="Max Height: 500", width=135, anchor="w"
+    frame_base_terrain, text="Max Height: 300", width=135, anchor="w"
 )
 max_height_label.grid(row=3, column=0, sticky="w")
 
 max_height_slider = ctk.CTkSlider(
     frame_base_terrain,
-    from_=10,
-    to=1000,
+    from_=0,
+    to=500,
     width=400,
-    number_of_steps=99,
+    number_of_steps=100,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(max_height_label, "Max Height", value),
 )
 max_height_slider.grid(row=3, column=1, sticky="w", padx=(10, 0))
-max_height_slider.set(500)
+max_height_slider.set(300)
 
-
+'''
 # SMOOTHNESS
 smoothness_label = ctk.CTkLabel(
     frame_base_terrain, text="Smoothness: 5", width=135, anchor="w"
@@ -1301,7 +1379,7 @@ maxVerticesY_slider = ctk.CTkSlider(
 )
 maxVerticesY_slider.grid(row=8, column=1, sticky="w", padx=(10, 0))
 maxVerticesY_slider.set(50)
-
+'''
 ############################################################################################################
 
 
