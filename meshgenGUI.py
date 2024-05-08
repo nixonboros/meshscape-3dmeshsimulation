@@ -1,7 +1,14 @@
 import customtkinter as ctk
 import json
 from tkinter import filedialog
+
 import os
+import webbrowser as wb
+
+from Controller.Gen.noisethingy import *
+
+export_image()
+
 
 
 def update_slider_label(label, text, value):
