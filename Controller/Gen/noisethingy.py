@@ -4,7 +4,11 @@ from PIL import Image
 from noise import pnoise2, snoise2
 from scipy.spatial import Voronoi, voronoi_plot_2d
 
+
+
+
 def generate_noise_image(width, height, scale, octaves, persistence, lacunarity, seed, noise_type):
+# def generate_noise_image(width=500, height=500, scale=200, octaves=6, persistence=3, lacunarity=1, seed=1, noise_type='Perlin'):
     """
     Generate and save a 2D noise image with customizable variables.
 
@@ -19,7 +23,7 @@ def generate_noise_image(width, height, scale, octaves, persistence, lacunarity,
     Returns:
     - A 2D numpy array of the generated noise.
     """
-    noise_img = np.zeros((height, width))
+    noise_img = np.zeros((int(height), int(width)))
 
     if noise_type in ['perlin', 'simplex']:
         for i in range(height):
@@ -46,11 +50,18 @@ def save_image(image_array, file_name='noise_image.png'):
     img = Image.fromarray(image_array)
     img.save(file_name)
 
-def export_image(width, height, scale, octaves, persistence, lacunarity, noise_type):
+def export_image(width, height, scale, octaves, persistence, lacunarity, seed, noise_type):
     # Example usage
-    noise_img = generate_noise_image(width, height, scale, octaves, persistence, lacunarity, seed=np.random.randint(0, 100), noise_type)
+    noise_img = generate_noise_image(width, height, scale, octaves, persistence, lacunarity, seed, noise_type)
+    
     #save_image(noise_img, f'~\\Desktop\\{noise_type}_noise.png')  # Adjust path as necessary
-    save_image(noise_img, f'noise.png')  # Adjust path as necessary
+    # save_image(noise_img, f'noise.png')  # Adjust path as necessary
+    
+    print(width, height, scale, octaves, persistence, lacunarity, seed, noise_type)
+
+#noise_img = generate_noise_image()
+#save_image(noise_img, f'noise.png')  # Adjust path as necessary
+#print("t")
 
 ## Example usage
 #width, height = 600, 400

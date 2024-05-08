@@ -2,12 +2,13 @@ import customtkinter as ctk
 import json
 from tkinter import filedialog
 
+import numpy as np
 import os
 import webbrowser as wb
 
 from Controller.Gen.noisethingy import *
 
-export_image()
+
 
 
 
@@ -968,7 +969,7 @@ noise_type_label.grid(row=0, column=0, sticky="w")
 
 noise_type_dropdown = ctk.CTkOptionMenu(
     frame_base_noise,
-    values=["Perlin", "Simplex", "Value", "Cellular"],
+    values=['Perlin', 'Simplex', 'Value', 'Cellular'],
     width=100,
     fg_color="#b9bdbd",
     button_color="#9ca2a2",
@@ -1017,14 +1018,14 @@ height_slider.set(500)
 
 # SCALE
 scale_label = ctk.CTkLabel(
-    frame_base_noise, text="Zoom Scale: 1", width=135, anchor="w"
+    frame_base_noise, text="Zoom Scale: 100", width=135, anchor="w"
 )
 scale_label.grid(row=3, column=0, sticky="w", pady=(20, 0))
 
 scale_slider = ctk.CTkSlider(
     frame_base_noise,
-    from_=1,
-    to=10,
+    from_=100,
+    to=1000,
     width=400,
     number_of_steps=9,
     button_color="#62a5d9",
@@ -1032,7 +1033,7 @@ scale_slider = ctk.CTkSlider(
     command=lambda value: update_slider_label(scale_label, "Zoom Scale", value),
 )
 scale_slider.grid(row=3, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
-scale_slider.set(1)
+scale_slider.set(100)
 
 # OCTAVES
 octaves_label = ctk.CTkLabel(frame_base_noise, text="Octaves: 5", width=135, anchor="w")
@@ -1311,15 +1312,9 @@ bind_toggle_switch_and_cursor(frame_rocks, add_rocks_switch, toggle_rocks_visibi
 bind_toggle_switch_and_cursor(frame_sticks, add_sticks_switch, toggle_sticks_visibility)
 bind_toggle_switch_and_cursor(frame_logs, add_logs_switch, toggle_logs_visibility)
 bind_toggle_switch_and_cursor(frame_bushes, add_bushes_switch, toggle_bushes_visibility)
-bind_toggle_switch_and_cursor(
-    frame_boulders, add_boulders_switch, toggle_boulders_visibility
-)
-bind_toggle_switch_and_cursor(
-    frame_volcanos, add_volcano_switch, toggle_volcanos_visibility
-)
-bind_toggle_switch_and_cursor(
-    frame_mushrooms, add_mushroom_switch, toggle_mushrooms_visibility
-)
+bind_toggle_switch_and_cursor(frame_boulders, add_boulders_switch, toggle_boulders_visibility)
+bind_toggle_switch_and_cursor(frame_volcanos, add_volcano_switch, toggle_volcanos_visibility)
+bind_toggle_switch_and_cursor(frame_mushrooms, add_mushroom_switch, toggle_mushrooms_visibility)
 
 ############################################################################################################
 
@@ -1331,6 +1326,7 @@ genmesh_button = ctk.CTkButton(
     height=40,
     fg_color="#62a5d9",
     hover_color="#4e84ae",
+    command=export_image(width_slider.get(), height_slider.get(), scale_slider.get(), octaves_slider.get(), persistence_slider.get(), lacunarity_slider.get(), np.random.randint(0, 100), noise_type_dropdown.get())
 )
 genmesh_button.grid(row=3, column=0, columnspan=2, pady=(10, 10), sticky="s")
 left_section.rowconfigure(2, weight=1)
