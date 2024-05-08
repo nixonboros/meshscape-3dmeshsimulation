@@ -54,8 +54,7 @@ def export_image(width, height, scale, octaves, persistence, lacunarity, seed, n
     # Example usage
     noise_img = generate_noise_image(width, height, scale, octaves, persistence, lacunarity, seed, noise_type)
     
-    #save_image(noise_img, f'~\\Desktop\\{noise_type}_noise.png')  # Adjust path as necessary
-    # save_image(noise_img, f'noise.png')  # Adjust path as necessary
+    save_image(noise_img, f'noise.png')  # Adjust path as necessary
     
     print(width, height, scale, octaves, persistence, lacunarity, seed, noise_type)
 

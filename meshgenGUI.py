@@ -9,7 +9,17 @@ import webbrowser as wb
 from Controller.Gen.noisethingy import *
 
 
-
+def generate_noise():
+    export_image(
+        width_slider.get(),
+        height_slider.get(),
+        scale_slider.get(),
+        octaves_slider.get(),
+        persistence_slider.get(),
+        lacunarity_slider.get(),
+        np.random.randint(0, 100),
+        noise_type_dropdown.get(),
+    )
 
 
 def update_slider_label(label, text, value):
@@ -1326,7 +1336,7 @@ genmesh_button = ctk.CTkButton(
     height=40,
     fg_color="#62a5d9",
     hover_color="#4e84ae",
-    command=export_image(width_slider.get(), height_slider.get(), scale_slider.get(), octaves_slider.get(), persistence_slider.get(), lacunarity_slider.get(), np.random.randint(0, 100), noise_type_dropdown.get())
+    command=generate_noise
 )
 genmesh_button.grid(row=3, column=0, columnspan=2, pady=(10, 10), sticky="s")
 left_section.rowconfigure(2, weight=1)
