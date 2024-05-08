@@ -4,7 +4,7 @@ from PIL import Image
 from noise import pnoise2, snoise2
 from scipy.spatial import Voronoi, voronoi_plot_2d
 
-def generate_noise_image(width, height, scale=100, octaves=6, persistence=0.5, lacunarity=2.0, seed=0, noise_type='perlin'):
+def generate_noise_image(width, height, scale, octaves, persistence, lacunarity, seed, noise_type):
     """
     Generate and save a 2D noise image with customizable variables.
 
