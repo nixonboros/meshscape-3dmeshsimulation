@@ -25,19 +25,19 @@ def generate_noise_image(width, height, scale, octaves, persistence, lacunarity,
     """
     noise_img = np.zeros((int(height), int(width)))
 
-    if noise_type in ['perlin', 'simplex']:
+    if noise_type in ['Perlin', 'Simplex']:
         for i in range(height):
             for j in range(width):
                 x, y = i / scale, j / scale
-                if noise_type == 'perlin':
+                if noise_type == 'Perlin':
                     noise_value = pnoise2(x, y, octaves=octaves, persistence=persistence, lacunarity=lacunarity, repeatx=width, repeaty=height, base=seed)
-                elif noise_type == 'simplex':
+                elif noise_type == 'Simplex':
                     noise_value = snoise2(x, y, octaves=octaves, persistence=persistence, lacunarity=lacunarity, base=seed)
                 noise_img[i][j] = noise_value
-    elif noise_type == 'value':
+    elif noise_type == 'Value':
         np.random.seed(seed)
         noise_img = np.random.rand(height, width)
-    elif noise_type == 'cellular':
+    elif noise_type == 'Cellular':
         points = np.random.rand(100, 2) * [width, height]
         vor = Voronoi(points)
         for i, (x, y) in enumerate(points):
@@ -58,8 +58,8 @@ def export_image(width, height, scale, octaves, persistence, lacunarity, seed, n
     
     print(width, height, scale, octaves, persistence, lacunarity, seed, noise_type)
 
-#noise_img = generate_noise_image()
-#save_image(noise_img, f'noise.png')  # Adjust path as necessary
+# noise_img = generate_noise_image()
+# save_image(noise_img, f'noise.png')  # Adjust path as necessary
 #print("t")
 
 ## Example usage

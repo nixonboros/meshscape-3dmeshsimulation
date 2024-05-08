@@ -11,12 +11,12 @@ from Controller.Gen.noisethingy import *
 
 def generate_noise():
     export_image(
-        width_slider.get(),
-        height_slider.get(),
-        scale_slider.get(),
-        octaves_slider.get(),
-        persistence_slider.get(),
-        lacunarity_slider.get(),
+        int(width_slider.get()),
+        int(height_slider.get()),
+        int(scale_slider.get()),
+        int(octaves_slider.get()),
+        int(persistence_slider.get()),
+        int(lacunarity_slider.get()),
         np.random.randint(0, 100),
         noise_type_dropdown.get(),
     )
@@ -39,6 +39,108 @@ def toggle_visibility(
         slider_label.grid_forget()
         edit_button.grid_forget()
         frame.configure(fg_color="#dfe1e1")
+
+
+# Save preset function
+def save_preset():
+    # Get all parameter values
+    preset_data = {
+        "noise_type": noise_type_dropdown.get(),
+        "width": width_slider.get(),
+        "height": height_slider.get(),
+        "scale": scale_slider.get(),
+        "octaves": octaves_slider.get(),
+        "persistence": persistence_slider.get(),
+        "lacunarity": lacunarity_slider.get(),
+        "resolution_factor": resolution_factor_slider.get(),
+        "base_elevation": base_elevation_slider.get(),
+        "min_height": min_height_slider.get(),
+        "max_height": max_height_slider.get(),
+        "smoothness": smoothness_slider.get(),
+        "minVerticesX": minVerticesX_slider.get(),
+        "maxVerticesX": maxVerticesX_slider.get(),
+        "minVerticesY": minVerticesY_slider.get(),
+        "maxVerticesY": maxVerticesY_slider.get(),
+        "add_trees": add_trees_switch.get(),
+        "trees_density": trees_slider.get(),
+        "add_rocks": add_rocks_switch.get(),
+        "rocks_density": rocks_slider.get(),
+        "add_sticks": add_sticks_switch.get(),
+        "sticks_density": sticks_slider.get(),
+        "add_logs": add_logs_switch.get(),
+        "logs_density": logs_slider.get(),
+        "add_bushes": add_bushes_switch.get(),
+        "bushes_density": bushes_slider.get(),
+        "add_boulders": add_boulders_switch.get(),
+        "boulders_density": boulders_slider.get(),
+        "add_volcano": add_volcano_switch.get(),
+        "volcano_density": volcano_slider.get(),
+        "add_mushroom": add_mushroom_switch.get(),
+        "mushroom_density": mushroom_slider.get(),
+    }
+    # Open a file dialog for saving
+    file_path = filedialog.asksaveasfilename(
+        defaultextension=".json", filetypes=[("JSON files", "*.json")]
+    )
+    if file_path:
+        with open(file_path, "w") as f:
+            json.dump(preset_data, f)
+        # Update the option menu
+        preset_name = os.path.basename(file_path)[:-5]
+        presets_optionmenu.configure(
+            values=presets_optionmenu.cget("values") + [preset_name]
+        )
+        presets_optionmenu.set(preset_name)
+
+
+# Load preset function
+def load_preset():
+    # Open a file dialog for loading
+    file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
+    if file_path:
+        with open(file_path, "r") as f:
+            preset_data = json.load(f)
+        # Update all parameter values
+        noise_type_dropdown.set(preset_data["noise_type"])
+        width_slider.set(preset_data["width"])
+        height_slider.set(preset_data["height"])
+        scale_slider.set(preset_data["scale"])
+        octaves_slider.set(preset_data["octaves"])
+        persistence_slider.set(preset_data["persistence"])
+        lacunarity_slider.set(preset_data["lacunarity"])
+        resolution_factor_slider.set(preset_data["resolution_factor"])
+        base_elevation_slider.set(preset_data["base_elevation"])
+        min_height_slider.set(preset_data["min_height"])
+        max_height_slider.set(preset_data["max_height"])
+        smoothness_slider.set(preset_data["smoothness"])
+        minVerticesX_slider.set(preset_data["minVerticesX"])
+        maxVerticesX_slider.set(preset_data["maxVerticesX"])
+        minVerticesY_slider.set(preset_data["minVerticesY"])
+        maxVerticesY_slider.set(preset_data["maxVerticesY"])
+        
+        # Update the labels
+        update_slider_label(width_label, "Mesh Width", preset_data["width"])
+        update_slider_label(height_label, "Mesh Height", preset_data["height"])
+        update_slider_label(scale_label, "Zoom Scale", preset_data["scale"])
+        update_slider_label(octaves_label, "Octaves", preset_data["octaves"])
+        update_slider_label(persistence_label, "Persistence", preset_data["persistence"])
+        update_slider_label(lacunarity_label, "Lacunarity", preset_data["lacunarity"])
+        update_slider_label(resolution_factor_label, "Resolution Factor", preset_data["resolution_factor"])
+        update_slider_label(base_elevation_label, "Base Elevation", preset_data["base_elevation"])
+        update_slider_label(min_height_label, "Min Height", preset_data["min_height"])
+        update_slider_label(max_height_label, "Max Height", preset_data["max_height"])
+        update_slider_label(smoothness_label, "Smoothness", preset_data["smoothness"])
+        update_slider_label(minVerticesX_label, "Min Vertices X", preset_data["minVerticesX"])
+        update_slider_label(maxVerticesX_label, "Max Vertices X", preset_data["maxVerticesX"])
+        update_slider_label(minVerticesY_label, "Min Vertices Y", preset_data["minVerticesY"])
+        update_slider_label(maxVerticesY_label, "Max Vertices Y", preset_data["maxVerticesY"])
+        
+        # Update the option menu
+        preset_name = os.path.basename(file_path)[:-5]
+        presets_optionmenu.configure(
+            values=presets_optionmenu.cget("values") + [preset_name]
+        )
+        presets_optionmenu.set(preset_name)
 
 
 def toggle_trees_visibility(*args):
@@ -127,106 +229,6 @@ def toggle_mushrooms_visibility(*args):
         mushroom_edit_button,
         frame_mushrooms,
     )
-
-
-# Save preset function
-def save_preset():
-    # Get all parameter values
-    preset_data = {
-        "noise_type": noise_type_dropdown.get(),
-        "width": width_slider.get(),
-        "height": height_slider.get(),
-        "scale": scale_slider.get(),
-        "octaves": octaves_slider.get(),
-        "persistence": persistence_slider.get(),
-        "lacunarity": lacunarity_slider.get(),
-        "resolution_factor": resolution_factor_slider.get(),
-        "base_elevation": base_elevation_slider.get(),
-        "min_height": min_height_slider.get(),
-        "max_height": max_height_slider.get(),
-        "smoothness": smoothness_slider.get(),
-        "minVerticesX": minVerticesX_slider.get(),
-        "maxVerticesX": maxVerticesX_slider.get(),
-        "minVerticesY": minVerticesY_slider.get(),
-        "maxVerticesY": maxVerticesY_slider.get(),
-        "add_trees": add_trees_switch.get(),
-        "trees_density": trees_slider.get(),
-        "add_rocks": add_rocks_switch.get(),
-        "rocks_density": rocks_slider.get(),
-        "add_sticks": add_sticks_switch.get(),
-        "sticks_density": sticks_slider.get(),
-        "add_logs": add_logs_switch.get(),
-        "logs_density": logs_slider.get(),
-        "add_bushes": add_bushes_switch.get(),
-        "bushes_density": bushes_slider.get(),
-        "add_boulders": add_boulders_switch.get(),
-        "boulders_density": boulders_slider.get(),
-        "add_volcano": add_volcano_switch.get(),
-        "volcano_density": volcano_slider.get(),
-        "add_mushroom": add_mushroom_switch.get(),
-        "mushroom_density": mushroom_slider.get(),
-    }
-    # Open a file dialog for saving
-    file_path = filedialog.asksaveasfilename(
-        defaultextension=".json", filetypes=[("JSON files", "*.json")]
-    )
-    if file_path:
-        with open(file_path, "w") as f:
-            json.dump(preset_data, f)
-        # Update the option menu
-        preset_name = os.path.basename(file_path)[:-5]
-        presets_optionmenu.configure(
-            values=presets_optionmenu.cget("values") + [preset_name]
-        )
-        presets_optionmenu.set(preset_name)
-
-
-# Load preset function
-def load_preset():
-    # Open a file dialog for loading
-    file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
-    if file_path:
-        with open(file_path, "r") as f:
-            preset_data = json.load(f)
-        # Update all parameter values
-        noise_type_dropdown.set(preset_data["noise_type"])
-        width_slider.set(preset_data["width"])
-        height_slider.set(preset_data["height"])
-        scale_slider.set(preset_data["scale"])
-        octaves_slider.set(preset_data["octaves"])
-        persistence_slider.set(preset_data["persistence"])
-        lacunarity_slider.set(preset_data["lacunarity"])
-        resolution_factor_slider.set(preset_data["resolution_factor"])
-        base_elevation_slider.set(preset_data["base_elevation"])
-        min_height_slider.set(preset_data["min_height"])
-        max_height_slider.set(preset_data["max_height"])
-        smoothness_slider.set(preset_data["smoothness"])
-        minVerticesX_slider.set(preset_data["minVerticesX"])
-        maxVerticesX_slider.set(preset_data["maxVerticesX"])
-        minVerticesY_slider.set(preset_data["minVerticesY"])
-        maxVerticesY_slider.set(preset_data["maxVerticesY"])
-        add_trees_switch.set(preset_data["add_trees"])
-        trees_slider.set(preset_data["trees_density"])
-        add_rocks_switch.set(preset_data["add_rocks"])
-        rocks_slider.set(preset_data["rocks_density"])
-        add_sticks_switch.set(preset_data["add_sticks"])
-        sticks_slider.set(preset_data["sticks_density"])
-        add_logs_switch.set(preset_data["add_logs"])
-        logs_slider.set(preset_data["logs_density"])
-        add_bushes_switch.set(preset_data["add_bushes"])
-        bushes_slider.set(preset_data["bushes_density"])
-        add_boulders_switch.set(preset_data["add_boulders"])
-        boulders_slider.set(preset_data["boulders_density"])
-        add_volcano_switch.set(preset_data["add_volcano"])
-        volcano_slider.set(preset_data["volcano_density"])
-        add_mushroom_switch.set(preset_data["add_mushroom"])
-        mushroom_slider.set(preset_data["mushroom_density"])
-        # Update the option menu
-        preset_name = os.path.basename(file_path)[:-5]
-        presets_optionmenu.configure(
-            values=presets_optionmenu.cget("values") + [preset_name]
-        )
-        presets_optionmenu.set(preset_name)
 
 
 def trees_advanced_settings_window():
@@ -639,10 +641,10 @@ trees_slider_label = ctk.CTkLabel(
 )
 trees_slider = ctk.CTkSlider(
     frame_trees,
-    from_=0,
+    from_=1,
     to=100,
     width=330,  # make scalable to window
-    number_of_steps=100,
+    number_of_steps=99,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(trees_slider_label, "Density", value),
@@ -682,10 +684,10 @@ rocks_slider_label = ctk.CTkLabel(
 )
 rocks_slider = ctk.CTkSlider(
     frame_rocks,
-    from_=0,
+    from_=1,
     to=100,
     width=330,  # make scalable to window
-    number_of_steps=100,
+    number_of_steps=99,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(rocks_slider_label, "Density", value),
@@ -725,10 +727,10 @@ sticks_slider_label = ctk.CTkLabel(
 )
 sticks_slider = ctk.CTkSlider(
     frame_sticks,
-    from_=0,
+    from_=1,
     to=100,
     width=330,  # make scalable to window
-    number_of_steps=100,
+    number_of_steps=99,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(sticks_slider_label, "Density", value),
@@ -766,10 +768,10 @@ logs_switch.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 logs_slider_label = ctk.CTkLabel(frame_logs, text="Density: 50", width=125, anchor="w")
 logs_slider = ctk.CTkSlider(
     frame_logs,
-    from_=0,
+    from_=1,
     to=100,
     width=330,  # make scalable to window
-    number_of_steps=100,
+    number_of_steps=99,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(logs_slider_label, "Density", value),
@@ -809,10 +811,10 @@ bushes_slider_label = ctk.CTkLabel(
 )
 bushes_slider = ctk.CTkSlider(
     frame_bushes,
-    from_=0,
+    from_=1,
     to=100,
     width=330,  # make scalable to window
-    number_of_steps=100,
+    number_of_steps=99,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(bushes_slider_label, "Density", value),
@@ -852,10 +854,10 @@ boulders_slider_label = ctk.CTkLabel(
 )
 boulders_slider = ctk.CTkSlider(
     frame_boulders,
-    from_=0,
+    from_=1,
     to=100,
     width=330,  # make scalable to window
-    number_of_steps=100,
+    number_of_steps=99,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(boulders_slider_label, "Density", value),
@@ -895,10 +897,10 @@ volcano_slider_label = ctk.CTkLabel(
 )
 volcano_slider = ctk.CTkSlider(
     frame_volcanos,
-    from_=0,
+    from_=1,
     to=100,
     width=330,  # make scalable to window
-    number_of_steps=100,
+    number_of_steps=99,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(volcano_slider_label, "Density", value),
@@ -938,10 +940,10 @@ mushroom_slider_label = ctk.CTkLabel(
 )
 mushroom_slider = ctk.CTkSlider(
     frame_mushrooms,
-    from_=0,
+    from_=1,
     to=100,
     width=330,  # make scalable to window
-    number_of_steps=100,
+    number_of_steps=99,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(mushroom_slider_label, "Density", value),
