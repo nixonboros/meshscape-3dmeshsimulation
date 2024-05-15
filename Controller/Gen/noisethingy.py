@@ -3,7 +3,7 @@ import numpy as np
 from PIL import Image
 from noise import pnoise2, snoise2
 from scipy.spatial import Voronoi, voronoi_plot_2d
-
+import os
 
 
 
@@ -51,12 +51,17 @@ def save_image(image_array, file_name='noise_image.png'):
     img.save(file_name)
 
 def export_image(width, height, scale, octaves, persistence, lacunarity, seed, noise_type):
-    # Example usage
+    script_dir = os.path.dirname(__file__)
+    temp_dir = os.path.join(script_dir, 'Temp')
+    
+    # Generate the noise image
+    print("Generating noise image...")
+    # print("Noise Parameter Values: " + width + " " + height + " " + scale + " " + octaves + " " + persistence + " " + lacunarity + " " + seed + " " + noise_type)
     noise_img = generate_noise_image(width, height, scale, octaves, persistence, lacunarity, seed, noise_type)
     
-    save_image(noise_img, f'noise.png')  # Adjust path as necessary
-    
-    print(width, height, scale, octaves, persistence, lacunarity, seed, noise_type)
+    # Save the image to the 'Temp' directory
+    save_image(noise_img, os.path.join(temp_dir, 'Noise.png'))  # Adjust path as necessary
+    print(f"Noise.png exported successfully to {temp_dir}")
 
 # noise_img = generate_noise_image()
 # save_image(noise_img, f'noise.png')  # Adjust path as necessary

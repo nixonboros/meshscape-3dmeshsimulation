@@ -5,8 +5,10 @@ from tkinter import filedialog
 import numpy as np
 import os
 import webbrowser as wb
+import time
 
 from Controller.Gen.noisethingy import *
+from Controller.Gen.MeshGenOnNoise import *
 
 
 def generate_noise():
@@ -21,6 +23,15 @@ def generate_noise():
         noise_type_dropdown.get(),
     )
 
+    time.sleep(10)
+
+    MeshGenOnNoise(
+        int(resolution_factor_slider.get()),
+        int(base_elevation_slider.get()),
+        int(min_height_slider.get()),
+        int(max_height_slider.get()),
+    )
+ 
 
 def update_slider_label(label, text, value):
     label.configure(text=f"{text}: {int(value)}")
