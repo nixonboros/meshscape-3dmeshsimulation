@@ -15,6 +15,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from stl import mesh
 import customtkinter as ctk
 import tkinter as tk
+from tkinter import messagebox
 
 import vtk
 from vtk.tk.vtkTkRenderWindowInteractor import vtkTkRenderWindowInteractor
@@ -49,6 +50,10 @@ def generate_noise():
     )
 
     visualize_stl()
+    
+    # Show a message box indicating completion
+    messagebox.showinfo("Success", "Noise mesh creation is complete!")
+
 
 def update_slider_label(label, text, value):
     label.configure(text=f"{text}: {int(value)}")
