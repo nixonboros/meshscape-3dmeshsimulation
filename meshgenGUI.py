@@ -5,6 +5,7 @@ from tkinter import filedialog
 import numpy as np
 import os
 import webbrowser as wb
+import threading
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -25,34 +26,41 @@ from Controller.Gen.noise_mesh_gen import *
 
 
 def generate_noise():
-    
-    noise_image_location = export_image(
-        int(width_slider.get()),
-        int(height_slider.get()),
-        int(scale_slider.get()),
-        int(octaves_slider.get()),
-        int(persistence_slider.get()),
-        int(lacunarity_slider.get()),
-        np.random.randint(0, 100),
-        noise_type_dropdown.get(),
-    )
-    
-   # print(int(resolution_factor_slider.get()))
-   # print(float(base_elevation_slider.get()/200))
-   # print(float((max_height_slider.get()-min_height_slider.get())/200))
-   # print(float(min_height_slider.get()/200))
-    generate_mesh_noise(
-        int(resolution_factor_slider.get()),
-        float(base_elevation_slider.get()/200),
-        float((max_height_slider.get()-min_height_slider.get())/200),
-        float(min_height_slider.get()/200),
-        noise_image_location
-    )
+    def run_long_task():
+        try:
+            progress_bar.set(0.0)
 
-    visualize_stl()
-    
-    # Show a message box indicating completion
-    messagebox.showinfo("Success", "Noise mesh creation is complete!")
+            noise_image_location = export_image(
+                int(width_slider.get()),
+                int(height_slider.get()),
+                int(scale_slider.get()),
+                int(octaves_slider.get()),
+                int(persistence_slider.get()),
+                int(lacunarity_slider.get()),
+                np.random.randint(0, 100),
+                noise_type_dropdown.get(),
+            )
+            
+            progress_bar.set(0.5)
+            generate_mesh_noise(
+                int(resolution_factor_slider.get()),
+                float(base_elevation_slider.get()/200),
+                float((max_height_slider.get()-min_height_slider.get())/200),
+                float(min_height_slider.get()/200),
+                noise_image_location
+            )
+            
+            progress_bar.set(0.8)
+            visualize_stl()
+            
+            progress_bar.set(1.0)
+            messagebox.showinfo("Success", "Noise mesh creation is complete!")
+        except Exception as e:
+            messagebox.showerror("Error", f"An error occurred: {str(e)}")
+        finally:
+            progress_bar.set(0)
+
+    threading.Thread(target=run_long_task).start()
 
 
 def update_slider_label(label, text, value):
@@ -504,6 +512,11 @@ root.rowconfigure(0, weight=1)
 
 # Set the minimum width for the left section
 left_section.grid_columnconfigure(0, weight=1)
+
+#PROGRESS BAR
+progress_bar = ctk.CTkProgressBar(left_section, width=300)
+progress_bar.grid(row=4, column=0, columnspan=2, pady=(15, 15))
+progress_bar.set(0)
 
 # FRAME FOR TITLE LABEL
 frame_title = ctk.CTkFrame(left_section, fg_color="#62a5d9")
