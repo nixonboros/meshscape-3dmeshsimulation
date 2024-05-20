@@ -23,7 +23,30 @@ from vtk.tk.vtkTkRenderWindowInteractor import vtkTkRenderWindowInteractor
 
 from Controller.Gen.noisethingy import *
 from Controller.Gen.noise_mesh_gen import *
+from Controller.ObGen.PlaceObjects import *
 
+#to connect to sliders
+def add_objects_to_mesh():
+    progress_bar.set(0.0)
+    num_rocks = 5
+    points_per_rock = 1000
+    rock_scale_min = 0.05
+    rock_scale_max = 0.1
+    
+    num_trees = 50
+    tree_scale = 0.1
+
+    num_mushrooms = 5
+    mushroom_scale = 0.2
+
+    num_anthills = 3
+    anthill_scale = 0.5
+
+    combined_mesh = place_objects_on_terrain('exported_mesh.stl', num_rocks, points_per_rock, rock_scale_min, rock_scale_max, num_trees, tree_scale, num_mushrooms, mushroom_scale, num_anthills, anthill_scale)
+    progress_bar.set(0.8)
+    save_combined_mesh(combined_mesh)
+    progress_bar.set(1.0)
+    messagebox.showinfo("Success", "Complete mesh creation is complete!")
 
 def generate_noise():
     def run_long_task():
@@ -54,6 +77,7 @@ def generate_noise():
             visualize_stl()
             
             progress_bar.set(1.0)
+            add_objects_to_mesh()
             messagebox.showinfo("Success", "Noise mesh creation is complete!")
         except Exception as e:
             messagebox.showerror("Error", f"An error occurred: {str(e)}")
@@ -193,7 +217,6 @@ def toggle_trees_visibility(*args):
         trees_edit_button,
         frame_trees,
     )
-
 
 def toggle_rocks_visibility(*args):
     toggle_visibility(
@@ -746,6 +769,33 @@ trees_slider = ctk.CTkSlider(
     command=lambda value: update_slider_label(trees_slider_label, "Density", value),
 )
 trees_slider.set(50)
+
+
+
+# TREE HEIGHT SLIDER LABEL
+tree_height_slider_label = ctk.CTkLabel(
+    frame_trees, text="Scale: 10", width=125, anchor="w"
+)
+
+# TREE HEIGHT SLIDER
+tree_height_slider = ctk.CTkSlider(
+    frame_trees,
+    from_=1,
+    to=20,
+    width=330,  # make scalable to window
+    number_of_steps=19,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
+    command=lambda value: update_slider_label(tree_height_slider_label, "Height", value),
+)
+tree_height_slider.set(10)
+
+# PLACE TREE HEIGHT SLIDER IN THE GRID
+tree_height_slider_label.grid(row=2, column=0, padx=(10, 0), pady=(0, 10), sticky="w")
+tree_height_slider.grid(row=2, column=1, padx=10, pady=(0, 10), sticky="ew")
+
+
+
 
 # TREE EDIT BUTTON
 trees_edit_button = ctk.CTkButton(
