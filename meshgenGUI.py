@@ -18,6 +18,7 @@ import customtkinter as ctk
 import tkinter as tk
 from tkinter import messagebox
 import time
+from PIL import Image, ImageTk
 
 import vtk
 from vtk.tk.vtkTkRenderWindowInteractor import vtkTkRenderWindowInteractor
@@ -25,8 +26,8 @@ from vtk.tk.vtkTkRenderWindowInteractor import vtkTkRenderWindowInteractor
 from Controller.Gen.noisethingy import *
 from Controller.Gen.noise_mesh_gen import *
 from Controller.ObGen.PlaceObjects import *
+from View.spinner import Spinner
 
-#to connect to sliders
 def add_objects_to_mesh():
     progress_bar.set(0.0)
     num_rocks = int(rocks_slider.get())
@@ -74,19 +75,15 @@ def generate_noise():
             progress_bar.set(0.6)
             
             root.after(0, add_objects_to_mesh)
-            messagebox.showinfo("Success", "Mesh creation is complete, now producing visualisation!")
+            root.after(0, lambda: messagebox.showinfo("Success", "Mesh creation is complete, now producing visualisation!"))
 
             progress_bar.set(0.8)
 
-            root.after(0, run_visualization)
-
-            time.sleep(3)
-
-            progress_bar.set(1.0)
-            messagebox.showinfo("Success", "The preview of your mesh is in the right panel.")
+            spinner.show()
+            threading.Thread(target=run_visualization).start()
 
         except Exception as e:
-            messagebox.showerror("Error", f"An error occurred: {str(e)}")
+            root.after(0, lambda: messagebox.showerror("Error", f"An error occurred: {str(e)}"))
         finally:
             progress_bar.set(0)
 
@@ -96,6 +93,9 @@ def update_slider_label(label, text, value):
     label.configure(text=f"{text}: {int(value)}")
     update_object_count()
 
+def on_visualisation_complete():
+    root.after(0, lambda: messagebox.showinfo("Success", "The preview of your mesh is in the right panel."))
+    root.after(0, spinner.hide)
 
 def toggle_visibility(
     switch_variable, *slider_and_labels, frame
@@ -139,7 +139,7 @@ def save_preset():
         "rocks_density": rocks_slider.get(),
         "add_sticks": add_sticks_switch.get(),
         "sticks_density": sticks_slider.get(),
-        "sticks_scale": volcano_scale_slider.get(),
+        "sticks_scale": sticks_scale_slider.get(),
         "add_bushes": add_bushes_switch.get(),
         "bushes_scale": volcano_scale_slider.get(),
         "bushes_density": bushes_slider.get(),
@@ -263,6 +263,9 @@ root.geometry("1366x768")
 ctk.set_appearance_mode("light")
 root.columnconfigure(0, weight=1)
 
+# SPINNER
+spinner = Spinner(root)
+
 # Left Section
 left_section = ctk.CTkFrame(root)
 left_section.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
@@ -355,49 +358,51 @@ tabview.tab("Objects").columnconfigure(0, weight=1)
 # Visualization function
 plt.switch_backend('agg')
 
-def visualize_stl():
-    try:
-        # Load the mesh
-        your_mesh = mesh.Mesh.from_file('combined_terrain_with_objects.stl')
-
-        # Simplify the mesh by taking every nth face (adjust the value of n for more/less simplification)
-        n = 2
-        simplified_vectors = your_mesh.vectors[::n]
-
-        # Create the plot
-        fig = plt.Figure(figsize=(5, 5))
-        ax = fig.add_subplot(111, projection='3d')
-        
-        # Plot the simplified mesh
-        poly3d = art3d.Poly3DCollection(simplified_vectors, alpha=0.5, edgecolor='k', linewidth=0.1)
-        ax.add_collection3d(poly3d)
-        
-        # Auto scale to the mesh size
-        scale = np.concatenate([your_mesh.min_, your_mesh.max_])
-        ax.auto_scale_xyz(scale, scale, scale)
-
-        # Set the view angle
-        ax.view_init(elev=30, azim=45)
-        
-        # Hide axes for better visualization
-        ax.set_axis_off()
-
-        # Clear existing canvas if it exists
-        for widget in frame_visualisation.winfo_children():
-            widget.destroy()
-
-        # Create a new canvas
-        canvas = FigureCanvasTkAgg(fig, master=frame_visualisation)
-        canvas.draw()
-        widget = canvas.get_tk_widget()
-        widget.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-
-    except Exception as e:
-        print(e)
-
-    # Function to run the visualization in the main thread
 def run_visualization():
-    root.after(50, visualize_stl)
+    def visualize_stl():
+        try:
+            # Load the mesh
+            your_mesh = mesh.Mesh.from_file('combined_terrain_with_objects.stl')
+
+            # Simplify the mesh by taking every nth face (adjust the value of n for more/less simplification)
+            n = 2
+            simplified_vectors = your_mesh.vectors[::n]
+
+            # Create the plot
+            fig = plt.Figure(figsize=(5, 5))
+            ax = fig.add_subplot(111, projection='3d')
+
+            # Plot the simplified mesh
+            poly3d = art3d.Poly3DCollection(simplified_vectors, alpha=0.5, edgecolor='k', linewidth=0.1)
+            ax.add_collection3d(poly3d)
+
+            # Auto scale to the mesh size
+            scale = np.concatenate([your_mesh.min_, your_mesh.max_])
+            ax.auto_scale_xyz(scale, scale, scale)
+
+            # Set the view angle
+            ax.view_init(elev=30, azim=45)
+
+            # Hide axes for better visualization
+            ax.set_axis_off()
+
+            # Clear existing canvas if it exists
+            for widget in frame_visualisation.winfo_children():
+                widget.destroy()
+
+            # Create a new canvas
+            canvas = FigureCanvasTkAgg(fig, master=frame_visualisation)
+            canvas.draw()
+            widget = canvas.get_tk_widget()
+            widget.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+
+        except Exception as e:
+            print(e)
+        finally:
+            root.after(0, spinner.hide)
+            root.after(0, lambda: messagebox.showinfo("Success", "The preview of your mesh is in the right panel."))
+
+    threading.Thread(target=visualize_stl).start()
 
 # Setup right section and frame visualization
 right_section = ctk.CTkFrame(root, fg_color="#dbdbdb")
