@@ -23,7 +23,23 @@ from Controller.ObGen.PlaceObjects import *
 matplotlib.use("TkAgg")
 # SPLASH SCREEN
 splash_root = ctk.CTk()
-splash_root.geometry("1366x768")
+splash_root.geometry("300x200")
+splash_root.overrideredirect(True)
+
+    # FRAME FOR TITLE LABEL
+frame_splash = ctk.CTkFrame(splash_root, fg_color="#62a5d9")
+frame_splash.grid(row=0, column=0, columnspan=6, padx=10, pady=(10, 20), sticky="ew")
+frame_splash.columnconfigure(0, weight=1)
+
+    # TITLE LABEL
+splash_label = ctk.CTkLabel(
+    frame_splash,
+    text="MeshScape is Loading",
+    font=ctk.CTkFont(size=18, weight="bold"),
+    text_color="white",
+)
+splash_label.grid(row=0, column=0, pady=(10, 10))
+# splash_label.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
 
 # MAIN WINDOW
 root = ctk.CTk()
