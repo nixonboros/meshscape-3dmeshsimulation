@@ -139,12 +139,10 @@ def save_preset():
         "rocks_density": rocks_slider.get(),
         "add_sticks": add_sticks_switch.get(),
         "sticks_density": sticks_slider.get(),
-        "add_logs": add_logs_switch.get(),
-        "logs_density": logs_slider.get(),
+        "sticks_scale": volcano_scale_slider.get(),
         "add_bushes": add_bushes_switch.get(),
+        "bushes_scale": volcano_scale_slider.get(),
         "bushes_density": bushes_slider.get(),
-        "add_boulders": add_boulders_switch.get(),
-        "boulders_density": boulders_slider.get(),
         "add_volcano": add_volcano_switch.get(),
         "volcano_scale": volcano_scale_slider.get(),
         "volcano_density": volcano_slider.get(),
@@ -229,33 +227,17 @@ def toggle_sticks_visibility(*args):
     toggle_visibility(
         add_sticks_switch,
         sticks_slider, sticks_slider_label,
+        sticks_scale_slider, sticks_scale_slider_label,
         frame = frame_sticks,
     )
-
-
-def toggle_logs_visibility(*args):
-    toggle_visibility(
-        add_logs_switch,
-        logs_slider, logs_slider_label,
-        frame = frame_logs,
-    )
-
 
 def toggle_bushes_visibility(*args):
     toggle_visibility(
         add_bushes_switch,
         bushes_slider, bushes_slider_label,
+        bushes_scale_slider, bushes_scale_slider_label,
         frame = frame_bushes,
     )
-
-
-def toggle_boulders_visibility(*args):
-    toggle_visibility(
-        add_boulders_switch,
-        boulders_slider, boulders_slider_label,
-        frame = frame_boulders,
-    )
-
 
 def toggle_volcanos_visibility(*args):
     toggle_visibility(
@@ -273,231 +255,6 @@ def toggle_mushrooms_visibility(*args):
         mushroom_scale_slider, mushroom_scale_slider_label,
         frame = frame_mushrooms,
     )
-
-
-def trees_advanced_settings_window():
-    def save_trees_settings():
-        trees_advanced_settings_window.destroy()
-
-    trees_advanced_settings_window = ctk.CTkToplevel(root)
-    trees_advanced_settings_window.title("Advanced Tree Settings")
-    trees_advanced_settings_window.geometry("450x300")
-    trees_advanced_settings_window.grab_set()
-
-    # add tree advanced settings here
-
-    # SAVE BUTTON FOR ADVANCED TREES SETTINGS
-    save_button = ctk.CTkButton(
-        trees_advanced_settings_window,
-        text="Save Settings",
-        command=save_trees_settings,
-        width=50,
-        fg_color="#62a5d9",
-        hover_color="#4e84ae",
-    )
-    save_button.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="se")
-
-    trees_advanced_settings_window.rowconfigure(4, weight=1)
-    trees_advanced_settings_window.columnconfigure(0, weight=1)
-
-
-def rocks_advanced_settings_window():
-    def save_rocks_settings():
-        # add saving function
-        rocks_advanced_settings_window.destroy()
-
-    rocks_advanced_settings_window = ctk.CTkToplevel(root)
-    rocks_advanced_settings_window.title("Advanced Rock Settings")
-    rocks_advanced_settings_window.geometry("450x300")
-    rocks_advanced_settings_window.grab_set()
-
-    # SAVE BUTTON
-    save_button = ctk.CTkButton(
-        rocks_advanced_settings_window,
-        text="Save Settings",
-        command=save_rocks_settings,
-        width=50,
-        fg_color="#62a5d9",
-        hover_color="#4e84ae",
-    )
-    save_button.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="se")
-
-    rocks_advanced_settings_window.rowconfigure(4, weight=1)
-    rocks_advanced_settings_window.columnconfigure(0, weight=1)
-
-
-def sticks_advanced_settings_window():
-    def save_sticks_settings():
-        # add saving function
-        sticks_advanced_settings_window.destroy()
-
-    sticks_advanced_settings_window = ctk.CTkToplevel(root)
-    sticks_advanced_settings_window.title("Advanced Stick Settings")
-    sticks_advanced_settings_window.geometry("450x300")
-    sticks_advanced_settings_window.grab_set()
-
-    # add stick advanced settings here
-
-    # SAVE BUTTON
-    save_button = ctk.CTkButton(
-        sticks_advanced_settings_window,
-        text="Save Settings",
-        command=save_sticks_settings,
-        width=50,
-        fg_color="#62a5d9",
-        hover_color="#4e84ae",
-    )
-    save_button.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="se")
-
-    sticks_advanced_settings_window.rowconfigure(4, weight=1)
-    sticks_advanced_settings_window.columnconfigure(0, weight=1)
-
-
-def logs_advanced_settings_window():
-    def save_logs_settings():
-        # add saving function
-        logs_advanced_settings_window.destroy()
-
-    logs_advanced_settings_window = ctk.CTkToplevel(root)
-    logs_advanced_settings_window.title("Advanced Log Settings")
-    logs_advanced_settings_window.geometry("450x300")
-    logs_advanced_settings_window.grab_set()
-
-    # add log advanced settings here
-
-    # SAVE BUTTON
-    save_button = ctk.CTkButton(
-        logs_advanced_settings_window,
-        text="Save Settings",
-        command=save_logs_settings,
-        width=50,
-        fg_color="#62a5d9",
-        hover_color="#4e84ae",
-    )
-    save_button.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="se")
-
-    logs_advanced_settings_window.rowconfigure(4, weight=1)
-    logs_advanced_settings_window.columnconfigure(0, weight=1)
-
-
-def bushes_advanced_settings_window():
-    def save_bushes_settings():
-        # add saving function
-        bushes_advanced_settings_window.destroy()
-
-    bushes_advanced_settings_window = ctk.CTkToplevel(root)
-    bushes_advanced_settings_window.title("Advanced Bush Settings")
-    bushes_advanced_settings_window.geometry("450x300")
-    bushes_advanced_settings_window.grab_set()
-
-    # add bush advanced settings here
-
-    # SAVE BUTTON
-    save_button = ctk.CTkButton(
-        bushes_advanced_settings_window,
-        text="Save Settings",
-        command=save_bushes_settings,
-        width=50,
-        fg_color="#62a5d9",
-        hover_color="#4e84ae",
-    )
-    save_button.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="se")
-
-    bushes_advanced_settings_window.rowconfigure(4, weight=1)
-    bushes_advanced_settings_window.columnconfigure(0, weight=1)
-
-
-############################################################################################################
-
-
-def boulders_advanced_settings_window():
-    def save_boulders_settings():
-        # add saving function
-        boulders_advanced_settings_window.destroy()
-
-    boulders_advanced_settings_window = ctk.CTkToplevel(root)
-    boulders_advanced_settings_window.title("Advanced Boulder Settings")
-    boulders_advanced_settings_window.geometry("450x300")
-    boulders_advanced_settings_window.grab_set()
-
-    # add bush advanced settings here
-
-    # SAVE BUTTON
-    save_button = ctk.CTkButton(
-        boulders_advanced_settings_window,
-        text="Save Settings",
-        command=save_boulders_settings,
-        width=50,
-        fg_color="#62a5d9",
-        hover_color="#4e84ae",
-    )
-    save_button.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="se")
-
-    boulders_advanced_settings_window.rowconfigure(4, weight=1)
-    boulders_advanced_settings_window.columnconfigure(0, weight=1)
-
-
-############################################################################################################
-
-
-def volcano_advanced_settings_window():
-    def save_volcano_settings():
-        # add saving function
-        volcano_advanced_settings_window.destroy()
-
-    volcano_advanced_settings_window = ctk.CTkToplevel(root)
-    volcano_advanced_settings_window.title("Advanced Volcano Settings")
-    volcano_advanced_settings_window.geometry("450x300")
-    volcano_advanced_settings_window.grab_set()
-
-    # add volcano advanced settings here
-
-    # SAVE BUTTON
-    save_button = ctk.CTkButton(
-        volcano_advanced_settings_window,
-        text="Save Settings",
-        command=save_volcano_settings,
-        width=50,
-        fg_color="#62a5d9",
-        hover_color="#4e84ae",
-    )
-    save_button.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="se")
-
-    volcano_advanced_settings_window.rowconfigure(4, weight=1)
-    volcano_advanced_settings_window.columnconfigure(0, weight=1)
-
-
-############################################################################################################
-
-
-def mushroom_advanced_settings_window():
-    def save_mushroom_settings():
-        # add saving function
-        mushroom_advanced_settings_window.destroy()
-
-    mushroom_advanced_settings_window = ctk.CTkToplevel(root)
-    mushroom_advanced_settings_window.title("Advanced Mushroom Settings")
-    mushroom_advanced_settings_window.geometry("450x300")
-    mushroom_advanced_settings_window.grab_set()
-
-    # add mushroom advanced settings here
-
-    # SAVE BUTTON
-    save_button = ctk.CTkButton(
-        mushroom_advanced_settings_window,
-        text="Save Settings",
-        command=save_mushroom_settings,
-        width=50,
-        fg_color="#62a5d9",
-        hover_color="#4e84ae",
-    )
-    save_button.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="se")
-
-    mushroom_advanced_settings_window.rowconfigure(4, weight=1)
-    mushroom_advanced_settings_window.columnconfigure(0, weight=1)
-
-
-############################################################################################################
 
 # MAIN WINDOW
 root = ctk.CTk()
@@ -681,35 +438,23 @@ frame_sticks = ctk.CTkFrame(
 )
 frame_sticks.grid(row=2, column=0, pady=(10, 0), sticky="ew")
 
-# FRAME_LOGS
-frame_logs = ctk.CTkFrame(
-    frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
-)
-frame_logs.grid(row=3, column=0, pady=(10, 0), sticky="ew")
-
 # FRAME_BUSHES
 frame_bushes = ctk.CTkFrame(
     frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
 )
-frame_bushes.grid(row=4, column=0, pady=(10, 0), sticky="ew")
-
-# FRAME_BOuLDERS
-frame_boulders = ctk.CTkFrame(
-    frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
-)
-frame_boulders.grid(row=5, column=0, pady=(10, 0), sticky="ew")
+frame_bushes.grid(row=3, column=0, pady=(10, 0), sticky="ew")
 
 # FRAME_VOLCANOES
 frame_volcanos = ctk.CTkFrame(
     frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
 )
-frame_volcanos.grid(row=6, column=0, pady=(10, 0), sticky="ew")
+frame_volcanos.grid(row=4, column=0, pady=(10, 0), sticky="ew")
 
 # FRAME_MUSHROOMS
 frame_mushrooms = ctk.CTkFrame(
     frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
 )
-frame_mushrooms.grid(row=7, column=0, pady=(10, 10), sticky="ew")
+frame_mushrooms.grid(row=5, column=0, pady=(10, 10), sticky="ew")
 
 
 ############################################################################################################
@@ -875,40 +620,25 @@ sticks_slider = ctk.CTkSlider(
 )
 sticks_slider.set(50)
 
-############################################################################################################
-
-# ENABLE/DISABLE ADD LOGS SWITCH
-add_logs_switch = ctk.StringVar(value="off")
-add_logs_switch.trace_add(
-    "write", toggle_logs_visibility
-)  # bind toggle_slider_visibility function to switch variable
-logs_switch = ctk.CTkSwitch(
-    frame_logs,
-    text="Logs",
-    command=toggle_logs_visibility,
-    variable=add_logs_switch,
-    onvalue="on",
-    offvalue="off",
+# STICK SCALE SLIDERS
+sticks_scale_slider_label = ctk.CTkLabel(
+    frame_sticks, text="Scale: 10", width=125, anchor="w"
 )
-logs_switch.grid(row=0, column=0, padx=10, pady=10, sticky="w")
-
-# LOGS SLIDERS
-logs_slider_label = ctk.CTkLabel(frame_logs, text="Density: 50", width=125, anchor="w")
-logs_slider = ctk.CTkSlider(
-    frame_logs,
+sticks_scale_slider = ctk.CTkSlider(
+    frame_sticks,
     from_=1,
     to=100,
     width=330,  # make scalable to window
     number_of_steps=99,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
-    command=lambda value: update_slider_label(logs_slider_label, "Density", value),
+    command=lambda value: update_slider_label(sticks_scale_slider_label, "Scale", value),
 )
-logs_slider.set(50)
+sticks_scale_slider.set(10)
 
 ############################################################################################################
 
-# ENABLE/DISABLE ADD BUSHES SWITCH
+# ENABLE/DISABLE ADD BUSHES BUTTON
 add_bushes_switch = ctk.StringVar(value="off")
 add_bushes_switch.trace_add(
     "write", toggle_bushes_visibility
@@ -923,7 +653,7 @@ bushes_switch = ctk.CTkSwitch(
 )
 bushes_switch.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
-# USHES SLIDERS
+# BUSHES SLIDERS
 bushes_slider_label = ctk.CTkLabel(
     frame_bushes, text="Density: 50", width=125, anchor="w"
 )
@@ -939,38 +669,21 @@ bushes_slider = ctk.CTkSlider(
 )
 bushes_slider.set(50)
 
-############################################################################################################
-
-# ENABLE/DISABLE ADD BOULDERS SWITCH
-add_boulders_switch = ctk.StringVar(value="off")
-add_boulders_switch.trace_add(
-    "write", toggle_boulders_visibility
-)  # bind toggle_slider_visibility function to switch variable
-boulders_switch = ctk.CTkSwitch(
-    frame_boulders,
-    text="Boulders",
-    command=toggle_boulders_visibility,
-    variable=add_boulders_switch,
-    onvalue="on",
-    offvalue="off",
+# STICK SCALE SLIDERS
+bushes_scale_slider_label = ctk.CTkLabel(
+    frame_volcanos, text="Scale: 10", width=125, anchor="w"
 )
-boulders_switch.grid(row=0, column=0, padx=10, pady=10, sticky="w")
-
-# BOULDER SLIDERS
-boulders_slider_label = ctk.CTkLabel(
-    frame_boulders, text="Density: 50", width=125, anchor="w"
-)
-boulders_slider = ctk.CTkSlider(
-    frame_boulders,
+bushes_scale_slider = ctk.CTkSlider(
+    frame_bushes,
     from_=1,
     to=100,
     width=330,  # make scalable to window
     number_of_steps=99,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
-    command=lambda value: update_slider_label(boulders_slider_label, "Density", value),
+    command=lambda value: update_slider_label(bushes_scale_slider_label, "Scale", value),
 )
-boulders_slider.set(50)
+bushes_scale_slider.set(10)
 
 ############################################################################################################
 
@@ -1339,9 +1052,7 @@ def bind_toggle_switch_and_cursor(frame, switch_variable, toggle_function):
 bind_toggle_switch_and_cursor(frame_trees, add_trees_switch, toggle_trees_visibility)
 bind_toggle_switch_and_cursor(frame_rocks, add_rocks_switch, toggle_rocks_visibility)
 bind_toggle_switch_and_cursor(frame_sticks, add_sticks_switch, toggle_sticks_visibility)
-bind_toggle_switch_and_cursor(frame_logs, add_logs_switch, toggle_logs_visibility)
 bind_toggle_switch_and_cursor(frame_bushes, add_bushes_switch, toggle_bushes_visibility)
-bind_toggle_switch_and_cursor(frame_boulders, add_boulders_switch, toggle_boulders_visibility)
 bind_toggle_switch_and_cursor(frame_volcanos, add_volcano_switch, toggle_volcanos_visibility)
 bind_toggle_switch_and_cursor(frame_mushrooms, add_mushroom_switch, toggle_mushrooms_visibility)
 
