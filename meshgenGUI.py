@@ -7,7 +7,6 @@ import customtkinter as ctk
 import numpy as np
 import os
 import threading
-import time
 
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import art3d
@@ -22,9 +21,7 @@ from Controller.ObGen.PlaceObjects import *
 
 matplotlib.use("TkAgg")
 
-#to connect to sliders
 def add_objects_to_mesh(): 
-    progress_bar.set(0.0)
 
     num_rocks = int(rocks_slider.get())
     points_per_rock = int(rocks_point_slider.get())
@@ -59,7 +56,6 @@ def add_objects_to_mesh():
     if (add_mushroom_switch.get() == "off"):
         num_mushrooms = 0
 
-    progress_bar.set(0.6)
     combined_mesh = place_objects_on_terrain('exported_mesh.stl', num_rocks, points_per_rock, 
                                              rock_scale_min, rock_scale_max, num_trees, 
                                              tree_scale, num_mushrooms, mushroom_scale, 
@@ -71,7 +67,7 @@ def add_objects_to_mesh():
 def generate_noise():
     def run_long_task():
         try:
-            progress_bar.set(0.0)
+            progress_bar.set(0)
 
             noise_image_location = export_image(
                 int(width_slider.get()),
@@ -95,20 +91,22 @@ def generate_noise():
             progress_bar.set(0.6)
             
             root.after(50, add_objects_to_mesh)
-            root.after(50, partial(messagebox.showinfo, "Success", "Mesh creation is complete!"))
-
             progress_bar.set(0.8)
 
             root.after(50, run_visualization)
 
             progress_bar.set(1.0)
+            root.after(50, partial(show_completion_message))
 
         except Exception as e:
             root.after(0, messagebox.showerror, "Error", f"An error occurred: {str(e)}")
-        finally:
-            progress_bar.set(0)
+            root.after(1000, lambda: progress_bar.set(0))
 
     threading.Thread(target=run_long_task).start()
+
+def show_completion_message():
+    messagebox.showinfo("Success", "Mesh creation is complete!")
+    root.after(0, lambda: progress_bar.set(0))
 
 def update_slider_label(label, text, value):
     label.configure(text=f"{text}: {int(value)}")

@@ -79,9 +79,6 @@ def generate_mesh_noise(resolution_factor, base_elevation, height_difference, fl
     height_scale = height_difference / heightmap.max()
     height_offset = -height_difference / 2
     terrain_mesh, base_layer = create_mesh(heightmap, height_scale, height_offset, resolution_factor, base_elevation, floor_elevation)
-    #ex = MainWindow(terrain_mesh, base_layer)
-    #ex.show()
-    #sys.exit(app.exec_())
     return
 
 #if __name__ == '__main__':
