@@ -92,9 +92,9 @@ def generate_noise():
 
     threading.Thread(target=run_long_task).start()
 
-
 def update_slider_label(label, text, value):
     label.configure(text=f"{text}: {int(value)}")
+    update_object_count()
 
 
 def toggle_visibility(
@@ -165,7 +165,6 @@ def save_preset():
             values=presets_optionmenu.cget("values") + [preset_name]
         )
         presets_optionmenu.set(preset_name)
-
 
 # Load preset function
 def load_preset():
@@ -311,8 +310,6 @@ def rocks_advanced_settings_window():
     rocks_advanced_settings_window.title("Advanced Rock Settings")
     rocks_advanced_settings_window.geometry("450x300")
     rocks_advanced_settings_window.grab_set()
-
-    # add rocks advanced settings here
 
     # SAVE BUTTON
     save_button = ctk.CTkButton(
@@ -1072,6 +1069,23 @@ mushroom_scale_slider = ctk.CTkSlider(
     command=lambda value: update_slider_label(mushroom_scale_slider_label, "Scale", value),
 )
 mushroom_scale_slider.set(10)
+
+############################################################################################################
+
+#OBJECT COUNTER
+
+def update_object_count():
+    num_rocks = int(rocks_slider.get())
+    num_trees = int(trees_slider.get())
+    num_mushrooms = int(mushroom_slider.get())
+    num_anthills = int(volcano_slider.get())
+    total_objects = num_rocks + num_trees + num_mushrooms + num_anthills
+    object_count_label.configure(text=f"Total Objects: {total_objects}")
+
+object_count_label = ctk.CTkLabel(right_section, text="Total Objects: 0", font=ctk.CTkFont(size=14, weight="bold"))
+object_count_label.grid(row=1, column=0, pady=(10, 10), padx=10, sticky="s")
+
+update_object_count()
 
 ############################################################################################################
 
