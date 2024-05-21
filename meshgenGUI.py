@@ -96,21 +96,19 @@ def update_slider_label(label, text, value):
 
 
 def toggle_visibility(
-    switch_type, switch_variable, slider, slider_label, scale_slider, scale_slider_label, edit_button, frame
+    switch_variable, *slider_and_labels, frame
 ):
     if switch_variable.get() == "on":
-        slider_label.grid(row=1, column=0, padx=(10, 0), pady=(0, 10), sticky="w")
-        slider.grid(row=1, column=1, padx=10, pady=(0, 10), sticky="ew")
-        scale_slider_label.grid(row=2, column=0, padx=(10, 0), pady=(0, 10), sticky="w")
-        scale_slider.grid(row=2, column=1, padx=10, pady=(0, 10), sticky="ew") 
-        edit_button.grid(row=1, column=2, padx=(0, 10), pady=(0, 10), sticky="e")
+        for i in range(0, len(slider_and_labels), 2):
+            slider_label, slider = slider_and_labels[i], slider_and_labels[i+1]
+            slider_label.grid(row=1 + i, column=0, padx=(10, 0), pady=(0, 10), sticky="w")
+            slider.grid(row=1 + i, column=1, padx=10, pady=(0, 10), sticky="ew")
         frame.configure(fg_color="#d1d1d1")
     else:
-        slider.grid_forget()
-        slider_label.grid_forget()
-        edit_button.grid_forget()
-        scale_slider.grid_forget()
-        scale_slider_label.grid_forget()
+        for i in range(0, len(slider_and_labels), 2):
+            slider_label, slider = slider_and_labels[i], slider_and_labels[i+1]
+            slider_label.grid_forget()
+            slider.grid_forget()
         frame.configure(fg_color="#dfe1e1")
 
 
@@ -133,7 +131,9 @@ def save_preset():
         "trees_density": trees_slider.get(),
         "trees_scale": trees_scale_slider.get(),
         "add_rocks": add_rocks_switch.get(),
-        "rocks_scale": rocks_scale_slider.get(),
+        "rocks_min": rocks_min_slider.get(),
+        "rocks_max": rocks_max_slider.get(),
+        "rocks_point": rocks_point_slider.get(),
         "rocks_density": rocks_slider.get(),
         "add_sticks": add_sticks_switch.get(),
         "sticks_density": sticks_slider.get(),
@@ -207,96 +207,70 @@ def load_preset():
 
 def toggle_trees_visibility(*args):
     toggle_visibility(
-        "Trees",
         add_trees_switch,
-        trees_slider,
-        trees_slider_label,
-        trees_scale_slider,
-        trees_scale_slider_label,
-        trees_edit_button,
-        frame_trees,
+        trees_slider,trees_slider_label,
+        trees_scale_slider,trees_scale_slider_label,
+        frame = frame_trees,
     )
 
 def toggle_rocks_visibility(*args):
     toggle_visibility(
-        "Rocks",
         add_rocks_switch,
-        rocks_slider,
-        rocks_slider_label,
-        rocks_scale_slider,
-        rocks_scale_slider_label,
-        rocks_edit_button,
-        frame_rocks,
+        rocks_slider,rocks_slider_label,
+        rocks_point_slider, rocks_point_slider_label,
+        rocks_min_slider, rocks_min_slider_label,
+        rocks_max_slider, rocks_max_slider_label,
+        frame = frame_rocks,
     )
 
 
 def toggle_sticks_visibility(*args):
     toggle_visibility(
-        "sticks",
         add_sticks_switch,
-        sticks_slider,
-        sticks_slider_label,
-        sticks_edit_button,
-        frame_sticks,
+        sticks_slider, sticks_slider_label,
+        frame = frame_sticks,
     )
 
 
 def toggle_logs_visibility(*args):
     toggle_visibility(
-        "logs",
         add_logs_switch,
-        logs_slider,
-        logs_slider_label,
-        logs_edit_button,
-        frame_logs,
+        logs_slider, logs_slider_label,
+        frame = frame_logs,
     )
 
 
 def toggle_bushes_visibility(*args):
     toggle_visibility(
-        "bushes",
         add_bushes_switch,
-        bushes_slider,
-        bushes_slider_label,
-        bushes_edit_button,
-        frame_bushes,
+        bushes_slider, bushes_slider_label,
+        frame = frame_bushes,
     )
 
 
 def toggle_boulders_visibility(*args):
     toggle_visibility(
-        "boulders",
         add_boulders_switch,
-        boulders_slider,
-        boulders_slider_label,
-        boulders_edit_button,
-        frame_boulders,
+        boulders_slider, boulders_slider_label,
+        frame = frame_boulders,
     )
 
 
 def toggle_volcanos_visibility(*args):
     toggle_visibility(
-        "Anthills and Termite Mounds",
         add_volcano_switch,
-        volcano_slider,
-        volcano_slider_label,
-        volcano_scale_slider,
-        volcano_scale_slider_label,
-        volcano_edit_button,
-        frame_volcanos,
+        volcano_slider, volcano_slider_label,
+        volcano_scale_slider, volcano_scale_slider_label,
+        frame = frame_volcanos,
     )
 
 
 def toggle_mushrooms_visibility(*args):
     toggle_visibility(
-        "Small Plants",
         add_mushroom_switch,
-        mushroom_slider,
-        mushroom_slider_label,
-        mushroom_scale_slider,
-        mushroom_scale_slider_label,
-        mushroom_edit_button,
-        frame_mushrooms,
+        mushroom_slider, mushroom_slider_label,
+        mushroom_scale_slider, mushroom_scale_slider_label,
+        frame = frame_mushrooms,
     )
 
 
@@ -819,11 +793,11 @@ rocks_slider = ctk.CTkSlider(
 )
 rocks_slider.set(50)
 
-# ROCKS SCALE SLIDERS
-rocks_scale_slider_label = ctk.CTkLabel(
-    frame_rocks, text="Scale: 50", width=125, anchor="w"
+# ROCKS MIN SLIDERS
+rocks_min_slider_label = ctk.CTkLabel(
+    frame_rocks, text="Min Size: 50", width=125, anchor="w"
 )
-rocks_scale_slider = ctk.CTkSlider(
+rocks_min_slider = ctk.CTkSlider(
     frame_rocks,
     from_=1,
     to=100,
@@ -831,9 +805,41 @@ rocks_scale_slider = ctk.CTkSlider(
     number_of_steps=99,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
-    command=lambda value: update_slider_label(rocks_scale_slider_label, "Scale", value),
+    command=lambda value: update_slider_label(rocks_min_slider_label, "Min", value),
 )
-rocks_scale_slider.set(50)
+rocks_min_slider.set(50)
+
+# ROCKS MAX SLIDERS
+rocks_max_slider_label = ctk.CTkLabel(
+    frame_rocks, text="Max Size: 50", width=125, anchor="w"
+)
+rocks_max_slider = ctk.CTkSlider(
+    frame_rocks,
+    from_=1,
+    to=100,
+    width=330,  # make scalable to window
+    number_of_steps=99,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
+    command=lambda value: update_slider_label(rocks_max_slider_label, "Max", value),
+)
+rocks_max_slider.set(50)
+
+# ROCKS POINT SLIDERS
+rocks_point_slider_label = ctk.CTkLabel(
+    frame_rocks, text="Points: 50", width=125, anchor="w"
+)
+rocks_point_slider = ctk.CTkSlider(
+    frame_rocks,
+    from_=1,
+    to=100,
+    width=330,  # make scalable to window
+    number_of_steps=99,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
+    command=lambda value: update_slider_label(rocks_point_slider_label, "Points", value),
+)
+rocks_point_slider.set(50)
 
 # ROCK EDIT BUTTON
 rocks_edit_button = ctk.CTkButton(
