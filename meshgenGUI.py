@@ -76,8 +76,12 @@ def generate_noise():
             progress_bar.set(0.8)
             visualize_stl()
             
+            add_objects_to_mesh(
+                #int(trees_scale_slider.get()),
+                #int(trees_slider.get()),
+            )
             progress_bar.set(1.0)
-            add_objects_to_mesh()
+
             messagebox.showinfo("Success", "Noise mesh creation is complete!")
         except Exception as e:
             messagebox.showerror("Error", f"An error occurred: {str(e)}")
@@ -92,17 +96,21 @@ def update_slider_label(label, text, value):
 
 
 def toggle_visibility(
-    switch_type, switch_variable, slider, slider_label, edit_button, frame
+    switch_type, switch_variable, slider, slider_label, scale_slider, scale_slider_label, edit_button, frame
 ):
     if switch_variable.get() == "on":
         slider_label.grid(row=1, column=0, padx=(10, 0), pady=(0, 10), sticky="w")
         slider.grid(row=1, column=1, padx=10, pady=(0, 10), sticky="ew")
+        scale_slider_label.grid(row=2, column=0, padx=(10, 0), pady=(0, 10), sticky="w")
+        scale_slider.grid(row=2, column=1, padx=10, pady=(0, 10), sticky="ew") 
         edit_button.grid(row=1, column=2, padx=(0, 10), pady=(0, 10), sticky="e")
         frame.configure(fg_color="#d1d1d1")
     else:
         slider.grid_forget()
         slider_label.grid_forget()
         edit_button.grid_forget()
+        scale_slider.grid_forget()
+        scale_slider_label.grid_forget()
         frame.configure(fg_color="#dfe1e1")
 
 
@@ -121,14 +129,11 @@ def save_preset():
         "base_elevation": base_elevation_slider.get(),
         "min_height": min_height_slider.get(),
         "max_height": max_height_slider.get(),
-        "smoothness": smoothness_slider.get(),
-        "minVerticesX": minVerticesX_slider.get(),
-        "maxVerticesX": maxVerticesX_slider.get(),
-        "minVerticesY": minVerticesY_slider.get(),
-        "maxVerticesY": maxVerticesY_slider.get(),
         "add_trees": add_trees_switch.get(),
         "trees_density": trees_slider.get(),
+        "trees_scale": trees_scale_slider.get(),
         "add_rocks": add_rocks_switch.get(),
+        "rocks_scale": rocks_scale_slider.get(),
         "rocks_density": rocks_slider.get(),
         "add_sticks": add_sticks_switch.get(),
         "sticks_density": sticks_slider.get(),
@@ -139,8 +144,10 @@ def save_preset():
         "add_boulders": add_boulders_switch.get(),
         "boulders_density": boulders_slider.get(),
         "add_volcano": add_volcano_switch.get(),
+        "volcano_scale": volcano_scale_slider.get(),
         "volcano_density": volcano_slider.get(),
         "add_mushroom": add_mushroom_switch.get(),
+        "mushroom_scale": mushroom_scale_slider.get(),
         "mushroom_density": mushroom_slider.get(),
     }
     # Open a file dialog for saving
@@ -177,11 +184,6 @@ def load_preset():
         base_elevation_slider.set(preset_data["base_elevation"])
         min_height_slider.set(preset_data["min_height"])
         max_height_slider.set(preset_data["max_height"])
-        smoothness_slider.set(preset_data["smoothness"])
-        minVerticesX_slider.set(preset_data["minVerticesX"])
-        maxVerticesX_slider.set(preset_data["maxVerticesX"])
-        minVerticesY_slider.set(preset_data["minVerticesY"])
-        maxVerticesY_slider.set(preset_data["maxVerticesY"])
         
         # Update the labels
         update_slider_label(width_label, "Mesh Width", preset_data["width"])
@@ -194,11 +196,6 @@ def load_preset():
         update_slider_label(base_elevation_label, "Base Elevation", preset_data["base_elevation"])
         update_slider_label(min_height_label, "Min Height", preset_data["min_height"])
         update_slider_label(max_height_label, "Max Height", preset_data["max_height"])
-        update_slider_label(smoothness_label, "Smoothness", preset_data["smoothness"])
-        update_slider_label(minVerticesX_label, "Min Vertices X", preset_data["minVerticesX"])
-        update_slider_label(maxVerticesX_label, "Max Vertices X", preset_data["maxVerticesX"])
-        update_slider_label(minVerticesY_label, "Min Vertices Y", preset_data["minVerticesY"])
-        update_slider_label(maxVerticesY_label, "Max Vertices Y", preset_data["maxVerticesY"])
         
         # Update the option menu
         preset_name = os.path.basename(file_path)[:-5]
@@ -210,20 +207,24 @@ def load_preset():
 
 def toggle_trees_visibility(*args):
     toggle_visibility(
-        "trees",
+        "Trees",
         add_trees_switch,
         trees_slider,
         trees_slider_label,
+        trees_scale_slider,
+        trees_scale_slider_label,
         trees_edit_button,
         frame_trees,
     )
 
 def toggle_rocks_visibility(*args):
     toggle_visibility(
-        "rocks",
+        "Rocks",
         add_rocks_switch,
         rocks_slider,
         rocks_slider_label,
+        rocks_scale_slider,
+        rocks_scale_slider_label,
         rocks_edit_button,
         frame_rocks,
     )
@@ -275,10 +276,12 @@ def toggle_boulders_visibility(*args):
 
 def toggle_volcanos_visibility(*args):
     toggle_visibility(
-        "volcano",
+        "Anthills and Termite Mounds",
         add_volcano_switch,
         volcano_slider,
         volcano_slider_label,
+        volcano_scale_slider,
+        volcano_scale_slider_label,
         volcano_edit_button,
         frame_volcanos,
     )
@@ -286,10 +289,12 @@ def toggle_volcanos_visibility(*args):
 
 def toggle_mushrooms_visibility(*args):
     toggle_visibility(
-        "mushroom",
+        "Small Plants",
         add_mushroom_switch,
         mushroom_slider,
         mushroom_slider_label,
+        mushroom_scale_slider,
+        mushroom_scale_slider_label,
         mushroom_edit_button,
         frame_mushrooms,
     )
@@ -524,7 +529,7 @@ def mushroom_advanced_settings_window():
 # MAIN WINDOW
 root = ctk.CTk()
 root.title("MeshScape")
-root.geometry("1150x600")
+root.geometry("1366x768")
 ctk.set_appearance_mode("light")
 root.columnconfigure(0, weight=1)
 
@@ -616,29 +621,11 @@ tabview.tab("Terrain").columnconfigure(0, weight=1)
 tabview.tab("Objects").columnconfigure(0, weight=1)
 
 ############################################################################################################
-'''
-# Right Section
-right_section = ctk.CTkFrame(root, fg_color="#dbdbdb")
-right_section.grid(row=0, column=1, padx=(0, 10), pady=10, sticky="new")
-right_section.columnconfigure(0, weight=1)
-
-root.columnconfigure(1, weight=1)
-
-# Visualisation Frame
-frame_visualisation = ctk.CTkFrame(
-    right_section, width=190, height=560, fg_color="white"
-)
-frame_visualisation.grid(row=0, column=0, pady=10, padx=10, sticky="nsew")
-frame_visualisation.columnconfigure(0, weight=1)
-'''
-
-# Load your STL file
-
 
 # Visualization function
 def visualize_stl():
     try:
-        your_mesh = mesh.Mesh.from_file('exported_mesh.stl')
+        your_mesh = mesh.Mesh.from_file('combined_terrain_with_objects.stl')
         fig = plt.Figure(figsize=(5, 5.6))
         ax = fig.add_subplot(111, projection='3d')
         ax.add_collection3d(art3d.Poly3DCollection(your_mesh.vectors, alpha=0.5))  # Reduced opacity to improve rendering performance
@@ -685,7 +672,7 @@ visualize_stl()
 
 # FRAME_BASE_OBJECTS
 frame_base_objects = ctk.CTkScrollableFrame(
-    tabview.tab("Objects"), height=350, fg_color="#f2f3f3"
+    tabview.tab("Objects"), height=400, fg_color="#f2f3f3"
 )
 frame_base_objects.grid(row=0, column=0, sticky="ew")
 frame_base_objects.columnconfigure(0, weight=1)
@@ -726,11 +713,13 @@ frame_boulders = ctk.CTkFrame(
 )
 frame_boulders.grid(row=5, column=0, pady=(10, 0), sticky="ew")
 
+# FRAME_VOLCANOES
 frame_volcanos = ctk.CTkFrame(
     frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
 )
 frame_volcanos.grid(row=6, column=0, pady=(10, 0), sticky="ew")
 
+# FRAME_MUSHROOMS
 frame_mushrooms = ctk.CTkFrame(
     frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
 )
@@ -770,31 +759,21 @@ trees_slider = ctk.CTkSlider(
 )
 trees_slider.set(50)
 
-
-
-# TREE HEIGHT SLIDER LABEL
-tree_height_slider_label = ctk.CTkLabel(
-    frame_trees, text="Scale: 10", width=125, anchor="w"
+# TREE SCALE SLIDERS
+trees_scale_slider_label = ctk.CTkLabel(
+    frame_trees, text="Scale: 50", width=125, anchor="w"
 )
-
-# TREE HEIGHT SLIDER
-tree_height_slider = ctk.CTkSlider(
+trees_scale_slider = ctk.CTkSlider(
     frame_trees,
     from_=1,
-    to=20,
+    to=100,
     width=330,  # make scalable to window
-    number_of_steps=19,
+    number_of_steps=99,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
-    command=lambda value: update_slider_label(tree_height_slider_label, "Height", value),
+    command=lambda value: update_slider_label(trees_scale_slider_label, "Scale", value),
 )
-tree_height_slider.set(10)
-
-# PLACE TREE HEIGHT SLIDER IN THE GRID
-tree_height_slider_label.grid(row=2, column=0, padx=(10, 0), pady=(0, 10), sticky="w")
-tree_height_slider.grid(row=2, column=1, padx=10, pady=(0, 10), sticky="ew")
-
-
+trees_scale_slider.set(50)
 
 
 # TREE EDIT BUTTON
@@ -839,6 +818,22 @@ rocks_slider = ctk.CTkSlider(
     command=lambda value: update_slider_label(rocks_slider_label, "Density", value),
 )
 rocks_slider.set(50)
+
+# ROCKS SCALE SLIDERS
+rocks_scale_slider_label = ctk.CTkLabel(
+    frame_rocks, text="Scale: 50", width=125, anchor="w"
+)
+rocks_scale_slider = ctk.CTkSlider(
+    frame_rocks,
+    from_=1,
+    to=100,
+    width=330,  # make scalable to window
+    number_of_steps=99,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
+    command=lambda value: update_slider_label(rocks_scale_slider_label, "Scale", value),
+)
+rocks_scale_slider.set(50)
 
 # ROCK EDIT BUTTON
 rocks_edit_button = ctk.CTkButton(
@@ -1029,7 +1024,7 @@ add_volcano_switch.trace_add(
 )  # bind toggle_slider_visibility function to switch variable
 volcano_switch = ctk.CTkSwitch(
     frame_volcanos,
-    text="Volcano",
+    text="Anthills and Mounds",
     command=toggle_volcanos_visibility,
     variable=add_volcano_switch,
     onvalue="on",
@@ -1053,6 +1048,22 @@ volcano_slider = ctk.CTkSlider(
 )
 volcano_slider.set(50)
 
+# VOLCANO SCALE SLIDERS
+volcano_scale_slider_label = ctk.CTkLabel(
+    frame_volcanos, text="Scale: 50", width=125, anchor="w"
+)
+volcano_scale_slider = ctk.CTkSlider(
+    frame_volcanos,
+    from_=1,
+    to=100,
+    width=330,  # make scalable to window
+    number_of_steps=99,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
+    command=lambda value: update_slider_label(volcano_scale_slider_label, "Scale", value),
+)
+volcano_scale_slider.set(50)
+
 # VOLCANO EDIT BUTTON
 volcano_edit_button = ctk.CTkButton(
     frame_volcanos,
@@ -1072,7 +1083,7 @@ add_mushroom_switch.trace_add(
 )  # bind toggle_slider_visibility function to switch variable
 mushroom_switch = ctk.CTkSwitch(
     frame_mushrooms,
-    text="Mushroom",
+    text="Small Plants",
     command=toggle_mushrooms_visibility,
     variable=add_mushroom_switch,
     onvalue="on",
@@ -1095,6 +1106,22 @@ mushroom_slider = ctk.CTkSlider(
     command=lambda value: update_slider_label(mushroom_slider_label, "Density", value),
 )
 mushroom_slider.set(50)
+
+# MUSHROOM SCALE SLIDERS
+mushroom_scale_slider_label = ctk.CTkLabel(
+    frame_mushrooms, text="Scale: 50", width=125, anchor="w"
+)
+mushroom_scale_slider = ctk.CTkSlider(
+    frame_mushrooms,
+    from_=1,
+    to=100,
+    width=330,  # make scalable to window
+    number_of_steps=99,
+    button_color="#62a5d9",
+    button_hover_color="#4e84ae",
+    command=lambda value: update_slider_label(mushroom_scale_slider_label, "Scale", value),
+)
+mushroom_scale_slider.set(50)
 
 # MUSHROOM EDIT BUTTON
 mushroom_edit_button = ctk.CTkButton(
@@ -1283,7 +1310,7 @@ resolution_factor_slider.set(10)
 
 # BASE ELEVATION
 base_elevation_label = ctk.CTkLabel(
-    frame_base_terrain, text="Base Elevation: 100", width=135, anchor="w"
+    frame_base_terrain, text="Base Elevation: 200", width=135, anchor="w"
 )
 base_elevation_label.grid(row=1, column=0, sticky="w", pady=(20, 0))
 
@@ -1300,7 +1327,7 @@ base_elevation_slider = ctk.CTkSlider(
     ),
 )
 base_elevation_slider.grid(row=1, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
-base_elevation_slider.set(100)
+base_elevation_slider.set(200)
 
 # MIN HEIGHT
 min_height_label = ctk.CTkLabel(
@@ -1340,116 +1367,7 @@ max_height_slider = ctk.CTkSlider(
 max_height_slider.grid(row=3, column=1, sticky="w", padx=(10, 0))
 max_height_slider.set(300)
 
-'''
-# SMOOTHNESS
-smoothness_label = ctk.CTkLabel(
-    frame_base_terrain, text="Smoothness: 5", width=135, anchor="w"
-)
-smoothness_label.grid(row=4, column=0, sticky="w", pady=(20, 0))
-
-smoothness_slider = ctk.CTkSlider(
-    frame_base_terrain,
-    from_=0,
-    to=10,
-    width=400,
-    number_of_steps=10,
-    button_color="#62a5d9",
-    button_hover_color="#4e84ae",
-    command=lambda value: update_slider_label(smoothness_label, "Smoothness", value),
-)
-smoothness_slider.grid(row=4, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
-smoothness_slider.set(5)
-
-# MIN VERTICES X
-minVerticesX_label = ctk.CTkLabel(
-    frame_base_terrain, text="Min  Vertices X: 50", width=135, anchor="w"
-)
-minVerticesX_label.grid(row=5, column=0, sticky="w", pady=(20, 0))
-
-minVerticesX_slider = ctk.CTkSlider(
-    frame_base_terrain,
-    from_=10,
-    to=100,
-    width=400,
-    number_of_steps=9,
-    button_color="#62a5d9",
-    button_hover_color="#4e84ae",
-    command=lambda value: update_slider_label(
-        minVerticesX_label, "Min  Vertices X", value
-    ),
-)
-minVerticesX_slider.grid(row=5, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
-minVerticesX_slider.set(50)
-
-# MAX VERTICES X
-maxVerticesX_label = ctk.CTkLabel(
-    frame_base_terrain, text="Max Vertices X: 10", width=135, anchor="w"
-)
-maxVerticesX_label.grid(
-    row=6,
-    column=0,
-    sticky="w",
-)
-
-maxVerticesX_slider = ctk.CTkSlider(
-    frame_base_terrain,
-    from_=10,
-    to=100,
-    width=400,
-    number_of_steps=9,
-    button_color="#62a5d9",
-    button_hover_color="#4e84ae",
-    command=lambda value: update_slider_label(
-        maxVerticesX_label, "Max Vertices X", value
-    ),
-)
-maxVerticesX_slider.grid(row=6, column=1, sticky="w", padx=(10, 0))
-maxVerticesX_slider.set(50)
-
-# MIN VERTICES Y
-minVerticesY_label = ctk.CTkLabel(
-    frame_base_terrain, text="Min  Vertices Y: 50", width=135, anchor="w"
-)
-minVerticesY_label.grid(row=7, column=0, sticky="w", pady=(20, 0))
-
-minVerticesY_slider = ctk.CTkSlider(
-    frame_base_terrain,
-    from_=5,
-    to=100,
-    width=400,
-    number_of_steps=9,
-    button_color="#62a5d9",
-    button_hover_color="#4e84ae",
-    command=lambda value: update_slider_label(
-        minVerticesY_label, "Min  Vertices Y", value
-    ),
-)
-minVerticesY_slider.grid(row=7, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
-minVerticesY_slider.set(50)
-
-# MAX VERTICES Y
-maxVerticesY_label = ctk.CTkLabel(
-    frame_base_terrain, text="Max Vertices Y: 50", width=135, anchor="w"
-)
-maxVerticesY_label.grid(row=8, column=0, sticky="w")
-
-maxVerticesY_slider = ctk.CTkSlider(
-    frame_base_terrain,
-    from_=10,
-    to=100,
-    width=400,
-    number_of_steps=9,
-    button_color="#62a5d9",
-    button_hover_color="#4e84ae",
-    command=lambda value: update_slider_label(
-        maxVerticesY_label, "Max Vertices Y", value
-    ),
-)
-maxVerticesY_slider.grid(row=8, column=1, sticky="w", padx=(10, 0))
-maxVerticesY_slider.set(50)
-'''
 ############################################################################################################
-
 
 # OBJECT FRAME CLICKABLE
 def bind_toggle_switch_and_cursor(frame, switch_variable, toggle_function):
