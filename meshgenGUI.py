@@ -123,6 +123,42 @@ def toggle_visibility(
             slider.grid_forget()
         frame.configure(fg_color="#dfe1e1")
 
+# Initialize an internal dictionary to store presets
+stored_presets = {
+    "Default": {
+        "noise_type": "Perlin",
+        "width": 15,
+        "height": 15,
+        "scale": 100.0,
+        "octaves": 5.0,
+        "persistence": 5.0,
+        "lacunarity": 5.0,
+        "resolution_factor": 9.55,
+        "base_elevation": 200.0,
+        "min_height": 100.0,
+        "max_height": 300.0,
+        "add_trees": "off",
+        "trees_density": 30.3,
+        "trees_scale": 10.0,
+        "add_rocks": "off",
+        "rocks_min": 10.0,
+        "rocks_max": 15.0,
+        "rocks_point": 1000.0,
+        "rocks_density": 15.15,
+        "add_sticks": "off",
+        "sticks_density": 50.0,
+        "sticks_scale": 10.0,
+        "add_bushes": "off",
+        "bushes_scale": 50.0,
+        "bushes_density": 50.0,
+        "add_volcano": "off",
+        "volcano_scale": 60.0,
+        "volcano_density": 10.0,
+        "add_mushroom": "off",
+        "mushroom_scale": 10.0,
+        "mushroom_density": 15.0
+    }
+}
 
 # Save preset function
 def save_preset():
@@ -167,11 +203,10 @@ def save_preset():
     if file_path:
         with open(file_path, "w") as f:
             json.dump(preset_data, f)
-        # Update the option menu
+        # Update the option menu and internal dictionary
         preset_name = os.path.basename(file_path)[:-5]
-        presets_optionmenu.configure(
-            values=presets_optionmenu.cget("values") + [preset_name]
-        )
+        stored_presets[preset_name] = preset_data
+        presets_optionmenu.configure(values=list(stored_presets.keys()))
         presets_optionmenu.set(preset_name)
 
 # Load preset function
@@ -182,37 +217,64 @@ def load_preset():
         with open(file_path, "r") as f:
             preset_data = json.load(f)
         # Update all parameter values
-        noise_type_dropdown.set(preset_data["noise_type"])
-        width_slider.set(preset_data["width"])
-        height_slider.set(preset_data["height"])
-        scale_slider.set(preset_data["scale"])
-        octaves_slider.set(preset_data["octaves"])
-        persistence_slider.set(preset_data["persistence"])
-        lacunarity_slider.set(preset_data["lacunarity"])
-        resolution_factor_slider.set(preset_data["resolution_factor"])
-        base_elevation_slider.set(preset_data["base_elevation"])
-        min_height_slider.set(preset_data["min_height"])
-        max_height_slider.set(preset_data["max_height"])
+        apply_preset(preset_data)
         
-        # Update the labels
-        update_slider_label(width_label, "Mesh Width", preset_data["width"])
-        update_slider_label(height_label, "Mesh Height", preset_data["height"])
-        update_slider_label(scale_label, "Zoom Scale", preset_data["scale"])
-        update_slider_label(octaves_label, "Octaves", preset_data["octaves"])
-        update_slider_label(persistence_label, "Persistence", preset_data["persistence"])
-        update_slider_label(lacunarity_label, "Lacunarity", preset_data["lacunarity"])
-        update_slider_label(resolution_factor_label, "Resolution Factor", preset_data["resolution_factor"])
-        update_slider_label(base_elevation_label, "Base Elevation", preset_data["base_elevation"])
-        update_slider_label(min_height_label, "Min Height", preset_data["min_height"])
-        update_slider_label(max_height_label, "Max Height", preset_data["max_height"])
-        
-        # Update the option menu
+        # Update the option menu and internal dictionary
         preset_name = os.path.basename(file_path)[:-5]
-        presets_optionmenu.configure(
-            values=presets_optionmenu.cget("values") + [preset_name]
-        )
+        stored_presets[preset_name] = preset_data
+        presets_optionmenu.configure(values=list(stored_presets.keys()))
         presets_optionmenu.set(preset_name)
 
+# Function to apply preset data to the UI
+def apply_preset(preset_data):
+    width_slider.set(preset_data["width"])
+    height_slider.set(preset_data["height"])
+    scale_slider.set(preset_data["scale"])
+    octaves_slider.set(preset_data["octaves"])
+    persistence_slider.set(preset_data["persistence"])
+    lacunarity_slider.set(preset_data["lacunarity"])
+    resolution_factor_slider.set(preset_data["resolution_factor"])
+    base_elevation_slider.set(preset_data["base_elevation"])
+    min_height_slider.set(preset_data["min_height"])
+    max_height_slider.set(preset_data["max_height"])
+    noise_type_dropdown.set(preset_data["noise_type"])
+    add_trees_switch.set(preset_data["add_trees"])
+    trees_slider.set(preset_data["trees_density"])
+    trees_scale_slider.set(preset_data["trees_scale"])
+    add_rocks_switch.set(preset_data["add_rocks"])
+    rocks_min_slider.set(preset_data["rocks_min"])
+    rocks_max_slider.set(preset_data["rocks_max"])
+    rocks_point_slider.set(preset_data["rocks_point"])
+    rocks_slider.set(preset_data["rocks_density"])
+    add_sticks_switch.set(preset_data["add_sticks"])
+    sticks_slider.set(preset_data["sticks_density"])
+    sticks_scale_slider.set(preset_data["sticks_scale"])
+    add_bushes_switch.set(preset_data["add_bushes"])
+    bushes_scale_slider.set(preset_data["bushes_scale"])
+    bushes_slider.set(preset_data["bushes_density"])
+    add_volcano_switch.set(preset_data["add_volcano"])
+    volcano_scale_slider.set(preset_data["volcano_scale"])
+    volcano_slider.set(preset_data["volcano_density"])
+    add_mushroom_switch.set(preset_data["add_mushroom"])
+    mushroom_scale_slider.set(preset_data["mushroom_scale"])
+    mushroom_slider.set(preset_data["mushroom_density"])
+    
+    # Update the labels
+    update_slider_label(width_label, "Mesh Width", preset_data["width"])
+    update_slider_label(height_label, "Mesh Height", preset_data["height"])
+    update_slider_label(scale_label, "Zoom Scale", preset_data["scale"])
+    update_slider_label(octaves_label, "Octaves", preset_data["octaves"])
+    update_slider_label(persistence_label, "Persistence", preset_data["persistence"])
+    update_slider_label(lacunarity_label, "Lacunarity", preset_data["lacunarity"])
+    update_slider_label(resolution_factor_label, "Resolution Factor", preset_data["resolution_factor"])
+    update_slider_label(base_elevation_label, "Base Elevation", preset_data["base_elevation"])
+    update_slider_label(min_height_label, "Min Height", preset_data["min_height"])
+    update_slider_label(max_height_label, "Max Height", preset_data["max_height"])
+
+# Function to load selected preset from the option menu
+def load_selected_preset(preset_name):
+    if preset_name in stored_presets:
+        apply_preset(stored_presets[preset_name])
 
 def toggle_trees_visibility(*args):
     toggle_visibility(
@@ -307,6 +369,7 @@ presets_label.grid(row=1, column=0, padx=20, pady=(10, 0), sticky="w")
 presets_optionmenu = ctk.CTkOptionMenu(
     left_section,
     values=["Default"],
+    command=load_selected_preset,
     width=200,
     fg_color="#b9bdbd",
     button_color="#9ca2a2",
