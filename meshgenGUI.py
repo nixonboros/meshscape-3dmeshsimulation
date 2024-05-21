@@ -8,18 +8,12 @@ import numpy as np
 import os
 import threading
 
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import art3d
-import matplotlib
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from stl import mesh
 from functools import partial
 
 from Controller.Gen.noisethingy import *
 from Controller.Gen.noise_mesh_gen import *
 from Controller.ObGen.PlaceObjects import *
-
-matplotlib.use("TkAgg")
 
 def add_objects_to_mesh(): 
 
@@ -369,10 +363,18 @@ tabview.tab("Objects").columnconfigure(0, weight=1)
 ############################################################################################################
 
 # Visualization function
-plt.switch_backend('agg')
 
 def visualize_stl():
     try:
+        import matplotlib.pyplot as plt
+        from mpl_toolkits.mplot3d import art3d
+        from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+        from stl import mesh
+        import matplotlib
+        
+        plt.switch_backend('agg')
+        matplotlib.use("TkAgg")
+
         # Load the mesh
         your_mesh = mesh.Mesh.from_file('combined_terrain_with_objects.stl')
 
