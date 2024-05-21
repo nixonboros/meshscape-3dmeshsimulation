@@ -1,77 +1,78 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+import trimesh
 import random
-import matplotlib.tri as mtri
 
-def generate_bush_points(center, min_radius, max_radius, num_points, length, density, lumpiness):
-    # Generate spherical coordinates
-    phi = np.random.uniform(0, 2 * np.pi, num_points)
-    costheta = np.random.uniform(-1, 1, num_points)
-    u = np.random.uniform(min_radius**3, max_radius**3, num_points)
+def create_leaf(scale):
+    # leaf
+    leaf_scale = random.uniform(0.05, 0.08) * scale
+    leaf_shape = np.array([
+        [0, 0, 0],
+        [1, 0, 0],
+        [0.5, 1, 0]
+    ]) * leaf_scale
     
-    # Convert to cartesian coordinates
-    theta = np.arccos(costheta)
-    r = u**(1/3) * (1 + lumpiness * np.random.uniform(-0.5, 0.5, num_points)) 
-    x = r * np.sin(theta) * np.cos(phi) + center[0]
-    y = r * np.sin(theta) * np.sin(phi) + center[1] * length
-    z = r * np.cos(theta) + center[2]
+    leaf_faces = np.array([
+        [0, 1, 2]
+    ])
+    
+    leaf = trimesh.Trimesh(vertices=leaf_shape, faces=leaf_faces)
+    return leaf
 
-    # Density of the bush randomised through discarding points
-    mask = np.random.uniform(0, 1, num_points) < density
-    return x[mask], y[mask], z[mask]
+def create_stick(scale):
+    # sticks
+    radius = random.uniform(0.01, 0.02) * scale
+    height = random.uniform(0.1, 0.2) * scale
+    stick = trimesh.creation.cylinder(radius, height, sections=10)
+    return stick
 
-def generate_sticks(center, num_sticks, stick_length, max_radius, stick_width):
-    stick_points = []
+def create_bit(scale):
+    # cubes and spheres
+    if np.random.rand() > 0.5:
+        size = random.uniform(0.001, 0.0015) * scale
+        bit = trimesh.creation.box(extents=[size, size, size])
+    else:
+        radius = random.uniform(0.005, 0.0075) * scale
+        bit = trimesh.creation.icosphere(radius=radius)
+    return bit
+
+def create_bush(num_leaves=800, num_sticks=15, num_bits=50, scale=1.0):
+    all_vertices = []
+    all_faces = []
+    face_offset = 0
+
+    for _ in range(num_leaves):
+        leaf = create_leaf(scale)
+        translation = (np.random.rand(3) - 0.5) * 0.1 * scale
+        rotation = trimesh.transformations.random_rotation_matrix()
+        leaf.apply_translation(translation)
+        leaf.apply_transform(rotation)
+        all_vertices.append(leaf.vertices)
+        all_faces.append(leaf.faces + face_offset)
+        face_offset += len(leaf.vertices)
+    
     for _ in range(num_sticks):
-        # Random position for each stick
-        stick_center = np.array([
-            np.random.uniform(center[0], max_radius / 2),
-            np.random.uniform(center[1], max_radius / 2),
-            np.random.uniform(center[2], max_radius / 2)
-        ])
-
-        # Random 3D orientation of sticks
-        orientation = np.random.normal(0, np.pi, 3)
-        for point in np.linspace(-stick_length / 2, stick_length / 2, int(stick_width)):
-            dx = np.sin(orientation[0]) * np.cos(orientation[1]) * point
-            dy = np.sin(orientation[0]) * np.sin(orientation[1]) * point
-            dz = np.cos(orientation[0]) * point
-            stick_points.append(stick_center + np.array([dx, dy, dz]))
+        stick = create_stick(scale)
+        translation = (np.random.rand(3) - 0.5) * 0.1 * scale
+        rotation = trimesh.transformations.random_rotation_matrix()
+        stick.apply_translation(translation)
+        stick.apply_transform(rotation)
+        all_vertices.append(stick.vertices)
+        all_faces.append(stick.faces + face_offset)
+        face_offset += len(stick.vertices)
     
-    return np.array(stick_points).T
+    for _ in range(num_bits):
+        bit = create_bit(scale)
+        translation = (np.random.rand(3) - 0.5) * 0.1 * scale
+        rotation = trimesh.transformations.random_rotation_matrix()
+        bit.apply_translation(translation)
+        bit.apply_transform(rotation)
+        all_vertices.append(bit.vertices)
+        all_faces.append(bit.faces + face_offset)
+        face_offset += len(bit.vertices)
+    
+    vertices = np.vstack(all_vertices)
+    faces = np.vstack(all_faces)
+    
+    bush_mesh = trimesh.Trimesh(vertices=vertices, faces=faces)
+    return bush_mesh
 
-
-# Parameters for bush
-center = [0, 0, 0]                               # Center of the bush
-min_radius = random.uniform(0.5, 3)              # Minimum radius randomisation
-max_radius = random.uniform(1.5, 3)              # Maximum radius randomisation
-num_points = random.randint(1000, 3000)          # Total points to generate before sparsity is applied
-length = random.uniform(0.5, 3.0)                # Elongates the bush in the Y direction
-density = random.uniform(0.4, 1)                 # density randomiser
-lumpiness = random.uniform(0.1, 0.5)             # Variation in radius to create lumps
-
-# Parameters for stick
-num_sticks = random.randint(5,10)
-stick_length = random.uniform (0.5,1)
-stick_width = random.randint(5, 20)
-
-# Generate Bush
-x, y, z = generate_bush_points(center, min_radius, max_radius, num_points, length, density, lumpiness)
-
-#Generate Stick
-sticks_x, sticks_y, sticks_z = generate_sticks(center, num_sticks, stick_length, stick_width, max_radius)
-
-# Combine Bush and Stick
-x = np.concatenate([x, sticks_x])
-y = np.concatenate([y, sticks_y])
-z = np.concatenate([z, sticks_z])
-
-# Visualization
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-ax.scatter(x, y, z, marker='o')
-ax.set_xlabel('X Label')
-ax.set_ylabel('Y Label')
-ax.set_zlabel('Z Label')
-plt.show()

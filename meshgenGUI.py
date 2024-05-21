@@ -1,34 +1,31 @@
-import customtkinter as ctk
 import json
+import tkinter as tk
+from tkinter import messagebox
 from tkinter import filedialog
+import customtkinter as ctk
 
 import numpy as np
 import os
-import webbrowser as wb
 import threading
-
-import numpy as np
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D, art3d
-import matplotlib
-matplotlib.use("TkAgg")
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from stl import mesh
-import customtkinter as ctk
-import tkinter as tk
-from tkinter import messagebox
 import time
 
-import vtk
-from vtk.tk.vtkTkRenderWindowInteractor import vtkTkRenderWindowInteractor
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import art3d
+import matplotlib
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from stl import mesh
+from functools import partial
 
 from Controller.Gen.noisethingy import *
 from Controller.Gen.noise_mesh_gen import *
 from Controller.ObGen.PlaceObjects import *
 
+matplotlib.use("TkAgg")
+
 #to connect to sliders
-def add_objects_to_mesh():
+def add_objects_to_mesh(): 
     progress_bar.set(0.0)
+
     num_rocks = int(rocks_slider.get())
     points_per_rock = int(rocks_point_slider.get())
     rock_scale_min = float(rocks_min_slider.get() / 100)
@@ -43,8 +40,32 @@ def add_objects_to_mesh():
     num_anthills = int(volcano_slider.get())
     anthill_scale = float(volcano_scale_slider.get() / 100)
 
+    num_sticks = int(sticks_slider.get())
+    stick_scale = float(sticks_scale_slider.get() / 100)
+    
+    num_bushes = int(bushes_slider.get())
+    bushes_scale = float(bushes_scale_slider.get() / 50)
+
+    if (add_trees_switch.get() == "off"):
+        num_trees = 0
+    if (add_rocks_switch.get() == "off"):
+        num_rocks = 0
+    if (add_sticks_switch.get() == "off"):
+        num_sticks = 0
+    if (add_bushes_switch.get() == "off"):
+        num_bushes = 0
+    if (add_volcano_switch.get() == "off"):
+        num_anthills = 0
+    if (add_mushroom_switch.get() == "off"):
+        num_mushrooms = 0
+
     progress_bar.set(0.6)
-    combined_mesh = place_objects_on_terrain('exported_mesh.stl', num_rocks, points_per_rock, rock_scale_min, rock_scale_max, num_trees, tree_scale, num_mushrooms, mushroom_scale, num_anthills, anthill_scale)
+    combined_mesh = place_objects_on_terrain('exported_mesh.stl', num_rocks, points_per_rock, 
+                                             rock_scale_min, rock_scale_max, num_trees, 
+                                             tree_scale, num_mushrooms, mushroom_scale, 
+                                             num_anthills, anthill_scale, num_sticks, 
+                                             stick_scale, num_bushes, bushes_scale)
+    
     root.after(0, save_combined_mesh, combined_mesh)
 
 def generate_noise():
@@ -73,20 +94,17 @@ def generate_noise():
             )
             progress_bar.set(0.6)
             
-            root.after(0, add_objects_to_mesh)
-            messagebox.showinfo("Success", "Mesh creation is complete, now producing visualisation!")
+            root.after(50, add_objects_to_mesh)
+            root.after(50, partial(messagebox.showinfo, "Success", "Mesh creation is complete!"))
 
             progress_bar.set(0.8)
 
-            root.after(0, run_visualization)
-
-            time.sleep(3)
+            root.after(50, run_visualization)
 
             progress_bar.set(1.0)
-            messagebox.showinfo("Success", "The preview of your mesh is in the right panel.")
 
         except Exception as e:
-            messagebox.showerror("Error", f"An error occurred: {str(e)}")
+            root.after(0, messagebox.showerror, "Error", f"An error occurred: {str(e)}")
         finally:
             progress_bar.set(0)
 
@@ -139,9 +157,9 @@ def save_preset():
         "rocks_density": rocks_slider.get(),
         "add_sticks": add_sticks_switch.get(),
         "sticks_density": sticks_slider.get(),
-        "sticks_scale": volcano_scale_slider.get(),
+        "sticks_scale": sticks_scale_slider.get(),
         "add_bushes": add_bushes_switch.get(),
-        "bushes_scale": volcano_scale_slider.get(),
+        "bushes_scale": bushes_scale_slider.get(),
         "bushes_density": bushes_slider.get(),
         "add_volcano": add_volcano_switch.get(),
         "volcano_scale": volcano_scale_slider.get(),
@@ -397,7 +415,7 @@ def visualize_stl():
 
     # Function to run the visualization in the main thread
 def run_visualization():
-    root.after(50, visualize_stl)
+    root.after(100, visualize_stl)
 
 # Setup right section and frame visualization
 right_section = ctk.CTkFrame(root, fg_color="#dbdbdb")
@@ -408,8 +426,7 @@ frame_visualisation = ctk.CTkFrame(right_section, width=190, height=560, fg_colo
 frame_visualisation.grid(row=0, column=0, pady=10, padx=10, sticky="nsew")
 frame_visualisation.columnconfigure(0, weight=1)
 
-root.after(0, run_visualization)
-
+root.after(100, run_visualization)
 
 ############################################################################################################
 
@@ -455,7 +472,6 @@ frame_mushrooms = ctk.CTkFrame(
     frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
 )
 frame_mushrooms.grid(row=5, column=0, pady=(10, 10), sticky="ew")
-
 
 ############################################################################################################
 
@@ -671,7 +687,7 @@ bushes_slider.set(50)
 
 # STICK SCALE SLIDERS
 bushes_scale_slider_label = ctk.CTkLabel(
-    frame_volcanos, text="Scale: 10", width=125, anchor="w"
+    frame_bushes, text="Scale: 50", width=125, anchor="w"
 )
 bushes_scale_slider = ctk.CTkSlider(
     frame_bushes,
@@ -683,7 +699,7 @@ bushes_scale_slider = ctk.CTkSlider(
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(bushes_scale_slider_label, "Scale", value),
 )
-bushes_scale_slider.set(10)
+bushes_scale_slider.set(50)
 
 ############################################################################################################
 
@@ -720,7 +736,7 @@ volcano_slider.set(10)
 
 # VOLCANO SCALE SLIDERS
 volcano_scale_slider_label = ctk.CTkLabel(
-    frame_volcanos, text="Scale: 10", width=125, anchor="w"
+    frame_volcanos, text="Scale: 60", width=125, anchor="w"
 )
 volcano_scale_slider = ctk.CTkSlider(
     frame_volcanos,
@@ -732,7 +748,7 @@ volcano_scale_slider = ctk.CTkSlider(
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(volcano_scale_slider_label, "Scale", value),
 )
-volcano_scale_slider.set(10)
+volcano_scale_slider.set(60)
 
 ############################################################################################################
 
@@ -792,7 +808,23 @@ def update_object_count():
     num_trees = int(trees_slider.get())
     num_mushrooms = int(mushroom_slider.get())
     num_anthills = int(volcano_slider.get())
-    total_objects = num_rocks + num_trees + num_mushrooms + num_anthills
+    num_sticks = int(sticks_slider.get())
+    num_bushes = int(bushes_slider.get())
+
+    if (add_trees_switch.get() == "off"):
+        num_trees = 0
+    if (add_rocks_switch.get() == "off"):
+        num_rocks = 0
+    if (add_sticks_switch.get() == "off"):
+        num_sticks = 0
+    if (add_bushes_switch.get() == "off"):
+        num_bushes = 0
+    if (add_volcano_switch.get() == "off"):
+        num_anthills = 0
+    if (add_mushroom_switch.get() == "off"):
+        num_mushrooms = 0
+    
+    total_objects = num_rocks + num_trees + num_mushrooms + num_anthills + num_sticks + num_bushes
     object_count_label.configure(text=f"Total Objects: {total_objects}")
 
 object_count_label = ctk.CTkLabel(right_section, text="Total Objects: 0", font=ctk.CTkFont(size=14, weight="bold"))
@@ -1047,7 +1079,6 @@ def bind_toggle_switch_and_cursor(frame, switch_variable, toggle_function):
 
     frame.bind("<Button-1>", toggle_frame_switch)
     frame.configure(cursor="hand2")
-
 
 bind_toggle_switch_and_cursor(frame_trees, add_trees_switch, toggle_trees_visibility)
 bind_toggle_switch_and_cursor(frame_rocks, add_rocks_switch, toggle_rocks_visibility)

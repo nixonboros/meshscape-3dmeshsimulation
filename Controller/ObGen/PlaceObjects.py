@@ -7,8 +7,10 @@ from .OakGen import mushroom_mesh
 from .TreeGen import generate_tree, tree_to_trimesh
 from .RockGen import rock_generator
 from .AntHillGen import generate_anthill_mesh
+from .StickGen import generate_wiggly_stick
+from .BushGen import create_bush
 
-def place_objects_on_terrain(terrain_path, num_rocks=5, points_per_rock=1000, rock_scale_min=0.05, rock_scale_max=0.1, num_trees=5, tree_scale=0.1, num_mushrooms=5, mushroom_scale=0.1, num_anthills=3, anthill_scale=1.0):
+def place_objects_on_terrain(terrain_path, num_rocks=5, points_per_rock=1000, rock_scale_min=0.05, rock_scale_max=0.1, num_trees=5, tree_scale=0.1, num_mushrooms=5, mushroom_scale=0.1, num_anthills=3, anthill_scale=1.0, num_sticks=10, stick_scale=0.5, num_bushes=10, bushes_scale=0.2):
     # Load the terrain STL file
     terrain = trimesh.load(terrain_path)
 
@@ -43,6 +45,18 @@ def place_objects_on_terrain(terrain_path, num_rocks=5, points_per_rock=1000, ro
         anthill = generate_anthill_mesh(scale=anthill_scale)
         anthill_mesh_pos = position_object_on_terrain(anthill, terrain, min_x, max_x, min_y, max_y)
         objects.append(anthill_mesh_pos)
+
+    # Place sticks
+    for _ in range(num_sticks):
+        stick = generate_wiggly_stick([0, 0, 0], scale=stick_scale)
+        stick_mesh_pos = position_object_on_terrain(stick, terrain, min_x, max_x, min_y, max_y)
+        objects.append(stick_mesh_pos)
+
+    # Place bushes
+    for _ in range(num_bushes):
+        bush = create_bush(scale=bushes_scale)
+        bush_mesh_pos = position_object_on_terrain(bush, terrain, min_x, max_x, min_y, max_y)
+        objects.append(bush_mesh_pos)
 
     # Combine terrain and all objects into one mesh
     combined_mesh = trimesh.util.concatenate([terrain] + objects)
@@ -82,19 +96,25 @@ def save_combined_mesh(combined_mesh, file_name='combined_terrain_with_objects.s
         combined_mesh.export(file_path)
 
 if __name__ == "__main__":
-    num_rocks = 5
+    num_rocks = 0
     points_per_rock = 1000
     rock_scale_min = 0.05
     rock_scale_max = 0.1
     
-    num_trees = 50
+    num_trees = 0
     tree_scale = 0.1
 
-    num_mushrooms = 5
+    num_mushrooms = 0
     mushroom_scale = 0.2
 
-    num_anthills = 3
+    num_anthills = 0
     anthill_scale = 0.5
-    
-    combined_mesh = place_objects_on_terrain('exported_mesh.stl', num_rocks, points_per_rock, rock_scale_min, rock_scale_max, num_trees, tree_scale, num_mushrooms, mushroom_scale, num_anthills, anthill_scale)
+
+    num_sticks = 0
+    stick_scale = 0.2
+
+    num_bushes = 0
+    bushes_scale = 1
+
+    combined_mesh = place_objects_on_terrain('exported_mesh.stl', num_rocks, points_per_rock, rock_scale_min, rock_scale_max, num_trees, tree_scale, num_mushrooms, mushroom_scale, num_anthills, anthill_scale, num_sticks, stick_scale, num_bushes, bushes_scale)
     save_combined_mesh(combined_mesh)
