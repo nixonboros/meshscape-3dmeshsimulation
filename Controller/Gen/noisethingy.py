@@ -51,17 +51,14 @@ def save_image(image_array, file_name='noise_image.png'):
     img.save(file_name)
 
 def export_image(width, height, scale, octaves, persistence, lacunarity, seed, noise_type):
-    script_dir = os.path.dirname(__file__)
-    temp_dir = os.path.join(script_dir, 'Temp')
-    
-    # Generate the noise image
-    print("Generating noise image...")
-    # print("Noise Parameter Values: " + width + " " + height + " " + scale + " " + octaves + " " + persistence + " " + lacunarity + " " + seed + " " + noise_type)
+    # Example usage
     noise_img = generate_noise_image(width, height, scale, octaves, persistence, lacunarity, seed, noise_type)
     
-    # Save the image to the 'Temp' directory
-    save_image(noise_img, os.path.join(temp_dir, 'Noise.png'))  # Adjust path as necessary
-    print(f"Noise.png exported successfully to {temp_dir}")
+    filename = 'noise.png'
+    save_image(noise_img, filename)  # Save the image
+    
+    #print(width, height, scale, octaves, persistence, lacunarity, seed, noise_type)
+    return os.path.abspath(filename)
 
 # noise_img = generate_noise_image()
 # save_image(noise_img, f'noise.png')  # Adjust path as necessary

@@ -1,44 +1,89 @@
-import os
 import numpy as np
-import collada
+import trimesh
 import random
-import tkinter as tk
-from tkinter import ttk
 
-def generate_stick(mesh, base_position, height, thickness):
-    x, y, z = base_position
-    vertices = np.array([
-        [x - thickness, y - thickness, z],
-        [x + thickness, y - thickness, z],
-        [x + thickness, y + thickness, z],
-        [x - thickness, y + thickness, z],
-        [x - thickness, y - thickness, z + height],
-        [x + thickness, y - thickness, z + height],
-        [x + thickness, y + thickness, z + height],
-        [x - thickness, y + thickness, z + height]
+def generate_random_rotation_matrix():
+    angle_x = np.deg2rad(random.uniform(0, 360))
+    angle_y = np.deg2rad(random.uniform(0, 360))
+    angle_z = np.deg2rad(random.uniform(0, 360))
+
+    Rx = np.array([
+        [1, 0, 0],
+        [0, np.cos(angle_x), -np.sin(angle_x)],
+        [0, np.sin(angle_x), np.cos(angle_x)]
     ])
-    indices = np.array([
-        0, 1, 2, 0, 2, 3,
-        4, 5, 6, 4, 6, 7,
-        0, 4, 5, 0, 5, 1,
-        1, 5, 6, 1, 6, 2,
-        2, 6, 7, 2, 7, 3,
-        3, 7, 4, 3, 4, 0
+
+    Ry = np.array([
+        [np.cos(angle_y), 0, np.sin(angle_y)],
+        [0, 1, 0],
+        [-np.sin(angle_y), 0, np.cos(angle_y)]
     ])
-    vert_src = collada.source.FloatSource(f"stick_vertices_{random.random()}", vertices.flatten(), ('X', 'Y', 'Z'))
-    geom = collada.geometry.Geometry(mesh, f"stick_geometry_{random.random()}", "stick_mesh", [vert_src])
-    input_list = collada.source.InputList()
-    input_list.addInput(0, 'VERTEX', f"#{vert_src.id}")
-    triset = geom.createTriangleSet(indices, input_list, "materialref_stick")
-    geom.primitives.append(triset)
-    mesh.geometries.append(geom)
-    geom_node = collada.scene.GeometryNode(geom, [])
-    node = collada.scene.Node(f"stick_node_{random.random()}", children=[geom_node])
-    return node
-    
-for _ in range(num_sticks):
-    height = random.uniform(1, 5)  # Random stick height between 1 and 5 units
-    thickness = random.uniform(0.05, 0.2)  # Random stick thickness
-    base_position = (random.uniform(0, size_x), random.uniform(0, size_y), random.uniform(0, 5))  # Random base position
-    stick_node = generate_stick(mesh, base_position, height, thickness)
-    myscene.nodes.append(stick_node)     
+
+    Rz = np.array([
+        [np.cos(angle_z), -np.sin(angle_z), 0],
+        [np.sin(angle_z), np.cos(angle_z), 0],
+        [0, 0, 1]
+    ])
+
+    return Rz @ Ry @ Rx
+
+def generate_wiggly_stick(base_position, length=5, radius=0.1, num_segments=50, perturbation_strength=0.1, scale=1.0):
+    # Scale length, radius, and perturbation_strength
+    length *= scale
+    radius *= scale
+    perturbation_strength *= scale
+
+    # Create a basic cylinder
+    cylinder = trimesh.creation.cylinder(radius=radius, height=length, sections=num_segments)
+
+    # Apply random perturbations to vertices to make it wiggly
+    vertices = cylinder.vertices.copy()
+    z_values = np.unique(vertices[:, 2])
+    for z in z_values:
+        mask = (vertices[:, 2] == z)
+        perturbation = np.random.normal(0, perturbation_strength, size=(mask.sum(), 2))
+        vertices[mask, :2] += perturbation
+
+    # Apply random rotation
+    rotation_matrix = generate_random_rotation_matrix()
+    vertices = vertices @ rotation_matrix.T
+
+    # Translate to base position
+    vertices += np.array(base_position)
+
+    # Create the mesh with modified vertices
+    wiggly_stick_mesh = trimesh.Trimesh(vertices=vertices, faces=cylinder.faces)
+    return wiggly_stick_mesh
+
+def add_protrusions(mesh, num_protrusions=5, protrusion_length=1, protrusion_radius=0.05, scale=1.0):
+    combined_mesh = mesh.copy()
+    z_range = mesh.bounds[1][2] - mesh.bounds[0][2]
+
+    for _ in range(num_protrusions):
+        # Randomly choose a point along the main cylinder
+        z_position = random.uniform(0, z_range)
+        mask = np.isclose(mesh.vertices[:, 2], z_position, atol=0.1)
+        candidate_vertices = mesh.vertices[mask]
+
+        if len(candidate_vertices) == 0:
+            continue
+
+        base_vertex = candidate_vertices[random.randint(0, len(candidate_vertices) - 1)]
+
+        # Create a small wiggly stick as a protrusion
+        protrusion_base = base_vertex
+        protrusion = generate_wiggly_stick(protrusion_base, length=protrusion_length * scale, radius=protrusion_radius * scale, scale=scale)
+
+        # Combine with the main mesh
+        combined_mesh = trimesh.util.concatenate([combined_mesh, protrusion])
+
+    return combined_mesh
+
+base_position = (0, 0, 0)
+
+scale_factor = 0.5  
+main_stick_mesh = generate_wiggly_stick(base_position, scale=scale_factor)
+
+stick_with_protrusions = add_protrusions(main_stick_mesh, num_protrusions=5, protrusion_length=1, protrusion_radius=0.05, scale=scale_factor)
+
+

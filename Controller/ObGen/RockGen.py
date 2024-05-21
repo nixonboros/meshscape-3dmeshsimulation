@@ -1,25 +1,31 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 from scipy.spatial import ConvexHull
+from stl import mesh
 
-def rock_generator(num_points):
-    # more points mean smoother rocks
-    points = np.random.normal(size=(num_points, 3)) 
-    # Convex rock shape, so currently not indents or sheer caves etc.
+def rock_generator(num_points, scale_min=0.1, scale_max=0.2):
+    # Generate random points
+    points = np.random.normal(size=(num_points, 3))
+    
+    # Apply random scale between scale_min and scale_max
+    scale = np.random.uniform(scale_min, scale_max)
+    points *= scale
+    
+    # Create a convex hull
     hull = ConvexHull(points)
-    # Point cloud, can just be put into the mesh.
-    return(points,hull)
+    return points, hull
 
-# Currently exports to obj, but can just transfer point cloud to MESH
-""" def export_to_obj(rock, filename="rock_shape.obj"):
-    points = rock[0]
-    hull = rock[1]
-    with open(filename, "w") as file:
-        for point in points:
-            file.write(f"v {point[0]} {point[1]} {point[2]}\n")
-        for simplex in hull.simplices:
-            face_indices = [str(index + 1) for index in simplex]
-            file.write("f " + " ".join(face_indices) + "\n")
-            
-export_to_obj(rock_generator(10000)) """
+def export_to_stl(points, hull, filename="rock_shape.stl", scale=1.0):
+    # Scale points before creating the mesh
+    points = points * scale
+
+    # Create an empty mesh
+    rock_mesh = mesh.Mesh(np.zeros(hull.simplices.shape[0], dtype=mesh.Mesh.dtype))
+
+    # Loop through the triangles defined by the simplices
+    for i, f in enumerate(hull.simplices):
+        for j in range(3):
+            # Assign the scaled vertex coordinates to the mesh
+            rock_mesh.vectors[i][j] = points[f[j], :]
+
+    # Save the mesh to file
+    rock_mesh.save(filename)
