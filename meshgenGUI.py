@@ -28,19 +28,19 @@ from Controller.ObGen.PlaceObjects import *
 #to connect to sliders
 def add_objects_to_mesh():
     progress_bar.set(0.0)
-    num_rocks = 5
-    points_per_rock = 1000
-    rock_scale_min = 0.05
-    rock_scale_max = 0.1
+    num_rocks = int(rocks_slider.get())
+    points_per_rock = int(rocks_point_slider.get())
+    rock_scale_min = float(rocks_min_slider.get() / 100)
+    rock_scale_max = float(rocks_max_slider.get() / 100)
     
-    num_trees = 50
-    tree_scale = 0.1
+    num_trees = int(trees_slider.get())
+    tree_scale = float(trees_scale_slider.get() / 100)
 
-    num_mushrooms = 5
-    mushroom_scale = 0.2
+    num_mushrooms = int(mushroom_slider.get())
+    mushroom_scale = float(mushroom_scale_slider.get() / 100)
 
-    num_anthills = 3
-    anthill_scale = 0.5
+    num_anthills = int(volcano_slider.get())
+    anthill_scale = float(volcano_scale_slider.get() / 100)
 
     combined_mesh = place_objects_on_terrain('exported_mesh.stl', num_rocks, points_per_rock, rock_scale_min, rock_scale_max, num_trees, tree_scale, num_mushrooms, mushroom_scale, num_anthills, anthill_scale)
     progress_bar.set(0.8)
@@ -76,10 +76,7 @@ def generate_noise():
             progress_bar.set(0.8)
             visualize_stl()
             
-            add_objects_to_mesh(
-                #int(trees_scale_slider.get()),
-                #int(trees_slider.get()),
-            )
+            root.after(0, add_objects_to_mesh)
             progress_bar.set(1.0)
 
             messagebox.showinfo("Success", "Noise mesh creation is complete!")
@@ -719,11 +716,11 @@ trees_switch.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
 # TREE SLIDERS
 trees_slider_label = ctk.CTkLabel(
-    frame_trees, text="Density: 50", width=125, anchor="w"
+    frame_trees, text="Density: 30", width=125, anchor="w"
 )
 trees_slider = ctk.CTkSlider(
     frame_trees,
-    from_=1,
+    from_=0,
     to=100,
     width=330,  # make scalable to window
     number_of_steps=99,
@@ -731,11 +728,11 @@ trees_slider = ctk.CTkSlider(
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(trees_slider_label, "Density", value),
 )
-trees_slider.set(50)
+trees_slider.set(30)
 
 # TREE SCALE SLIDERS
 trees_scale_slider_label = ctk.CTkLabel(
-    frame_trees, text="Scale: 50", width=125, anchor="w"
+    frame_trees, text="Scale: 10", width=125, anchor="w"
 )
 trees_scale_slider = ctk.CTkSlider(
     frame_trees,
@@ -747,18 +744,7 @@ trees_scale_slider = ctk.CTkSlider(
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(trees_scale_slider_label, "Scale", value),
 )
-trees_scale_slider.set(50)
-
-
-# TREE EDIT BUTTON
-trees_edit_button = ctk.CTkButton(
-    frame_trees,
-    text="Edit",
-    command=trees_advanced_settings_window,
-    width=50,
-    fg_color="#62a5d9",
-    hover_color="#4e84ae",
-)
+trees_scale_slider.set(10)
 
 ############################################################################################################
 
@@ -779,11 +765,11 @@ rocks_switch.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
 # ROCKS SLIDERS
 rocks_slider_label = ctk.CTkLabel(
-    frame_rocks, text="Density: 50", width=125, anchor="w"
+    frame_rocks, text="Density: 15", width=125, anchor="w"
 )
 rocks_slider = ctk.CTkSlider(
     frame_rocks,
-    from_=1,
+    from_=0,
     to=100,
     width=330,  # make scalable to window
     number_of_steps=99,
@@ -791,11 +777,11 @@ rocks_slider = ctk.CTkSlider(
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(rocks_slider_label, "Density", value),
 )
-rocks_slider.set(50)
+rocks_slider.set(15)
 
 # ROCKS MIN SLIDERS
 rocks_min_slider_label = ctk.CTkLabel(
-    frame_rocks, text="Min Size: 50", width=125, anchor="w"
+    frame_rocks, text="Min Size: 10", width=125, anchor="w"
 )
 rocks_min_slider = ctk.CTkSlider(
     frame_rocks,
@@ -807,11 +793,11 @@ rocks_min_slider = ctk.CTkSlider(
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(rocks_min_slider_label, "Min", value),
 )
-rocks_min_slider.set(50)
+rocks_min_slider.set(10)
 
 # ROCKS MAX SLIDERS
 rocks_max_slider_label = ctk.CTkLabel(
-    frame_rocks, text="Max Size: 50", width=125, anchor="w"
+    frame_rocks, text="Max Size: 15", width=125, anchor="w"
 )
 rocks_max_slider = ctk.CTkSlider(
     frame_rocks,
@@ -823,33 +809,23 @@ rocks_max_slider = ctk.CTkSlider(
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(rocks_max_slider_label, "Max", value),
 )
-rocks_max_slider.set(50)
+rocks_max_slider.set(15)
 
 # ROCKS POINT SLIDERS
 rocks_point_slider_label = ctk.CTkLabel(
-    frame_rocks, text="Points: 50", width=125, anchor="w"
+    frame_rocks, text="Points: 1000", width=125, anchor="w"
 )
 rocks_point_slider = ctk.CTkSlider(
     frame_rocks,
-    from_=1,
-    to=100,
+    from_=10,
+    to=10000,
     width=330,  # make scalable to window
-    number_of_steps=99,
+    number_of_steps=9990,
     button_color="#62a5d9",
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(rocks_point_slider_label, "Points", value),
 )
-rocks_point_slider.set(50)
-
-# ROCK EDIT BUTTON
-rocks_edit_button = ctk.CTkButton(
-    frame_rocks,
-    text="Edit",
-    command=rocks_advanced_settings_window,
-    width=50,
-    fg_color="#62a5d9",
-    hover_color="#4e84ae",
-)
+rocks_point_slider.set(1000)
 
 ############################################################################################################
 
@@ -884,16 +860,6 @@ sticks_slider = ctk.CTkSlider(
 )
 sticks_slider.set(50)
 
-# STICKS EDIT BUTTON
-sticks_edit_button = ctk.CTkButton(
-    frame_sticks,
-    text="Edit",
-    command=sticks_advanced_settings_window,
-    width=50,
-    fg_color="#62a5d9",
-    hover_color="#4e84ae",
-)
-
 ############################################################################################################
 
 # ENABLE/DISABLE ADD LOGS SWITCH
@@ -924,16 +890,6 @@ logs_slider = ctk.CTkSlider(
     command=lambda value: update_slider_label(logs_slider_label, "Density", value),
 )
 logs_slider.set(50)
-
-# LOGS EDIT BUTTON
-logs_edit_button = ctk.CTkButton(
-    frame_logs,
-    text="Edit",
-    command=logs_advanced_settings_window,
-    width=50,
-    fg_color="#62a5d9",
-    hover_color="#4e84ae",
-)
 
 ############################################################################################################
 
@@ -968,16 +924,6 @@ bushes_slider = ctk.CTkSlider(
 )
 bushes_slider.set(50)
 
-# BUSHES EDIT BUTTON
-bushes_edit_button = ctk.CTkButton(
-    frame_bushes,
-    text="Edit",
-    command=bushes_advanced_settings_window,
-    width=50,
-    fg_color="#62a5d9",
-    hover_color="#4e84ae",
-)
-
 ############################################################################################################
 
 # ENABLE/DISABLE ADD BOULDERS SWITCH
@@ -1011,16 +957,6 @@ boulders_slider = ctk.CTkSlider(
 )
 boulders_slider.set(50)
 
-# BOULDERS EDIT BUTTON
-boulders_edit_button = ctk.CTkButton(
-    frame_boulders,
-    text="Edit",
-    command=boulders_advanced_settings_window,
-    width=50,
-    fg_color="#62a5d9",
-    hover_color="#4e84ae",
-)
-
 ############################################################################################################
 
 # ENABLE/DISABLE ADD VOLCANO SWITCH
@@ -1040,7 +976,7 @@ volcano_switch.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
 # VOLCANO SLIDERS
 volcano_slider_label = ctk.CTkLabel(
-    frame_volcanos, text="Density: 50", width=125, anchor="w"
+    frame_volcanos, text="Density: 10", width=125, anchor="w"
 )
 volcano_slider = ctk.CTkSlider(
     frame_volcanos,
@@ -1052,11 +988,11 @@ volcano_slider = ctk.CTkSlider(
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(volcano_slider_label, "Density", value),
 )
-volcano_slider.set(50)
+volcano_slider.set(10)
 
 # VOLCANO SCALE SLIDERS
 volcano_scale_slider_label = ctk.CTkLabel(
-    frame_volcanos, text="Scale: 50", width=125, anchor="w"
+    frame_volcanos, text="Scale: 10", width=125, anchor="w"
 )
 volcano_scale_slider = ctk.CTkSlider(
     frame_volcanos,
@@ -1068,17 +1004,7 @@ volcano_scale_slider = ctk.CTkSlider(
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(volcano_scale_slider_label, "Scale", value),
 )
-volcano_scale_slider.set(50)
-
-# VOLCANO EDIT BUTTON
-volcano_edit_button = ctk.CTkButton(
-    frame_volcanos,
-    text="Edit",
-    command=volcano_advanced_settings_window,
-    width=50,
-    fg_color="#62a5d9",
-    hover_color="#4e84ae",
-)
+volcano_scale_slider.set(10)
 
 ############################################################################################################
 
@@ -1099,7 +1025,7 @@ mushroom_switch.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
 # MUSHROOM SLIDERS
 mushroom_slider_label = ctk.CTkLabel(
-    frame_mushrooms, text="Density: 50", width=125, anchor="w"
+    frame_mushrooms, text="Density: 15", width=125, anchor="w"
 )
 mushroom_slider = ctk.CTkSlider(
     frame_mushrooms,
@@ -1111,11 +1037,11 @@ mushroom_slider = ctk.CTkSlider(
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(mushroom_slider_label, "Density", value),
 )
-mushroom_slider.set(50)
+mushroom_slider.set(15)
 
 # MUSHROOM SCALE SLIDERS
 mushroom_scale_slider_label = ctk.CTkLabel(
-    frame_mushrooms, text="Scale: 50", width=125, anchor="w"
+    frame_mushrooms, text="Scale: 10", width=125, anchor="w"
 )
 mushroom_scale_slider = ctk.CTkSlider(
     frame_mushrooms,
@@ -1127,18 +1053,7 @@ mushroom_scale_slider = ctk.CTkSlider(
     button_hover_color="#4e84ae",
     command=lambda value: update_slider_label(mushroom_scale_slider_label, "Scale", value),
 )
-mushroom_scale_slider.set(50)
-
-# MUSHROOM EDIT BUTTON
-mushroom_edit_button = ctk.CTkButton(
-    frame_mushrooms,
-    text="Edit",
-    command=mushroom_advanced_settings_window,
-    width=50,
-    fg_color="#62a5d9",
-    hover_color="#4e84ae",
-)
-
+mushroom_scale_slider.set(10)
 
 ############################################################################################################
 
