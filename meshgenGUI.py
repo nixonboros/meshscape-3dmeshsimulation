@@ -17,6 +17,7 @@ from stl import mesh
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import messagebox
+import time
 
 import vtk
 from vtk.tk.vtkTkRenderWindowInteractor import vtkTkRenderWindowInteractor
@@ -79,6 +80,8 @@ def generate_noise():
             progress_bar.set(0.8)
 
             root.after(0, run_visualization)
+
+            time.sleep(3)
 
             progress_bar.set(1.0)
             messagebox.showinfo("Success", "The preview of your mesh is in the right panel.")
