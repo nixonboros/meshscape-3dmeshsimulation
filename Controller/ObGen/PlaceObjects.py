@@ -1,5 +1,7 @@
 import numpy as np
 import trimesh
+import tkinter as tk
+from tkinter import filedialog
 
 from .OakGen import mushroom_mesh
 from .TreeGen import generate_tree, tree_to_trimesh
@@ -69,8 +71,15 @@ def position_object_on_terrain(object_mesh, terrain, min_x, max_x, min_y, max_y,
     return object_mesh
 
 def save_combined_mesh(combined_mesh, file_name='combined_terrain_with_objects.stl'):
-    # Save the combined mesh to a new STL file
+    # Save the combined mesh to a new STL file for preview
     combined_mesh.export(file_name)
+
+    # Save the combined mesh in the location of user choice
+    root = tk.Tk()
+    root.withdraw()  # Hide the root window
+    file_path = filedialog.asksaveasfilename(defaultextension=".stl", filetypes=[("STL files", "*.stl")])
+    if file_path:
+        combined_mesh.export(file_path)
 
 if __name__ == "__main__":
     num_rocks = 5

@@ -45,8 +45,7 @@ def add_objects_to_mesh():
 
     progress_bar.set(0.6)
     combined_mesh = place_objects_on_terrain('exported_mesh.stl', num_rocks, points_per_rock, rock_scale_min, rock_scale_max, num_trees, tree_scale, num_mushrooms, mushroom_scale, num_anthills, anthill_scale)
-    save_combined_mesh(combined_mesh)
-    progress_bar.set(0.8)
+    root.after(0, save_combined_mesh, combined_mesh)
 
 def generate_noise():
     def run_long_task():
