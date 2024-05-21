@@ -42,11 +42,10 @@ def add_objects_to_mesh():
     num_anthills = int(volcano_slider.get())
     anthill_scale = float(volcano_scale_slider.get() / 100)
 
+    progress_bar.set(0.6)
     combined_mesh = place_objects_on_terrain('exported_mesh.stl', num_rocks, points_per_rock, rock_scale_min, rock_scale_max, num_trees, tree_scale, num_mushrooms, mushroom_scale, num_anthills, anthill_scale)
-    progress_bar.set(0.8)
     save_combined_mesh(combined_mesh)
-    progress_bar.set(1.0)
-    messagebox.showinfo("Success", "Complete mesh creation is complete!")
+    progress_bar.set(0.8)
 
 def generate_noise():
     def run_long_task():
@@ -64,7 +63,7 @@ def generate_noise():
                 noise_type_dropdown.get(),
             )
             
-            progress_bar.set(0.5)
+            progress_bar.set(0.3)
             generate_mesh_noise(
                 int(resolution_factor_slider.get()),
                 float(base_elevation_slider.get()/200),
@@ -72,14 +71,18 @@ def generate_noise():
                 float(min_height_slider.get()/200),
                 noise_image_location
             )
-            
-            progress_bar.set(0.8)
-            visualize_stl()
+            progress_bar.set(0.6)
             
             root.after(0, add_objects_to_mesh)
-            progress_bar.set(1.0)
+            messagebox.showinfo("Success", "Mesh creation is complete, now producing visualisation!")
 
-            messagebox.showinfo("Success", "Noise mesh creation is complete!")
+            progress_bar.set(0.8)
+
+            root.after(0, run_visualization)
+
+            progress_bar.set(1.0)
+            messagebox.showinfo("Success", "The preview of your mesh is in the right panel.")
+
         except Exception as e:
             messagebox.showerror("Error", f"An error occurred: {str(e)}")
         finally:
@@ -594,18 +597,33 @@ tabview.tab("Objects").columnconfigure(0, weight=1)
 ############################################################################################################
 
 # Visualization function
+plt.switch_backend('agg')
+
 def visualize_stl():
     try:
+        # Load the mesh
         your_mesh = mesh.Mesh.from_file('combined_terrain_with_objects.stl')
-        fig = plt.Figure(figsize=(5, 5.6))
-        ax = fig.add_subplot(111, projection='3d')
-        ax.add_collection3d(art3d.Poly3DCollection(your_mesh.vectors, alpha=0.5))  # Reduced opacity to improve rendering performance
 
+        # Simplify the mesh by taking every nth face (adjust the value of n for more/less simplification)
+        n = 2
+        simplified_vectors = your_mesh.vectors[::n]
+
+        # Create the plot
+        fig = plt.Figure(figsize=(5, 5))
+        ax = fig.add_subplot(111, projection='3d')
+        
+        # Plot the simplified mesh
+        poly3d = art3d.Poly3DCollection(simplified_vectors, alpha=0.5, edgecolor='k', linewidth=0.1)
+        ax.add_collection3d(poly3d)
+        
         # Auto scale to the mesh size
-        scale = np.concatenate(your_mesh.points).flatten()
+        scale = np.concatenate([your_mesh.min_, your_mesh.max_])
         ax.auto_scale_xyz(scale, scale, scale)
 
-        # Hide axes
+        # Set the view angle
+        ax.view_init(elev=30, azim=45)
+        
+        # Hide axes for better visualization
         ax.set_axis_off()
 
         # Clear existing canvas if it exists
@@ -618,14 +636,12 @@ def visualize_stl():
         widget = canvas.get_tk_widget()
         widget.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
-        # Improve responsiveness by reducing redraw frequency during interactions
-        def on_move(event):
-            canvas.draw_idle()
-
-        fig.canvas.mpl_connect('motion_notify_event', on_move)
-
     except Exception as e:
-        print(e)  # It's good practice to print or log the exception message
+        print(e)
+
+    # Function to run the visualization in the main thread
+def run_visualization():
+    root.after(50, visualize_stl)
 
 # Setup right section and frame visualization
 right_section = ctk.CTkFrame(root, fg_color="#dbdbdb")
@@ -636,7 +652,7 @@ frame_visualisation = ctk.CTkFrame(right_section, width=190, height=560, fg_colo
 frame_visualisation.grid(row=0, column=0, pady=10, padx=10, sticky="nsew")
 frame_visualisation.columnconfigure(0, weight=1)
 
-visualize_stl()
+root.after(0, run_visualization)
 
 
 ############################################################################################################
