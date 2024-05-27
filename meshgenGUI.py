@@ -4,6 +4,9 @@ from tkinter import messagebox
 from tkinter import filedialog
 import customtkinter as ctk
 
+from tktooltip import ToolTip
+from PIL import Image
+
 import numpy as np
 import os
 import threading
@@ -108,7 +111,7 @@ def update_slider_label(label, text, value):
 
 
 def toggle_visibility(
-    switch_variable, *slider_and_labels, frame
+    switch_variable, *slider_and_labels, frame, density_tooltip, scale_tooltip=None, point_tooltip=None, min_tooltip=None, max_tooltip=None,
 ):
     if switch_variable.get() == "on":
         for i in range(0, len(slider_and_labels), 2):
@@ -116,12 +119,30 @@ def toggle_visibility(
             slider_label.grid(row=1 + i, column=0, padx=(10, 0), pady=(0, 10), sticky="w")
             slider.grid(row=1 + i, column=1, padx=10, pady=(0, 10), sticky="ew")
         frame.configure(fg_color="#d1d1d1")
+        density_tooltip.grid(row=1, column=2, sticky="w", padx=(5, 0), pady=(0, 10))
+        if scale_tooltip:
+            scale_tooltip.grid(row=3, column=2, sticky="w", padx=(5, 0), pady=(0, 10))
+        if point_tooltip:
+            point_tooltip.grid(row=3, column=2, sticky="w", padx=(5, 0), pady=(0, 10))
+        if min_tooltip:
+            min_tooltip.grid(row=5, column=2, sticky="w", padx=(5, 0), pady=(0, 10))
+        if max_tooltip:
+            max_tooltip.grid(row=7, column=2, sticky="w", padx=(5, 0), pady=(0, 10))
     else:
         for i in range(0, len(slider_and_labels), 2):
             slider_label, slider = slider_and_labels[i], slider_and_labels[i+1]
             slider_label.grid_forget()
             slider.grid_forget()
         frame.configure(fg_color="#dfe1e1")
+        density_tooltip.grid_forget()
+        if scale_tooltip:
+            scale_tooltip.grid_forget()
+        if point_tooltip:
+            point_tooltip.grid_forget()
+        if min_tooltip:
+            min_tooltip.grid_forget()
+        if max_tooltip:
+            max_tooltip.grid_forget()
 
 # Initialize an internal dictionary to store presets
 stored_presets = {
@@ -279,21 +300,26 @@ def load_selected_preset(preset_name):
 def toggle_trees_visibility(*args):
     toggle_visibility(
         add_trees_switch,
-        trees_slider,trees_slider_label,
-        trees_scale_slider,trees_scale_slider_label,
+        trees_slider, trees_slider_label,
+        trees_scale_slider, trees_scale_slider_label,
         frame = frame_trees,
+        density_tooltip=trees_density_tooltip,
+        scale_tooltip=trees_scale_tooltip
     )
 
 def toggle_rocks_visibility(*args):
     toggle_visibility(
         add_rocks_switch,
-        rocks_slider,rocks_slider_label,
+        rocks_slider, rocks_slider_label,
         rocks_point_slider, rocks_point_slider_label,
         rocks_min_slider, rocks_min_slider_label,
         rocks_max_slider, rocks_max_slider_label,
         frame = frame_rocks,
+        density_tooltip=rocks_density_tooltip,
+        point_tooltip=rocks_point_tooltip,
+        min_tooltip=rocks_min_tooltip,
+        max_tooltip=rocks_max_tooltip
     )
-
 
 def toggle_sticks_visibility(*args):
     toggle_visibility(
@@ -301,6 +327,8 @@ def toggle_sticks_visibility(*args):
         sticks_slider, sticks_slider_label,
         sticks_scale_slider, sticks_scale_slider_label,
         frame = frame_sticks,
+        density_tooltip=sticks_density_tooltip,
+        scale_tooltip=sticks_scale_tooltip
     )
 
 def toggle_bushes_visibility(*args):
@@ -309,6 +337,8 @@ def toggle_bushes_visibility(*args):
         bushes_slider, bushes_slider_label,
         bushes_scale_slider, bushes_scale_slider_label,
         frame = frame_bushes,
+        density_tooltip=bushes_density_tooltip,
+        scale_tooltip=bushes_scale_tooltip
     )
 
 def toggle_volcanos_visibility(*args):
@@ -317,8 +347,9 @@ def toggle_volcanos_visibility(*args):
         volcano_slider, volcano_slider_label,
         volcano_scale_slider, volcano_scale_slider_label,
         frame = frame_volcanos,
+        density_tooltip=volcano_density_tooltip,
+        scale_tooltip=volcano_scale_tooltip
     )
-
 
 def toggle_mushrooms_visibility(*args):
     toggle_visibility(
@@ -326,6 +357,8 @@ def toggle_mushrooms_visibility(*args):
         mushroom_slider, mushroom_slider_label,
         mushroom_scale_slider, mushroom_scale_slider_label,
         frame = frame_mushrooms,
+        density_tooltip=mushroom_density_tooltip,
+        scale_tooltip=mushroom_scale_tooltip
     )
 
 # MAIN WINDOW
@@ -334,6 +367,10 @@ root.title("MeshScape")
 root.geometry("1366x768")
 ctk.set_appearance_mode("light")
 root.columnconfigure(0, weight=1)
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+tooltip_icon = Image.open(os.path.join(script_dir, "tooltip_icon.png"))
+tooltip_icon_image = ctk.CTkImage(light_image=tooltip_icon, size=(20, 20))
 
 # Left Section
 left_section = ctk.CTkFrame(root)
@@ -555,7 +592,7 @@ trees_switch.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
 # TREE SLIDERS
 trees_slider_label = ctk.CTkLabel(
-    frame_trees, text="Density: 30", width=125, anchor="w"
+    frame_trees, text="Density: 30", anchor="w"
 )
 trees_slider = ctk.CTkSlider(
     frame_trees,
@@ -569,9 +606,12 @@ trees_slider = ctk.CTkSlider(
 )
 trees_slider.set(30)
 
+trees_density_tooltip = ctk.CTkLabel(frame_trees, image=tooltip_icon_image, text="")
+ToolTip(trees_density_tooltip, msg="Controls how densely these objects are placed over the terrain.", delay=0.5)
+
 # TREE SCALE SLIDERS
 trees_scale_slider_label = ctk.CTkLabel(
-    frame_trees, text="Scale: 10", width=125, anchor="w"
+    frame_trees, text="Scale: 10", anchor="w"
 )
 trees_scale_slider = ctk.CTkSlider(
     frame_trees,
@@ -584,6 +624,9 @@ trees_scale_slider = ctk.CTkSlider(
     command=lambda value: update_slider_label(trees_scale_slider_label, "Scale", value),
 )
 trees_scale_slider.set(10)
+
+trees_scale_tooltip = ctk.CTkLabel(frame_trees, image=tooltip_icon_image, text="")
+ToolTip(trees_scale_tooltip, msg="Adjusts the size or scale of the objects.", delay=0.5)
 
 ############################################################################################################
 
@@ -604,7 +647,7 @@ rocks_switch.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
 # ROCKS SLIDERS
 rocks_slider_label = ctk.CTkLabel(
-    frame_rocks, text="Density: 15", width=125, anchor="w"
+    frame_rocks, text="Density: 15", anchor="w"
 )
 rocks_slider = ctk.CTkSlider(
     frame_rocks,
@@ -618,9 +661,12 @@ rocks_slider = ctk.CTkSlider(
 )
 rocks_slider.set(15)
 
+rocks_density_tooltip = ctk.CTkLabel(frame_rocks, image=tooltip_icon_image, text="")
+ToolTip(rocks_density_tooltip, msg="Controls how densely these objects are placed over the terrain.", delay=0.5)
+
 # ROCKS MIN SLIDERS
 rocks_min_slider_label = ctk.CTkLabel(
-    frame_rocks, text="Min Size: 10", width=125, anchor="w"
+    frame_rocks, text="Min Size: 10", anchor="w"
 )
 rocks_min_slider = ctk.CTkSlider(
     frame_rocks,
@@ -634,9 +680,12 @@ rocks_min_slider = ctk.CTkSlider(
 )
 rocks_min_slider.set(10)
 
+rocks_min_tooltip = ctk.CTkLabel(frame_rocks, image=tooltip_icon_image, text="")
+ToolTip(rocks_min_tooltip, msg="Adjusts the minimum size of each rock object.", delay=0.5)
+
 # ROCKS MAX SLIDERS
 rocks_max_slider_label = ctk.CTkLabel(
-    frame_rocks, text="Max Size: 15", width=125, anchor="w"
+    frame_rocks, text="Max Size: 15", anchor="w"
 )
 rocks_max_slider = ctk.CTkSlider(
     frame_rocks,
@@ -650,9 +699,12 @@ rocks_max_slider = ctk.CTkSlider(
 )
 rocks_max_slider.set(15)
 
+rocks_max_tooltip = ctk.CTkLabel(frame_rocks, image=tooltip_icon_image, text="")
+ToolTip(rocks_max_tooltip, msg="Adjusts the maximum size of each rock object.", delay=0.5)
+
 # ROCKS POINT SLIDERS
 rocks_point_slider_label = ctk.CTkLabel(
-    frame_rocks, text="Points: 1000", width=125, anchor="w"
+    frame_rocks, text="Points: 1000", anchor="w"
 )
 rocks_point_slider = ctk.CTkSlider(
     frame_rocks,
@@ -665,6 +717,9 @@ rocks_point_slider = ctk.CTkSlider(
     command=lambda value: update_slider_label(rocks_point_slider_label, "Points", value),
 )
 rocks_point_slider.set(1000)
+
+rocks_point_tooltip = ctk.CTkLabel(frame_rocks, image=tooltip_icon_image, text="")
+ToolTip(rocks_point_tooltip, msg="Defines the complexity or number of vertices in each rock object.", delay=0.5)
 
 ############################################################################################################
 
@@ -685,7 +740,7 @@ sticks_switch.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
 # STICKS SLIDERS
 sticks_slider_label = ctk.CTkLabel(
-    frame_sticks, text="Density: 50", width=125, anchor="w"
+    frame_sticks, text="Density: 50", anchor="w"
 )
 sticks_slider = ctk.CTkSlider(
     frame_sticks,
@@ -699,9 +754,12 @@ sticks_slider = ctk.CTkSlider(
 )
 sticks_slider.set(50)
 
+sticks_density_tooltip = ctk.CTkLabel(frame_sticks, image=tooltip_icon_image, text="")
+ToolTip(sticks_density_tooltip, msg="Controls how densely these objects are placed over the terrain.", delay=0.5)
+
 # STICK SCALE SLIDERS
 sticks_scale_slider_label = ctk.CTkLabel(
-    frame_sticks, text="Scale: 10", width=125, anchor="w"
+    frame_sticks, text="Scale: 10", anchor="w"
 )
 sticks_scale_slider = ctk.CTkSlider(
     frame_sticks,
@@ -714,6 +772,9 @@ sticks_scale_slider = ctk.CTkSlider(
     command=lambda value: update_slider_label(sticks_scale_slider_label, "Scale", value),
 )
 sticks_scale_slider.set(10)
+
+sticks_scale_tooltip = ctk.CTkLabel(frame_sticks, image=tooltip_icon_image, text="")
+ToolTip(sticks_scale_tooltip, msg="Adjusts the size or scale of the objects.", delay=0.5)
 
 ############################################################################################################
 
@@ -734,7 +795,7 @@ bushes_switch.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
 # BUSHES SLIDERS
 bushes_slider_label = ctk.CTkLabel(
-    frame_bushes, text="Density: 50", width=125, anchor="w"
+    frame_bushes, text="Density: 50", anchor="w"
 )
 bushes_slider = ctk.CTkSlider(
     frame_bushes,
@@ -748,9 +809,12 @@ bushes_slider = ctk.CTkSlider(
 )
 bushes_slider.set(50)
 
+bushes_density_tooltip = ctk.CTkLabel(frame_bushes, image=tooltip_icon_image, text="")
+ToolTip(bushes_density_tooltip, msg="Controls how densely these objects are placed over the terrain.", delay=0.5)
+
 # STICK SCALE SLIDERS
 bushes_scale_slider_label = ctk.CTkLabel(
-    frame_bushes, text="Scale: 50", width=125, anchor="w"
+    frame_bushes, text="Scale: 50", anchor="w"
 )
 bushes_scale_slider = ctk.CTkSlider(
     frame_bushes,
@@ -763,6 +827,9 @@ bushes_scale_slider = ctk.CTkSlider(
     command=lambda value: update_slider_label(bushes_scale_slider_label, "Scale", value),
 )
 bushes_scale_slider.set(50)
+
+bushes_scale_tooltip = ctk.CTkLabel(frame_bushes, image=tooltip_icon_image, text="")
+ToolTip(bushes_scale_tooltip, msg="Adjusts the size or scale of the objects.", delay=0.5)
 
 ############################################################################################################
 
@@ -783,7 +850,7 @@ volcano_switch.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
 # VOLCANO SLIDERS
 volcano_slider_label = ctk.CTkLabel(
-    frame_volcanos, text="Density: 10", width=125, anchor="w"
+    frame_volcanos, text="Density: 10", anchor="w"
 )
 volcano_slider = ctk.CTkSlider(
     frame_volcanos,
@@ -797,9 +864,12 @@ volcano_slider = ctk.CTkSlider(
 )
 volcano_slider.set(10)
 
+volcano_density_tooltip = ctk.CTkLabel(frame_volcanos, image=tooltip_icon_image, text="")
+ToolTip(volcano_density_tooltip, msg="Controls how densely these objects are placed over the terrain.", delay=0.5)
+
 # VOLCANO SCALE SLIDERS
 volcano_scale_slider_label = ctk.CTkLabel(
-    frame_volcanos, text="Scale: 60", width=125, anchor="w"
+    frame_volcanos, text="Scale: 60", anchor="w"
 )
 volcano_scale_slider = ctk.CTkSlider(
     frame_volcanos,
@@ -812,6 +882,9 @@ volcano_scale_slider = ctk.CTkSlider(
     command=lambda value: update_slider_label(volcano_scale_slider_label, "Scale", value),
 )
 volcano_scale_slider.set(60)
+
+volcano_scale_tooltip = ctk.CTkLabel(frame_volcanos, image=tooltip_icon_image, text="")
+ToolTip(volcano_scale_tooltip, msg="Adjusts the size or scale of the objects.", delay=0.5)
 
 ############################################################################################################
 
@@ -832,7 +905,7 @@ mushroom_switch.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
 # MUSHROOM SLIDERS
 mushroom_slider_label = ctk.CTkLabel(
-    frame_mushrooms, text="Density: 15", width=125, anchor="w"
+    frame_mushrooms, text="Density: 15", anchor="w"
 )
 mushroom_slider = ctk.CTkSlider(
     frame_mushrooms,
@@ -846,9 +919,12 @@ mushroom_slider = ctk.CTkSlider(
 )
 mushroom_slider.set(15)
 
+mushroom_density_tooltip = ctk.CTkLabel(frame_mushrooms, image=tooltip_icon_image, text="")
+ToolTip(mushroom_density_tooltip, msg="Controls how densely these objects are placed over the terrain.", delay=0.5)
+
 # MUSHROOM SCALE SLIDERS
 mushroom_scale_slider_label = ctk.CTkLabel(
-    frame_mushrooms, text="Scale: 10", width=125, anchor="w"
+    frame_mushrooms, text="Scale: 10", anchor="w"
 )
 mushroom_scale_slider = ctk.CTkSlider(
     frame_mushrooms,
@@ -861,6 +937,9 @@ mushroom_scale_slider = ctk.CTkSlider(
     command=lambda value: update_slider_label(mushroom_scale_slider_label, "Scale", value),
 )
 mushroom_scale_slider.set(10)
+
+mushroom_scale_tooltip = ctk.CTkLabel(frame_mushrooms, image=tooltip_icon_image, text="")
+ToolTip(mushroom_scale_tooltip, msg="Adjusts the size or scale of the objects.", delay=0.5)
 
 ############################################################################################################
 
@@ -924,6 +1003,10 @@ noise_type_dropdown = ctk.CTkOptionMenu(
 noise_type_dropdown.grid(row=0, column=1, sticky="w", padx=(15, 0))
 noise_type_dropdown.set("Perlin")
 
+noisetype_tooltip = ctk.CTkLabel(frame_base_noise, image=tooltip_icon_image, text="")
+noisetype_tooltip.grid(row=0, column=1, sticky="w", padx=(125, 0))
+ToolTip(noisetype_tooltip, msg="Choose the type of noise algorithm for the terrain generation. Each type affects the randomness and detail of your terrain differently.", delay=0.5)
+
 # WIDTH
 width_label = ctk.CTkLabel(
     frame_base_noise, text="Mesh Width: 15", width=135, anchor="w"
@@ -942,6 +1025,10 @@ width_slider = ctk.CTkSlider(
 )
 width_slider.grid(row=1, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
 width_slider.set(15)
+
+width_tooltip = ctk.CTkLabel(frame_base_noise, image=tooltip_icon_image, text="")
+width_tooltip.grid(row=1, column=2, sticky="w", padx=(5, 0), pady=(20, 0))
+ToolTip(width_tooltip, msg="Adjusts the width of the final mesh.", delay=0.5)
 
 # HEIGHT
 height_label = ctk.CTkLabel(
@@ -962,6 +1049,10 @@ height_slider = ctk.CTkSlider(
 height_slider.grid(row=2, column=1, sticky="w", padx=(10, 0))
 height_slider.set(15)
 
+height_tooltip = ctk.CTkLabel(frame_base_noise, image=tooltip_icon_image, text="")
+height_tooltip.grid(row=2, column=2, sticky="w", padx=(5, 0))
+ToolTip(height_tooltip, msg="Adjusts the height of the final mesh.", delay=0.5)
+
 # SCALE
 scale_label = ctk.CTkLabel(
     frame_base_noise, text="Zoom Scale: 100", width=135, anchor="w"
@@ -981,6 +1072,10 @@ scale_slider = ctk.CTkSlider(
 scale_slider.grid(row=3, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
 scale_slider.set(100)
 
+noise_scale_tooltip = ctk.CTkLabel(frame_base_noise, image=tooltip_icon_image, text="")
+noise_scale_tooltip.grid(row=3, column=2, sticky="w", padx=(5, 0), pady=(20, 0))
+ToolTip(noise_scale_tooltip, msg="Controls the zoom level of the noise pattern on the mesh, affecting how large the noise features appear.", delay=0.5)
+
 # OCTAVES
 octaves_label = ctk.CTkLabel(frame_base_noise, text="Octaves: 5", width=135, anchor="w")
 octaves_label.grid(row=4, column=0, sticky="w", pady=(20, 0))
@@ -997,6 +1092,10 @@ octaves_slider = ctk.CTkSlider(
 )
 octaves_slider.grid(row=4, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
 octaves_slider.set(5)
+
+octaves_tooltip = ctk.CTkLabel(frame_base_noise, image=tooltip_icon_image, text="")
+octaves_tooltip.grid(row=4, column=2, sticky="w", padx=(5, 0), pady=(20, 0))
+ToolTip(octaves_tooltip, msg="The number of layers of noise to generate. More octaves create more detail at the risk of higher computation cost.", delay=0.5)
 
 # PERSISTENCE
 persistence_label = ctk.CTkLabel(
@@ -1017,6 +1116,10 @@ persistence_slider = ctk.CTkSlider(
 persistence_slider.grid(row=5, column=1, sticky="w", padx=(10, 0))
 persistence_slider.set(5)
 
+persistence_tooltip = ctk.CTkLabel(frame_base_noise, image=tooltip_icon_image, text="")
+persistence_tooltip.grid(row=5, column=2, sticky="w", padx=(5, 0))
+ToolTip(persistence_tooltip, msg="Affects the amplitude of each octave; lower values make higher octaves have less impact.", delay=0.5)
+
 # LACUNARITY
 lacunarity_label = ctk.CTkLabel(
     frame_base_noise, text="Lacunarity: 5", width=135, anchor="w"
@@ -1035,6 +1138,10 @@ lacunarity_slider = ctk.CTkSlider(
 )
 lacunarity_slider.grid(row=6, column=1, sticky="w", padx=(10, 0))
 lacunarity_slider.set(5)
+
+lacunarity_tooltip = ctk.CTkLabel(frame_base_noise, image=tooltip_icon_image, text="")
+lacunarity_tooltip.grid(row=6, column=2, sticky="w", padx=(5, 0))
+ToolTip(lacunarity_tooltip, msg="Controls the frequency of each octave; higher values create more frequent features in the terrain.", delay=0.5)
 
 ############################################################################################################
 
@@ -1069,6 +1176,10 @@ resolution_factor_slider = ctk.CTkSlider(
 resolution_factor_slider.grid(row=0, column=1, sticky="w", padx=(10, 0))
 resolution_factor_slider.set(10)
 
+resolution_factor_tooltip = ctk.CTkLabel(frame_base_terrain, image=tooltip_icon_image, text="")
+resolution_factor_tooltip.grid(row=0, column=2, sticky="w", padx=(5, 0))
+ToolTip(resolution_factor_tooltip, msg="Adjusts the resolution of the terrain mesh.", delay=0.5)
+
 # BASE ELEVATION
 base_elevation_label = ctk.CTkLabel(
     frame_base_terrain, text="Base Elevation: 200", width=135, anchor="w"
@@ -1090,6 +1201,10 @@ base_elevation_slider = ctk.CTkSlider(
 base_elevation_slider.grid(row=1, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
 base_elevation_slider.set(200)
 
+base_elevation_tooltip = ctk.CTkLabel(frame_base_terrain, image=tooltip_icon_image, text="")
+base_elevation_tooltip.grid(row=1, column=2, sticky="w", padx=(5, 0), pady=(20, 0))
+ToolTip(base_elevation_tooltip, msg="Sets the starting elevation of the terrain.", delay=0.5)
+
 # MIN HEIGHT
 min_height_label = ctk.CTkLabel(
     frame_base_terrain, text="Min  Height: 100", width=135, anchor="w"
@@ -1109,6 +1224,10 @@ min_height_slider = ctk.CTkSlider(
 min_height_slider.grid(row=2, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
 min_height_slider.set(100)
 
+min_height_tooltip = ctk.CTkLabel(frame_base_terrain, image=tooltip_icon_image, text="")
+min_height_tooltip.grid(row=2, column=2, sticky="w", padx=(5, 0), pady=(20, 0))
+ToolTip(min_height_tooltip, msg="Define the range of elevation from the lowest valleys.", delay=0.5)
+
 # MAX HEIGHT
 max_height_label = ctk.CTkLabel(
     frame_base_terrain, text="Max Height: 300", width=135, anchor="w"
@@ -1127,6 +1246,10 @@ max_height_slider = ctk.CTkSlider(
 )
 max_height_slider.grid(row=3, column=1, sticky="w", padx=(10, 0))
 max_height_slider.set(300)
+
+max_height_tooltip = ctk.CTkLabel(frame_base_terrain, image=tooltip_icon_image, text="")
+max_height_tooltip.grid(row=3, column=2, sticky="w", padx=(5, 0))
+ToolTip(max_height_tooltip, msg="Define the range of elevation to the highest peaks.", delay=0.5)
 
 ############################################################################################################
 
