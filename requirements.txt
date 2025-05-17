@@ -1,0 +1,9 @@
+numpy>=1.24.0
+matplotlib>=3.7.0
+customtkinter>=5.2.0
+Pillow>=10.0.0
+numpy-stl>=2.16.0
+tktooltip>=1.2.0
+PyVista>=0.39.0
+scipy>=1.10.0
+PyQt5>=5.15.0 
