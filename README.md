@@ -45,7 +45,7 @@ MeshScape is a sophisticated parametric 3D terrain generation tool designed for 
 - Efficient memory management for large terrain generation
 - Seamless integration with robotics simulation frameworks
 
-## Technical Stack
+## Tech Stack
 - Python 3.x
 - NumPy for numerical operations
 - PyVista for 3D visualization
