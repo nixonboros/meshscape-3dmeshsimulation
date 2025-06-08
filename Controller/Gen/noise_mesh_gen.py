@@ -34,7 +34,7 @@ def create_mesh(heightmap, height_scale, height_offset, resolution_factor, base_
 
     # Create a solid base layer
     base_layer = pv.Plane(center=(np.mean(x_new), np.mean(y_new), floor_elevation),
-                          i_size=x_new.ptp(), j_size=y_new.ptp(),
+                          i_size=np.ptp(x_new), j_size=np.ptp(y_new),
                           i_resolution=int(x_new.shape[1]), j_resolution=int(y_new.shape[0]))
 
     return terrain_mesh, base_layer

@@ -1,0 +1,12 @@
+customtkinter
+matplotlib
+numpy
+scipy
+Pillow
+PyQt5
+pyvista
+pyvistaqt
+numpy-stl
+trimesh
+noise
+rtree

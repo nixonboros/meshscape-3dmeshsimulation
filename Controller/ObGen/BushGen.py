@@ -35,7 +35,7 @@ def create_bit(scale):
         bit = trimesh.creation.icosphere(radius=radius)
     return bit
 
-def create_bush(num_leaves=800, num_sticks=15, num_bits=50, scale=1.0):
+def create_bush(num_leaves=200, num_sticks=5, num_bits=20, scale=0.5):
     all_vertices = []
     all_faces = []
     face_offset = 0
