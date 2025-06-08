@@ -65,7 +65,7 @@ center_frame = ctk.CTkFrame(splash_root, fg_color=transparent_color, corner_radi
 center_frame.pack(expand=True, fill="both")
 
 # Card-style splash frame (smaller)
-frame_splash = ctk.CTkFrame(center_frame, fg_color="white", corner_radius=14, border_width=2, border_color="#b0c4d9")
+frame_splash = ctk.CTkFrame(center_frame, fg_color="white", corner_radius=14, border_width=2, border_color="#4e84ae")
 frame_splash.pack(expand=True, padx=10, pady=10)
 
 # TITLE LABEL (less padding)
@@ -73,7 +73,7 @@ splash_label = ctk.CTkLabel(
     frame_splash,
     text="MeshScape is Loading...",
     font=ctk.CTkFont(size=18, weight="bold"),
-    text_color="#62a5d9",
+    text_color="#4e84ae",
 )
 splash_label.pack(padx=10, pady=(16, 6))
 
@@ -113,6 +113,8 @@ root = ctk.CTk()
 root.title("MeshScape")
 root.geometry("1366x768")
 ctk.set_appearance_mode("light")
+ctk.set_default_color_theme("blue")  
+root.configure(fg_color="#f7f9fb")   
 root.columnconfigure(0, weight=1)
 
 # Center the main window with explicit size
@@ -375,8 +377,8 @@ def main_window():
         )
 
     # Left Section
-    left_section = ctk.CTkFrame(root)
-    left_section.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+    left_section = ctk.CTkFrame(root, corner_radius=16, border_width=1, border_color="#e0e6ed", fg_color="white")
+    left_section.grid(row=0, column=0, padx=16, pady=12, sticky="nsew")
     root.rowconfigure(0, weight=1)
 
     # Set the minimum width for the left section
@@ -388,68 +390,92 @@ def main_window():
     progress_bar.set(0)
 
     # FRAME FOR TITLE LABEL
-    frame_title = ctk.CTkFrame(left_section, fg_color="#62a5d9")
-    frame_title.grid(row=0, column=0, columnspan=2, padx=10, pady=(10, 20), sticky="ew")
+    frame_title = ctk.CTkFrame(
+        left_section,
+        fg_color="white",
+        corner_radius=16,
+        border_width=2,
+        border_color="#e0e6ed"
+    )
+    frame_title.grid(row=0, column=0, columnspan=2, padx=10, pady=(10, 8), sticky="ew")
     frame_title.columnconfigure(0, weight=1)
 
     # TITLE LABEL
     title_label = ctk.CTkLabel(
         frame_title,
         text="MeshScape",
-        font=ctk.CTkFont(size=24, weight="bold"),
-        text_color="white",
+        font=ctk.CTkFont(size=28, weight="bold"),
+        text_color="#4e84ae",
     )
-    title_label.grid(row=0, column=0, pady=(10, 10))
+    title_label.grid(row=0, column=0, pady=(18, 12))
 
     # PRESETS DROPDOWN MENU
-    presets_label = ctk.CTkLabel(left_section, text="Preset:")
-    presets_label.grid(row=1, column=0, padx=20, pady=(10, 0), sticky="w")
+    presets_label = ctk.CTkLabel(left_section, text="Preset:", font=ctk.CTkFont(size=15, weight="bold"), text_color="#4e84ae")
+    presets_label.grid(row=1, column=0, padx=20, pady=(0, 0), sticky="w")
 
     presets_optionmenu = ctk.CTkOptionMenu(
         left_section,
         values=["Default"],
-        width=200,
-        fg_color="#b9bdbd",
-        button_color="#9ca2a2",
-        button_hover_color="#838b8b",
+        width=180,
+        fg_color="#e0e6ed",
+        button_color="#4e84ae",
+        button_hover_color="#62a5d9",
+        font=ctk.CTkFont(size=14),
+        dropdown_font=ctk.CTkFont(size=13),
+        text_color="#222"
     )
-    presets_optionmenu.grid(row=1, column=0, padx=(70, 10), pady=(10, 0), sticky="w")
+    presets_optionmenu.grid(row=1, column=0, padx=(90, 0), pady=(0, 0), sticky="w")
 
     # SAVE PRESET BUTTON
     create_preset_button = ctk.CTkButton(
         left_section,
         text="Save",
         command=save_preset,
-        width=50,
-        fg_color="#9ca2a2",
-        hover_color="#838b8b",
+        width=60,
+        height=28,
+        corner_radius=8,
+        font=ctk.CTkFont(size=13, weight="bold"),
+        fg_color="#4e84ae",
+        hover_color="#62a5d9",
+        text_color="white"
     )
-    create_preset_button.grid(row=1, column=0, padx=(285, 0), pady=(10, 0), sticky="w")
+    create_preset_button.grid(row=1, column=0, padx=(285, 0), pady=(0, 0), sticky="w")
 
     # LOAD PRESET BUTTON
     load_preset_button = ctk.CTkButton(
         left_section,
         text="Load",
         command=load_preset,
-        width=50,
-        fg_color="#9ca2a2",
-        hover_color="#838b8b",
+        width=60,
+        height=28,
+        corner_radius=8,
+        font=ctk.CTkFont(size=13, weight="bold"),
+        fg_color="#4e84ae",
+        hover_color="#62a5d9",
+        text_color="white"
     )
-    load_preset_button.grid(row=1, column=0, padx=(340, 0), pady=(10, 0), sticky="w")
+    load_preset_button.grid(row=1, column=0, padx=(355, 0), pady=(0, 0), sticky="w")
+
+    # Section divider for visual separation
+    divider = ctk.CTkFrame(left_section, height=2, fg_color="#e0e6ed", corner_radius=1)
+    divider.grid(row=2, column=0, columnspan=2, sticky="ew", padx=10, pady=(4, 4))
 
     ############################################################################################################
 
     # TABVIEW
     tabview = ctk.CTkTabview(
         left_section,
-        fg_color="#f2f3f3",
-        segmented_button_fg_color="#9ca2a2",
-        segmented_button_selected_color="#62a5d9",
-        segmented_button_selected_hover_color="#4e84ae",
-        segmented_button_unselected_color="#9ca2a2",
-        segmented_button_unselected_hover_color="#838b8b",
+        fg_color="#f7f9fb",
+        segmented_button_fg_color="#e0e6ed",
+        segmented_button_selected_color="#4e84ae",
+        segmented_button_selected_hover_color="#62a5d9",
+        segmented_button_unselected_color="#c5c9d1",
+        segmented_button_unselected_hover_color="#aab0bb",
+        corner_radius=12,
+        border_width=1,
+        border_color="#e0e6ed"
     )
-    tabview.grid(row=2, column=0, columnspan=2, sticky="nsew", padx=10)
+    tabview.grid(row=2, column=0, columnspan=2, sticky="nsew", padx=10, pady=(0, 0))
 
     tabview.add("Noise")
     tabview.add("Terrain")
@@ -460,6 +486,11 @@ def main_window():
     tabview.tab("Noise").columnconfigure(0, weight=1)
     tabview.tab("Terrain").columnconfigure(0, weight=1)
     tabview.tab("Objects").columnconfigure(0, weight=1)
+
+    # Add section headers to each tab for clarity
+    ctk.CTkLabel(tabview.tab("Noise"), text="Noise Settings", font=ctk.CTkFont(size=16, weight="bold"), text_color="#4e84ae").grid(row=0, column=0, sticky="w", pady=(0, 8))
+    ctk.CTkLabel(tabview.tab("Terrain"), text="Terrain Settings", font=ctk.CTkFont(size=16, weight="bold"), text_color="#4e84ae").grid(row=0, column=0, sticky="w", pady=(0, 8))
+    ctk.CTkLabel(tabview.tab("Objects"), text="Object Placement", font=ctk.CTkFont(size=16, weight="bold"), text_color="#4e84ae").grid(row=0, column=0, sticky="w", pady=(0, 8))
 
     ############################################################################################################
 
@@ -524,47 +555,52 @@ def main_window():
     ############################################################################################################
 
     # FRAME_BASE_OBJECTS
-    frame_base_objects = ctk.CTkScrollableFrame(
-        tabview.tab("Objects"), height=400, fg_color="#f2f3f3"
+    frame_objects_card = ctk.CTkScrollableFrame(
+        tabview.tab("Objects"),
+        fg_color="white",
+        corner_radius=14,
+        border_width=1,
+        border_color="#e0e6ed",
+        height=400
     )
-    frame_base_objects.grid(row=0, column=0, sticky="ew")
-    frame_base_objects.columnconfigure(0, weight=1)
+    frame_objects_card.grid(row=1, column=0, padx=8, pady=8, sticky="nsew")
+    frame_objects_card.columnconfigure(0, weight=1)
 
     # FRAME_TREES
     frame_trees = ctk.CTkFrame(
-        frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
+        frame_objects_card, border_width=0, fg_color="#dfe1e1", corner_radius=20
     )
-    frame_trees.grid(row=0, column=0, sticky="ew")
+    frame_trees.grid(row=0, column=0, sticky="ew", padx=(0, 8), pady=(8))
 
     # FRAME_ROCKS
     frame_rocks = ctk.CTkFrame(
-        frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
+        frame_objects_card, border_width=0, fg_color="#dfe1e1", corner_radius=20
     )
-    frame_rocks.grid(row=1, column=0, pady=(10, 0), sticky="ew")
+    frame_rocks.grid(row=1, column=0, padx=(0, 8), pady=(8), sticky="ew")
 
     # FRAME_STICKS
     frame_sticks = ctk.CTkFrame(
-        frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
+        frame_objects_card, border_width=0, fg_color="#dfe1e1", corner_radius=20
     )
-    frame_sticks.grid(row=2, column=0, pady=(10, 0), sticky="ew")
+    frame_sticks.grid(row=2, column=0, padx=(0, 8), pady=(8), sticky="ew")
 
     # FRAME_BUSHES
     frame_bushes = ctk.CTkFrame(
-        frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
+        frame_objects_card, border_width=0, fg_color="#dfe1e1", corner_radius=20
     )
-    frame_bushes.grid(row=3, column=0, pady=(10, 0), sticky="ew")
+    frame_bushes.grid(row=3, column=0, padx=(0, 8), pady=(8), sticky="ew")
 
     # FRAME_VOLCANOES
     frame_volcanos = ctk.CTkFrame(
-        frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
+        frame_objects_card, border_width=0, fg_color="#dfe1e1", corner_radius=20
     )
-    frame_volcanos.grid(row=4, column=0, pady=(10, 0), sticky="ew")
+    frame_volcanos.grid(row=4, column=0, padx=(0, 8), pady=(8), sticky="ew")
 
     # FRAME_MUSHROOMS
     frame_mushrooms = ctk.CTkFrame(
-        frame_base_objects, border_width=0, fg_color="#dfe1e1", corner_radius=20
+        frame_objects_card, border_width=0, fg_color="#dfe1e1", corner_radius=20
     )
-    frame_mushrooms.grid(row=5, column=0, pady=(10, 10), sticky="ew")
+    frame_mushrooms.grid(row=5, column=0, padx=(0, 8), pady=(8), sticky="ew")
 
     ############################################################################################################
 
@@ -803,7 +839,7 @@ def main_window():
     )  # bind toggle_slider_visibility function to switch variable
     volcano_switch = ctk.CTkSwitch(
         frame_volcanos,
-        text="Anthills and Mounds",
+        text="Anthills",
         command=toggle_volcanos_visibility,
         variable=add_volcano_switch,
         onvalue="on",
@@ -927,258 +963,265 @@ def main_window():
 
     ############################################################################################################
 
-    # FRAME_BASE_NOISE
-    frame_base_noise = ctk.CTkScrollableFrame(
-        tabview.tab("Noise"), height=350, fg_color="#f2f3f3"
+    # Noise Card
+    frame_noise_card = ctk.CTkFrame(
+        tabview.tab("Noise"),
+        fg_color="white",
+        corner_radius=14,
+        border_width=1,
+        border_color="#e0e6ed"
     )
-    frame_base_noise.grid(
-        row=0,
-        column=0,
-        sticky="ew",
-    )
+    frame_noise_card.grid(row=1, column=0, padx=8, pady=8, sticky="nsew")
+    frame_noise_card.columnconfigure(1, weight=1)
 
-    # NOISE TYPE
+    # Noise Type
     noise_type_label = ctk.CTkLabel(
-        frame_base_noise, width=135, text="Noise Type: ", anchor="w"
+        frame_noise_card, text="Noise Type:", font=ctk.CTkFont(size=13), anchor="e"
     )
-    noise_type_label.grid(row=0, column=0, sticky="w")
+    noise_type_label.grid(row=0, column=0, sticky="e", padx=(16, 8), pady=(16, 8))
 
     noise_type_dropdown = ctk.CTkOptionMenu(
-        frame_base_noise,
+        frame_noise_card,
         values=['Perlin', 'Simplex', 'Value', 'Cellular'],
-        width=100,
-        fg_color="#b9bdbd",
-        button_color="#9ca2a2",
-        button_hover_color="#838b8b",
+        width=120,
+        fg_color="#e0e6ed",
+        button_color="#4e84ae",
+        button_hover_color="#62a5d9",
+        font=ctk.CTkFont(size=13),
+        dropdown_font=ctk.CTkFont(size=12),
+        text_color="#222"
     )
-    noise_type_dropdown.grid(row=0, column=1, sticky="w", padx=(15, 0))
+    noise_type_dropdown.grid(row=0, column=1, sticky="w", padx=(0, 16), pady=(16, 8))
     noise_type_dropdown.set("Perlin")
 
-    # WIDTH
+    # Mesh Width
     width_label = ctk.CTkLabel(
-        frame_base_noise, text="Mesh Width: 15", width=135, anchor="w"
+        frame_noise_card, text="Mesh Width", font=ctk.CTkFont(size=13), anchor="e"
     )
-    width_label.grid(row=1, column=0, sticky="w", pady=(20, 0))
-
+    width_label.grid(row=1, column=0, sticky="e", padx=(16, 8), pady=4)
+    width_value = ctk.CTkLabel(frame_noise_card, text="15", font=ctk.CTkFont(size=13), width=32, anchor="w")
+    width_value.grid(row=1, column=2, sticky="w", padx=(8, 16), pady=4)
+    def update_width(val):
+        width_value.configure(text=f"{int(val)}")
+        update_object_count()
     width_slider = ctk.CTkSlider(
-        frame_base_noise,
+        frame_noise_card,
         from_=10,
         to=50,
-        width=400,
+        width=220,
         number_of_steps=50,
         button_color="#62a5d9",
         button_hover_color="#4e84ae",
-        command=lambda value: update_slider_label(width_label, "Mesh Width", value),
+        command=update_width,
     )
-    width_slider.grid(row=1, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
+    width_slider.grid(row=1, column=1, sticky="ew", padx=0, pady=4)
     width_slider.set(15)
 
-    # HEIGHT
+    # Mesh Height
     height_label = ctk.CTkLabel(
-        frame_base_noise, text="Mesh Height: 15", width=135, anchor="w"
+        frame_noise_card, text="Mesh Height", font=ctk.CTkFont(size=13), anchor="e"
     )
-    height_label.grid(row=2, column=0, sticky="w")
-
+    height_label.grid(row=2, column=0, sticky="e", padx=(16, 8), pady=4)
+    height_value = ctk.CTkLabel(frame_noise_card, text="15", font=ctk.CTkFont(size=13), width=32, anchor="w")
+    height_value.grid(row=2, column=2, sticky="w", padx=(8, 16), pady=4)
+    def update_height(val):
+        height_value.configure(text=f"{int(val)}")
+        update_object_count()
     height_slider = ctk.CTkSlider(
-        frame_base_noise,
+        frame_noise_card,
         from_=10,
         to=50,
-        width=400,
+        width=220,
         number_of_steps=50,
         button_color="#62a5d9",
         button_hover_color="#4e84ae",
-        command=lambda value: update_slider_label(height_label, "Mesh Height", value),
+        command=update_height,
     )
-    height_slider.grid(row=2, column=1, sticky="w", padx=(10, 0))
+    height_slider.grid(row=2, column=1, sticky="ew", padx=0, pady=4)
     height_slider.set(15)
 
-    # SCALE
+    # Zoom Scale
     scale_label = ctk.CTkLabel(
-        frame_base_noise, text="Zoom Scale: 100", width=135, anchor="w"
+        frame_noise_card, text="Zoom Scale", font=ctk.CTkFont(size=13), anchor="e"
     )
-    scale_label.grid(row=3, column=0, sticky="w", pady=(20, 0))
-
+    scale_label.grid(row=3, column=0, sticky="e", padx=(16, 8), pady=4)
+    scale_value = ctk.CTkLabel(frame_noise_card, text="100", font=ctk.CTkFont(size=13), width=32, anchor="w")
+    scale_value.grid(row=3, column=2, sticky="w", padx=(8, 16), pady=4)
+    def update_scale(val):
+        scale_value.configure(text=f"{int(val)}")
     scale_slider = ctk.CTkSlider(
-        frame_base_noise,
+        frame_noise_card,
         from_=100,
         to=1000,
-        width=400,
+        width=220,
         number_of_steps=9,
         button_color="#62a5d9",
         button_hover_color="#4e84ae",
-        command=lambda value: update_slider_label(scale_label, "Zoom Scale", value),
+        command=update_scale,
     )
-    scale_slider.grid(row=3, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
+    scale_slider.grid(row=3, column=1, sticky="ew", padx=0, pady=4)
     scale_slider.set(100)
 
-    # OCTAVES
-    octaves_label = ctk.CTkLabel(frame_base_noise, text="Octaves: 5", width=135, anchor="w")
-    octaves_label.grid(row=4, column=0, sticky="w", pady=(20, 0))
-
+    # Octaves
+    octaves_label = ctk.CTkLabel(frame_noise_card, text="Octaves", font=ctk.CTkFont(size=13), anchor="e")
+    octaves_label.grid(row=4, column=0, sticky="e", padx=(16, 8), pady=4)
+    octaves_value = ctk.CTkLabel(frame_noise_card, text="5", font=ctk.CTkFont(size=13), width=32, anchor="w")
+    octaves_value.grid(row=4, column=2, sticky="w", padx=(8, 16), pady=4)
+    def update_octaves(val):
+        octaves_value.configure(text=f"{int(val)}")
     octaves_slider = ctk.CTkSlider(
-        frame_base_noise,
+        frame_noise_card,
         from_=1,
         to=10,
-        width=400,
+        width=220,
         number_of_steps=9,
         button_color="#62a5d9",
         button_hover_color="#4e84ae",
-        command=lambda value: update_slider_label(octaves_label, "Octaves", value),
+        command=update_octaves,
     )
-    octaves_slider.grid(row=4, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
+    octaves_slider.grid(row=4, column=1, sticky="ew", padx=0, pady=4)
     octaves_slider.set(5)
 
-    # PERSISTENCE
-    persistence_label = ctk.CTkLabel(
-        frame_base_noise, text="Persistence: 5", width=135, anchor="w"
-    )
-    persistence_label.grid(row=5, column=0, sticky="w")
-
+    # Persistence
+    persistence_label = ctk.CTkLabel(frame_noise_card, text="Persistence", font=ctk.CTkFont(size=13), anchor="e")
+    persistence_label.grid(row=5, column=0, sticky="e", padx=(16, 8), pady=4)
+    persistence_value = ctk.CTkLabel(frame_noise_card, text="5", font=ctk.CTkFont(size=13), width=32, anchor="w")
+    persistence_value.grid(row=5, column=2, sticky="w", padx=(8, 16), pady=4)
+    def update_persistence(val):
+        persistence_value.configure(text=f"{int(val)}")
     persistence_slider = ctk.CTkSlider(
-        frame_base_noise,
+        frame_noise_card,
         from_=1,
         to=10,
-        width=400,
+        width=220,
         number_of_steps=9,
         button_color="#62a5d9",
         button_hover_color="#4e84ae",
-        command=lambda value: update_slider_label(persistence_label, "Persistence", value),
+        command=update_persistence,
     )
-    persistence_slider.grid(row=5, column=1, sticky="w", padx=(10, 0))
+    persistence_slider.grid(row=5, column=1, sticky="ew", padx=0, pady=4)
     persistence_slider.set(5)
 
-    # LACUNARITY
-    lacunarity_label = ctk.CTkLabel(
-        frame_base_noise, text="Lacunarity: 5", width=135, anchor="w"
-    )
-    lacunarity_label.grid(row=6, column=0, sticky="w")
-
+    # Lacunarity
+    lacunarity_label = ctk.CTkLabel(frame_noise_card, text="Lacunarity", font=ctk.CTkFont(size=13), anchor="e")
+    lacunarity_label.grid(row=6, column=0, sticky="e", padx=(16, 8), pady=(4, 16))
+    lacunarity_value = ctk.CTkLabel(frame_noise_card, text="5", font=ctk.CTkFont(size=13), width=32, anchor="w")
+    lacunarity_value.grid(row=6, column=2, sticky="w", padx=(8, 16), pady=(4, 16))
+    def update_lacunarity(val):
+        lacunarity_value.configure(text=f"{int(val)}")
     lacunarity_slider = ctk.CTkSlider(
-        frame_base_noise,
+        frame_noise_card,
         from_=1,
         to=10,
-        width=400,
+        width=220,
         number_of_steps=9,
         button_color="#62a5d9",
         button_hover_color="#4e84ae",
-        command=lambda value: update_slider_label(lacunarity_label, "Lacunarity", value),
+        command=update_lacunarity,
     )
-    lacunarity_slider.grid(row=6, column=1, sticky="w", padx=(10, 0))
+    lacunarity_slider.grid(row=6, column=1, sticky="ew", padx=0, pady=(4, 16))
     lacunarity_slider.set(5)
 
     ############################################################################################################
 
-    # FRAME_BASE_TERRAIN
-    frame_base_terrain = ctk.CTkScrollableFrame(
-        tabview.tab("Terrain"), height=350, fg_color="#f2f3f3"
+    # Terrain Card
+    frame_terrain_card = ctk.CTkFrame(
+        tabview.tab("Terrain"),
+        fg_color="white",
+        corner_radius=14,
+        border_width=1,
+        border_color="#e0e6ed"
     )
-    frame_base_terrain.grid(
-        row=0,
-        column=0,
-        sticky="ew",
-    )
+    frame_terrain_card.grid(row=1, column=0, padx=8, pady=8, sticky="nsew")
+    frame_terrain_card.columnconfigure(1, weight=1)
 
-    # RESOLUTION FACTOR
+    # Resolution Factor
     resolution_factor_label = ctk.CTkLabel(
-        frame_base_terrain, text="Resolution Factor: 10", width=135, anchor="w"
+        frame_terrain_card, text="Resolution Factor", font=ctk.CTkFont(size=13), anchor="e"
     )
-    resolution_factor_label.grid(row=0, column=0, sticky="w")
-
+    resolution_factor_label.grid(row=0, column=0, sticky="e", padx=(16, 8), pady=(16, 4))
+    resolution_factor_value = ctk.CTkLabel(frame_terrain_card, text="10", font=ctk.CTkFont(size=13), width=32, anchor="w")
+    resolution_factor_value.grid(row=0, column=2, sticky="w", padx=(8, 16), pady=(16, 4))
+    def update_resolution_factor(val):
+        resolution_factor_value.configure(text=f"{int(val)}")
     resolution_factor_slider = ctk.CTkSlider(
-        frame_base_terrain,
+        frame_terrain_card,
         from_=1,
         to=20,
-        width=400,
+        width=220,
         number_of_steps=20,
         button_color="#62a5d9",
         button_hover_color="#4e84ae",
-        command=lambda value: update_slider_label(
-            resolution_factor_label, "Resolution Factor", value
-        ),
+        command=update_resolution_factor,
     )
-    resolution_factor_slider.grid(row=0, column=1, sticky="w", padx=(10, 0))
+    resolution_factor_slider.grid(row=0, column=1, sticky="ew", padx=0, pady=(16, 4))
     resolution_factor_slider.set(10)
 
-    # BASE ELEVATION
+    # Base Elevation
     base_elevation_label = ctk.CTkLabel(
-        frame_base_terrain, text="Base Elevation: 200", width=135, anchor="w"
+        frame_terrain_card, text="Base Elevation", font=ctk.CTkFont(size=13), anchor="e"
     )
-    base_elevation_label.grid(row=1, column=0, sticky="w", pady=(20, 0))
-
+    base_elevation_label.grid(row=1, column=0, sticky="e", padx=(16, 8), pady=4)
+    base_elevation_value = ctk.CTkLabel(frame_terrain_card, text="200", font=ctk.CTkFont(size=13), width=32, anchor="w")
+    base_elevation_value.grid(row=1, column=2, sticky="w", padx=(8, 16), pady=4)
+    def update_base_elevation(val):
+        base_elevation_value.configure(text=f"{int(val)}")
     base_elevation_slider = ctk.CTkSlider(
-        frame_base_terrain,
+        frame_terrain_card,
         from_=0,
         to=500,
-        width=400,
+        width=220,
         number_of_steps=100,
         button_color="#62a5d9",
         button_hover_color="#4e84ae",
-        command=lambda value: update_slider_label(
-            base_elevation_label, "Base Elevation", value
-        ),
+        command=update_base_elevation,
     )
-    base_elevation_slider.grid(row=1, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
+    base_elevation_slider.grid(row=1, column=1, sticky="ew", padx=0, pady=4)
     base_elevation_slider.set(200)
 
-    # MIN HEIGHT
+    # Min Height
     min_height_label = ctk.CTkLabel(
-        frame_base_terrain, text="Min  Height: 100", width=135, anchor="w"
+        frame_terrain_card, text="Min Height", font=ctk.CTkFont(size=13), anchor="e"
     )
-    min_height_label.grid(row=2, column=0, sticky="w", pady=(20, 0))
-
+    min_height_label.grid(row=2, column=0, sticky="e", padx=(16, 8), pady=4)
+    min_height_value = ctk.CTkLabel(frame_terrain_card, text="100", font=ctk.CTkFont(size=13), width=32, anchor="w")
+    min_height_value.grid(row=2, column=2, sticky="w", padx=(8, 16), pady=4)
+    def update_min_height(val):
+        min_height_value.configure(text=f"{int(val)}")
     min_height_slider = ctk.CTkSlider(
-        frame_base_terrain,
+        frame_terrain_card,
         from_=0,
         to=500,
-        width=400,
+        width=220,
         number_of_steps=100,
         button_color="#62a5d9",
         button_hover_color="#4e84ae",
-        command=lambda value: update_slider_label(min_height_label, "Min  Height", value),
+        command=update_min_height,
     )
-    min_height_slider.grid(row=2, column=1, sticky="w", padx=(10, 0), pady=(20, 0))
+    min_height_slider.grid(row=2, column=1, sticky="ew", padx=0, pady=4)
     min_height_slider.set(100)
 
-    # MAX HEIGHT
+    # Max Height
     max_height_label = ctk.CTkLabel(
-        frame_base_terrain, text="Max Height: 300", width=135, anchor="w"
+        frame_terrain_card, text="Max Height", font=ctk.CTkFont(size=13), anchor="e"
     )
-    max_height_label.grid(row=3, column=0, sticky="w")
-
+    max_height_label.grid(row=3, column=0, sticky="e", padx=(16, 8), pady=(4, 16))
+    max_height_value = ctk.CTkLabel(frame_terrain_card, text="300", font=ctk.CTkFont(size=13), width=32, anchor="w")
+    max_height_value.grid(row=3, column=2, sticky="w", padx=(8, 16), pady=(4, 16))
+    def update_max_height(val):
+        max_height_value.configure(text=f"{int(val)}")
     max_height_slider = ctk.CTkSlider(
-        frame_base_terrain,
+        frame_terrain_card,
         from_=0,
         to=500,
-        width=400,
+        width=220,
         number_of_steps=100,
         button_color="#62a5d9",
         button_hover_color="#4e84ae",
-        command=lambda value: update_slider_label(max_height_label, "Max Height", value),
+        command=update_max_height,
     )
-    max_height_slider.grid(row=3, column=1, sticky="w", padx=(10, 0))
+    max_height_slider.grid(row=3, column=1, sticky="ew", padx=0, pady=(4, 16))
     max_height_slider.set(300)
-
-    ############################################################################################################
-
-    # OBJECT FRAME CLICKABLE
-    def bind_toggle_switch_and_cursor(frame, switch_variable, toggle_function):
-        def toggle_frame_switch(event):
-            # Toggle the switch value when the frame is clicked
-            if switch_variable.get() == "on":
-                switch_variable.set("off")
-            else:
-                switch_variable.set("on")
-            toggle_function()
-
-        frame.bind("<Button-1>", toggle_frame_switch)
-        frame.configure(cursor="hand2")
-
-    bind_toggle_switch_and_cursor(frame_trees, add_trees_switch, toggle_trees_visibility)
-    bind_toggle_switch_and_cursor(frame_rocks, add_rocks_switch, toggle_rocks_visibility)
-    bind_toggle_switch_and_cursor(frame_sticks, add_sticks_switch, toggle_sticks_visibility)
-    bind_toggle_switch_and_cursor(frame_bushes, add_bushes_switch, toggle_bushes_visibility)
-    bind_toggle_switch_and_cursor(frame_volcanos, add_volcano_switch, toggle_volcanos_visibility)
-    bind_toggle_switch_and_cursor(frame_mushrooms, add_mushroom_switch, toggle_mushrooms_visibility)
 
     ############################################################################################################
 
@@ -1188,8 +1231,9 @@ def main_window():
         text="Generate Mesh",
         width=200,
         height=40,
-        fg_color="#62a5d9",
-        hover_color="#4e84ae",
+        fg_color="#4e84ae",
+        hover_color="#62a5d9",
+        font=ctk.CTkFont(size=13, weight="bold"),
         command=generate_noise
     )
     genmesh_button.grid(row=3, column=0, columnspan=2, pady=(10, 10), sticky="s")
