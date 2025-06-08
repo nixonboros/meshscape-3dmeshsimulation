@@ -71,9 +71,11 @@ frame_splash.pack(expand=True, padx=10, pady=10)
 # TITLE LABEL (less padding)
 splash_label = ctk.CTkLabel(
     frame_splash,
-    text="MeshScape is Loading...",
+    text="Loading...",
     font=ctk.CTkFont(size=18, weight="bold"),
     text_color="#4e84ae",
+    width=200,
+    height=50
 )
 splash_label.pack(padx=10, pady=(16, 6))
 
