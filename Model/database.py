@@ -7,10 +7,11 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import asyncio
 from documentSchema import create_document_schema
 
-password = quote_plus('6hrfDLfQ5M2gs53M')
-username = quote_plus('mesh')
+username = quote_plus('nixonboros')
+password = quote_plus('qgZs4gYLGEGUJ6Ng')
+cluster_url = '3dmeshgen.eqmrnic.mongodb.net'
 
-uri = 'mongodb+srv://' + username + ':' + password + '@meshgen.jkozatf.mongodb.net/?retryWrites=true&w=majority&appName=MeshGen'
+uri = f"mongodb+srv://{username}:{password}@{cluster_url}/?retryWrites=true&w=majority"
 
 # Create a new client and connect to the server
 client = AsyncIOMotorClient(uri)
@@ -25,8 +26,8 @@ async def check_connection():
         print("Failed to connect:", e)
 
 # Get the database and collection
-db = client['meshDB']
-collection = db['parameters']
+db = client['3dmeshgen']  
+collection = db['parameters']  
 
 async def insert_document(*args):
     document = create_document_schema(*args)

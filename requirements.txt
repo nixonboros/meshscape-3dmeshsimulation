@@ -10,3 +10,5 @@ numpy-stl
 trimesh
 noise
 rtree
+mongodb
+motor
