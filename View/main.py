@@ -28,23 +28,60 @@ from Controller.ObGen.PlaceObjects import *
 matplotlib.use("TkAgg")
 # SPLASH SCREEN
 splash_root = ctk.CTk()
-splash_root.geometry("300x200")
+splash_root.geometry("320x160")
 splash_root.overrideredirect(True)
+# Use a unique color for transparency
+transparent_color = "#e9ecef"
+splash_root.configure(bg=transparent_color)
+splash_root.wm_attributes("-transparentcolor", transparent_color)
 
-    # FRAME FOR TITLE LABEL
-frame_splash = ctk.CTkFrame(splash_root, fg_color="#62a5d9")
-frame_splash.grid(row=0, column=0, columnspan=6, padx=10, pady=(10, 20), sticky="ew")
-frame_splash.columnconfigure(0, weight=1)
+# Centering helper frame
+center_frame = ctk.CTkFrame(splash_root, fg_color=transparent_color, corner_radius=0)
+center_frame.pack(expand=True, fill="both")
 
-    # TITLE LABEL
+# Card-style splash frame (smaller)
+frame_splash = ctk.CTkFrame(center_frame, fg_color="white", corner_radius=14, border_width=2, border_color="#b0c4d9")
+frame_splash.pack(expand=True, padx=10, pady=10)
+
+# TITLE LABEL (less padding)
 splash_label = ctk.CTkLabel(
     frame_splash,
-    text="MeshScape is Loading",
+    text="MeshScape is Loading...",
     font=ctk.CTkFont(size=18, weight="bold"),
-    text_color="white",
+    text_color="#62a5d9",
 )
-splash_label.grid(row=0, column=0, pady=(10, 10))
-# splash_label.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
+splash_label.pack(padx=10, pady=(16, 6))
+
+# Splash Loading Bar
+splash_bar = ctk.CTkProgressBar(frame_splash, width=110, height=10)
+splash_bar.pack(pady=(0, 12))
+splash_bar.set(0)
+
+def animate_splash_bar(progress=0):
+    if progress < 1.0:
+        splash_bar.set(progress)
+        splash_root.after(20, animate_splash_bar, progress + 0.02)
+    else:
+        splash_bar.set(1.0)
+        splash_root.after(200, main_window)
+
+# Start the animation
+animate_splash_bar()
+
+# --- Make splash window draggable ---
+_drag_data = {'x': 0, 'y': 0}
+
+def start_move(event):
+    _drag_data['x'] = event.x
+    _drag_data['y'] = event.y
+
+def do_move(event):
+    x = splash_root.winfo_x() + event.x - _drag_data['x']
+    y = splash_root.winfo_y() + event.y - _drag_data['y']
+    splash_root.geometry(f'+{x}+{y}')
+
+frame_splash.bind('<Button-1>', start_move)
+frame_splash.bind('<B1-Motion>', do_move)
 
 # MAIN WINDOW
 root = ctk.CTk()
