@@ -26,6 +26,28 @@ from Controller.Gen.noise_mesh_gen import *
 from Controller.ObGen.PlaceObjects import *
 
 matplotlib.use("TkAgg")
+
+def center_window(window, width=None, height=None):
+    # Force window to update its geometry
+    window.update_idletasks()
+    
+    # Get the window's current size if not specified
+    if width is None:
+        width = window.winfo_width()
+    if height is None:
+        height = window.winfo_height()
+    
+    # Get screen dimensions
+    screen_width = window.winfo_screenwidth()
+    screen_height = window.winfo_screenheight()
+    
+    # Calculate position for center of screen
+    x = (screen_width - width) // 2
+    y = (screen_height - height) // 2
+    
+    # Set the window position
+    window.geometry(f'+{x}+{y}')
+
 # SPLASH SCREEN
 splash_root = ctk.CTk()
 splash_root.geometry("320x160")
@@ -34,6 +56,9 @@ splash_root.overrideredirect(True)
 transparent_color = "#e9ecef"
 splash_root.configure(bg=transparent_color)
 splash_root.wm_attributes("-transparentcolor", transparent_color)
+
+# Center the splash window with explicit size
+center_window(splash_root, 320, 160)
 
 # Centering helper frame
 center_frame = ctk.CTkFrame(splash_root, fg_color=transparent_color, corner_radius=0)
@@ -89,6 +114,9 @@ root.title("MeshScape")
 root.geometry("1366x768")
 ctk.set_appearance_mode("light")
 root.columnconfigure(0, weight=1)
+
+# Center the main window with explicit size
+center_window(root, 1366, 768)
 
 def main_window():
 #to connect to sliders
