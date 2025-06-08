@@ -378,7 +378,7 @@ def main_window():
 
     # Left Section
     left_section = ctk.CTkFrame(root, corner_radius=16, border_width=1, border_color="#e0e6ed", fg_color="white")
-    left_section.grid(row=0, column=0, padx=16, pady=12, sticky="nsew")
+    left_section.grid(row=0, column=0, padx=(16, 16), pady=12, sticky="nsew")
     root.rowconfigure(0, weight=1)
 
     # Set the minimum width for the left section
@@ -543,7 +543,7 @@ def main_window():
 
     # Setup right section and frame visualization
     right_section = ctk.CTkFrame(root, fg_color="#dbdbdb")
-    right_section.grid(row=0, column=1, padx=(0, 10), pady=10, sticky="nsew")
+    right_section.grid(row=0, column=1, padx=(16, 16), pady=10, sticky="nsew")
     right_section.columnconfigure(0, weight=1)
 
     frame_visualisation = ctk.CTkFrame(right_section, width=190, height=560, fg_color="white")
@@ -972,16 +972,22 @@ def main_window():
         border_color="#e0e6ed"
     )
     frame_noise_card.grid(row=1, column=0, padx=8, pady=8, sticky="nsew")
-    frame_noise_card.columnconfigure(1, weight=1)
+    tabview.tab("Noise").grid_columnconfigure(0, weight=1)
+    frame_noise_card.grid_columnconfigure(0, weight=1)
+    frame_noise_card.grid_columnconfigure(1, weight=1)
+    frame_noise_card.grid_columnconfigure(2, weight=0)
 
-    # Noise Type
+    # 1. Noise Type Group (left-aligned like other groups)
+    noise_type_group = ctk.CTkFrame(frame_noise_card, fg_color="#f7f9fb", corner_radius=10)
+    noise_type_group.grid(row=0, column=0, columnspan=3, sticky="ew", padx=8, pady=(16, 0))
+    noise_type_group.grid_columnconfigure(0, weight=0)
+    noise_type_group.grid_columnconfigure(1, weight=0)
     noise_type_label = ctk.CTkLabel(
-        frame_noise_card, text="Noise Type:", font=ctk.CTkFont(size=13), anchor="e"
+        noise_type_group, text="Noise Type", font=ctk.CTkFont(size=13), anchor="e"
     )
-    noise_type_label.grid(row=0, column=0, sticky="e", padx=(16, 8), pady=(16, 8))
-
+    noise_type_label.grid(row=0, column=0, sticky="w", padx=(16, 8), pady=8)
     noise_type_dropdown = ctk.CTkOptionMenu(
-        frame_noise_card,
+        noise_type_group,
         values=['Perlin', 'Simplex', 'Value', 'Cellular'],
         width=120,
         fg_color="#e0e6ed",
@@ -991,21 +997,26 @@ def main_window():
         dropdown_font=ctk.CTkFont(size=12),
         text_color="#222"
     )
-    noise_type_dropdown.grid(row=0, column=1, sticky="w", padx=(0, 16), pady=(16, 8))
+    noise_type_dropdown.grid(row=0, column=1, sticky="w", padx=0, pady=8)
     noise_type_dropdown.set("Perlin")
 
+    # 2. Mesh Size Group
+    mesh_size_group = ctk.CTkFrame(frame_noise_card, fg_color="#f7f9fb", corner_radius=10)
+    mesh_size_group.grid(row=1, column=0, columnspan=3, sticky="ew", padx=8, pady=(0, 0))
+    mesh_size_group.grid_columnconfigure(0, weight=0)
+    mesh_size_group.grid_columnconfigure(1, weight=1)
+    mesh_size_group.grid_columnconfigure(2, weight=0)
+    ctk.CTkLabel(mesh_size_group, text="Mesh Size", font=ctk.CTkFont(size=12, weight="bold"), text_color="#4e84ae").grid(row=0, column=0, columnspan=3, sticky="w", padx=8, pady=(8, 4))
     # Mesh Width
-    width_label = ctk.CTkLabel(
-        frame_noise_card, text="Mesh Width", font=ctk.CTkFont(size=13), anchor="e"
-    )
+    width_label = ctk.CTkLabel(mesh_size_group, text="Mesh Width", font=ctk.CTkFont(size=13), anchor="e")
     width_label.grid(row=1, column=0, sticky="e", padx=(16, 8), pady=4)
-    width_value = ctk.CTkLabel(frame_noise_card, text="15", font=ctk.CTkFont(size=13), width=32, anchor="w")
+    width_value = ctk.CTkLabel(mesh_size_group, text="15", font=ctk.CTkFont(size=13), width=32, anchor="w")
     width_value.grid(row=1, column=2, sticky="w", padx=(8, 16), pady=4)
     def update_width(val):
         width_value.configure(text=f"{int(val)}")
         update_object_count()
     width_slider = ctk.CTkSlider(
-        frame_noise_card,
+        mesh_size_group,
         from_=10,
         to=50,
         width=220,
@@ -1016,19 +1027,16 @@ def main_window():
     )
     width_slider.grid(row=1, column=1, sticky="ew", padx=0, pady=4)
     width_slider.set(15)
-
     # Mesh Height
-    height_label = ctk.CTkLabel(
-        frame_noise_card, text="Mesh Height", font=ctk.CTkFont(size=13), anchor="e"
-    )
-    height_label.grid(row=2, column=0, sticky="e", padx=(16, 8), pady=4)
-    height_value = ctk.CTkLabel(frame_noise_card, text="15", font=ctk.CTkFont(size=13), width=32, anchor="w")
-    height_value.grid(row=2, column=2, sticky="w", padx=(8, 16), pady=4)
+    height_label = ctk.CTkLabel(mesh_size_group, text="Mesh Height", font=ctk.CTkFont(size=13), anchor="e")
+    height_label.grid(row=2, column=0, sticky="e", padx=(16, 8), pady=(4, 8))
+    height_value = ctk.CTkLabel(mesh_size_group, text="15", font=ctk.CTkFont(size=13), width=32, anchor="w")
+    height_value.grid(row=2, column=2, sticky="w", padx=(8, 16), pady=(4, 8))
     def update_height(val):
         height_value.configure(text=f"{int(val)}")
         update_object_count()
     height_slider = ctk.CTkSlider(
-        frame_noise_card,
+        mesh_size_group,
         from_=10,
         to=50,
         width=220,
@@ -1037,20 +1045,25 @@ def main_window():
         button_hover_color="#4e84ae",
         command=update_height,
     )
-    height_slider.grid(row=2, column=1, sticky="ew", padx=0, pady=4)
+    height_slider.grid(row=2, column=1, sticky="ew", padx=0, pady=(4, 8))
     height_slider.set(15)
 
+    # 3. Scale Group
+    scale_group = ctk.CTkFrame(frame_noise_card, fg_color="#f7f9fb", corner_radius=10)
+    scale_group.grid(row=2, column=0, columnspan=3, sticky="ew", padx=8, pady=(0, 0))
+    scale_group.grid_columnconfigure(0, weight=0)
+    scale_group.grid_columnconfigure(1, weight=1)
+    scale_group.grid_columnconfigure(2, weight=0)
+    ctk.CTkLabel(scale_group, text="Scale", font=ctk.CTkFont(size=12, weight="bold"), text_color="#4e84ae").grid(row=0, column=0, columnspan=3, sticky="w", padx=8, pady=(8, 4))
     # Zoom Scale
-    scale_label = ctk.CTkLabel(
-        frame_noise_card, text="Zoom Scale", font=ctk.CTkFont(size=13), anchor="e"
-    )
-    scale_label.grid(row=3, column=0, sticky="e", padx=(16, 8), pady=4)
-    scale_value = ctk.CTkLabel(frame_noise_card, text="100", font=ctk.CTkFont(size=13), width=32, anchor="w")
-    scale_value.grid(row=3, column=2, sticky="w", padx=(8, 16), pady=4)
+    scale_label = ctk.CTkLabel(scale_group, text="Zoom Scale", font=ctk.CTkFont(size=13), anchor="e")
+    scale_label.grid(row=1, column=0, sticky="e", padx=(16, 8), pady=(4, 8))
+    scale_value = ctk.CTkLabel(scale_group, text="100", font=ctk.CTkFont(size=13), width=32, anchor="w")
+    scale_value.grid(row=1, column=2, sticky="w", padx=(8, 16), pady=(4, 8))
     def update_scale(val):
         scale_value.configure(text=f"{int(val)}")
     scale_slider = ctk.CTkSlider(
-        frame_noise_card,
+        scale_group,
         from_=100,
         to=1000,
         width=220,
@@ -1059,18 +1072,25 @@ def main_window():
         button_hover_color="#4e84ae",
         command=update_scale,
     )
-    scale_slider.grid(row=3, column=1, sticky="ew", padx=0, pady=4)
+    scale_slider.grid(row=1, column=1, sticky="ew", padx=0, pady=(4, 8))
     scale_slider.set(100)
 
+    # 4. Noise Detail Group
+    detail_group = ctk.CTkFrame(frame_noise_card, fg_color="#f7f9fb", corner_radius=10)
+    detail_group.grid(row=3, column=0, columnspan=3, sticky="ew", padx=8, pady=(0, 16))
+    detail_group.grid_columnconfigure(0, weight=0)
+    detail_group.grid_columnconfigure(1, weight=1)
+    detail_group.grid_columnconfigure(2, weight=0)
+    ctk.CTkLabel(detail_group, text="Noise Detail", font=ctk.CTkFont(size=12, weight="bold"), text_color="#4e84ae").grid(row=0, column=0, columnspan=3, sticky="w", padx=8, pady=(8, 4))
     # Octaves
-    octaves_label = ctk.CTkLabel(frame_noise_card, text="Octaves", font=ctk.CTkFont(size=13), anchor="e")
-    octaves_label.grid(row=4, column=0, sticky="e", padx=(16, 8), pady=4)
-    octaves_value = ctk.CTkLabel(frame_noise_card, text="5", font=ctk.CTkFont(size=13), width=32, anchor="w")
-    octaves_value.grid(row=4, column=2, sticky="w", padx=(8, 16), pady=4)
+    octaves_label = ctk.CTkLabel(detail_group, text="Octaves", font=ctk.CTkFont(size=13), anchor="e")
+    octaves_label.grid(row=1, column=0, sticky="e", padx=(16, 8), pady=4)
+    octaves_value = ctk.CTkLabel(detail_group, text="5", font=ctk.CTkFont(size=13), width=32, anchor="w")
+    octaves_value.grid(row=1, column=2, sticky="w", padx=(8, 16), pady=4)
     def update_octaves(val):
         octaves_value.configure(text=f"{int(val)}")
     octaves_slider = ctk.CTkSlider(
-        frame_noise_card,
+        detail_group,
         from_=1,
         to=10,
         width=220,
@@ -1079,18 +1099,17 @@ def main_window():
         button_hover_color="#4e84ae",
         command=update_octaves,
     )
-    octaves_slider.grid(row=4, column=1, sticky="ew", padx=0, pady=4)
+    octaves_slider.grid(row=1, column=1, sticky="ew", padx=0, pady=4)
     octaves_slider.set(5)
-
     # Persistence
-    persistence_label = ctk.CTkLabel(frame_noise_card, text="Persistence", font=ctk.CTkFont(size=13), anchor="e")
-    persistence_label.grid(row=5, column=0, sticky="e", padx=(16, 8), pady=4)
-    persistence_value = ctk.CTkLabel(frame_noise_card, text="5", font=ctk.CTkFont(size=13), width=32, anchor="w")
-    persistence_value.grid(row=5, column=2, sticky="w", padx=(8, 16), pady=4)
+    persistence_label = ctk.CTkLabel(detail_group, text="Persistence", font=ctk.CTkFont(size=13), anchor="e")
+    persistence_label.grid(row=2, column=0, sticky="e", padx=(16, 8), pady=4)
+    persistence_value = ctk.CTkLabel(detail_group, text="5", font=ctk.CTkFont(size=13), width=32, anchor="w")
+    persistence_value.grid(row=2, column=2, sticky="w", padx=(8, 16), pady=4)
     def update_persistence(val):
         persistence_value.configure(text=f"{int(val)}")
     persistence_slider = ctk.CTkSlider(
-        frame_noise_card,
+        detail_group,
         from_=1,
         to=10,
         width=220,
@@ -1099,18 +1118,17 @@ def main_window():
         button_hover_color="#4e84ae",
         command=update_persistence,
     )
-    persistence_slider.grid(row=5, column=1, sticky="ew", padx=0, pady=4)
+    persistence_slider.grid(row=2, column=1, sticky="ew", padx=0, pady=4)
     persistence_slider.set(5)
-
     # Lacunarity
-    lacunarity_label = ctk.CTkLabel(frame_noise_card, text="Lacunarity", font=ctk.CTkFont(size=13), anchor="e")
-    lacunarity_label.grid(row=6, column=0, sticky="e", padx=(16, 8), pady=(4, 16))
-    lacunarity_value = ctk.CTkLabel(frame_noise_card, text="5", font=ctk.CTkFont(size=13), width=32, anchor="w")
-    lacunarity_value.grid(row=6, column=2, sticky="w", padx=(8, 16), pady=(4, 16))
+    lacunarity_label = ctk.CTkLabel(detail_group, text="Lacunarity", font=ctk.CTkFont(size=13), anchor="e")
+    lacunarity_label.grid(row=3, column=0, sticky="e", padx=(16, 8), pady=(4, 12))
+    lacunarity_value = ctk.CTkLabel(detail_group, text="5", font=ctk.CTkFont(size=13), width=32, anchor="w")
+    lacunarity_value.grid(row=3, column=2, sticky="w", padx=(8, 16), pady=(4, 12))
     def update_lacunarity(val):
         lacunarity_value.configure(text=f"{int(val)}")
     lacunarity_slider = ctk.CTkSlider(
-        frame_noise_card,
+        detail_group,
         from_=1,
         to=10,
         width=220,
@@ -1119,7 +1137,7 @@ def main_window():
         button_hover_color="#4e84ae",
         command=update_lacunarity,
     )
-    lacunarity_slider.grid(row=6, column=1, sticky="ew", padx=0, pady=(4, 16))
+    lacunarity_slider.grid(row=3, column=1, sticky="ew", padx=0, pady=(4, 12))
     lacunarity_slider.set(5)
 
     ############################################################################################################
@@ -1135,17 +1153,24 @@ def main_window():
     frame_terrain_card.grid(row=1, column=0, padx=8, pady=8, sticky="nsew")
     frame_terrain_card.columnconfigure(1, weight=1)
 
+    # Terrain Tab: group parameters into two groups
+    # Section header for first group
+    ctk.CTkLabel(frame_terrain_card, text="Mesh Resolution", font=ctk.CTkFont(size=12, weight="bold"), text_color="#4e84ae").grid(row=0, column=0, columnspan=3, sticky="w", padx=8, pady=(16, 0))
+    # 1. Group: Resolution Factor and Base Elevation
+    terrain_group1 = ctk.CTkFrame(frame_terrain_card, fg_color="#f7f9fb", corner_radius=10)
+    terrain_group1.grid(row=1, column=0, columnspan=3, sticky="ew", padx=8, pady=(0, 0))
+    terrain_group1.grid_columnconfigure(0, weight=0)
+    terrain_group1.grid_columnconfigure(1, weight=1)
+    terrain_group1.grid_columnconfigure(2, weight=0)
     # Resolution Factor
-    resolution_factor_label = ctk.CTkLabel(
-        frame_terrain_card, text="Resolution Factor", font=ctk.CTkFont(size=13), anchor="e"
-    )
-    resolution_factor_label.grid(row=0, column=0, sticky="e", padx=(16, 8), pady=(16, 4))
-    resolution_factor_value = ctk.CTkLabel(frame_terrain_card, text="10", font=ctk.CTkFont(size=13), width=32, anchor="w")
-    resolution_factor_value.grid(row=0, column=2, sticky="w", padx=(8, 16), pady=(16, 4))
+    resolution_factor_label = ctk.CTkLabel(terrain_group1, text="Resolution Factor", font=ctk.CTkFont(size=13), anchor="e")
+    resolution_factor_label.grid(row=0, column=0, sticky="w", padx=(16, 8), pady=8)
+    resolution_factor_value = ctk.CTkLabel(terrain_group1, text="10", font=ctk.CTkFont(size=13), width=32, anchor="w")
+    resolution_factor_value.grid(row=0, column=2, sticky="w", padx=(8, 16), pady=8)
     def update_resolution_factor(val):
         resolution_factor_value.configure(text=f"{int(val)}")
     resolution_factor_slider = ctk.CTkSlider(
-        frame_terrain_card,
+        terrain_group1,
         from_=1,
         to=20,
         width=220,
@@ -1154,20 +1179,17 @@ def main_window():
         button_hover_color="#4e84ae",
         command=update_resolution_factor,
     )
-    resolution_factor_slider.grid(row=0, column=1, sticky="ew", padx=0, pady=(16, 4))
+    resolution_factor_slider.grid(row=0, column=1, sticky="ew", padx=0, pady=8)
     resolution_factor_slider.set(10)
-
     # Base Elevation
-    base_elevation_label = ctk.CTkLabel(
-        frame_terrain_card, text="Base Elevation", font=ctk.CTkFont(size=13), anchor="e"
-    )
-    base_elevation_label.grid(row=1, column=0, sticky="e", padx=(16, 8), pady=4)
-    base_elevation_value = ctk.CTkLabel(frame_terrain_card, text="200", font=ctk.CTkFont(size=13), width=32, anchor="w")
-    base_elevation_value.grid(row=1, column=2, sticky="w", padx=(8, 16), pady=4)
+    base_elevation_label = ctk.CTkLabel(terrain_group1, text="Base Elevation", font=ctk.CTkFont(size=13), anchor="e")
+    base_elevation_label.grid(row=1, column=0, sticky="w", padx=(16, 8), pady=8)
+    base_elevation_value = ctk.CTkLabel(terrain_group1, text="200", font=ctk.CTkFont(size=13), width=32, anchor="w")
+    base_elevation_value.grid(row=1, column=2, sticky="w", padx=(8, 16), pady=8)
     def update_base_elevation(val):
         base_elevation_value.configure(text=f"{int(val)}")
     base_elevation_slider = ctk.CTkSlider(
-        frame_terrain_card,
+        terrain_group1,
         from_=0,
         to=500,
         width=220,
@@ -1176,20 +1198,26 @@ def main_window():
         button_hover_color="#4e84ae",
         command=update_base_elevation,
     )
-    base_elevation_slider.grid(row=1, column=1, sticky="ew", padx=0, pady=4)
+    base_elevation_slider.grid(row=1, column=1, sticky="ew", padx=0, pady=8)
     base_elevation_slider.set(200)
 
+    # Section header for second group
+    ctk.CTkLabel(frame_terrain_card, text="Height Range", font=ctk.CTkFont(size=12, weight="bold"), text_color="#4e84ae").grid(row=2, column=0, columnspan=3, sticky="w", padx=8, pady=(16, 0))
+    # 2. Group: Min Height and Max Height
+    terrain_group2 = ctk.CTkFrame(frame_terrain_card, fg_color="#f7f9fb", corner_radius=10)
+    terrain_group2.grid(row=3, column=0, columnspan=3, sticky="ew", padx=8, pady=(0, 16))
+    terrain_group2.grid_columnconfigure(0, weight=0)
+    terrain_group2.grid_columnconfigure(1, weight=1)
+    terrain_group2.grid_columnconfigure(2, weight=0)
     # Min Height
-    min_height_label = ctk.CTkLabel(
-        frame_terrain_card, text="Min Height", font=ctk.CTkFont(size=13), anchor="e"
-    )
-    min_height_label.grid(row=2, column=0, sticky="e", padx=(16, 8), pady=4)
-    min_height_value = ctk.CTkLabel(frame_terrain_card, text="100", font=ctk.CTkFont(size=13), width=32, anchor="w")
-    min_height_value.grid(row=2, column=2, sticky="w", padx=(8, 16), pady=4)
+    min_height_label = ctk.CTkLabel(terrain_group2, text="Min Height", font=ctk.CTkFont(size=13), anchor="e")
+    min_height_label.grid(row=0, column=0, sticky="w", padx=(16, 8), pady=8)
+    min_height_value = ctk.CTkLabel(terrain_group2, text="100", font=ctk.CTkFont(size=13), width=32, anchor="w")
+    min_height_value.grid(row=0, column=2, sticky="w", padx=(8, 16), pady=8)
     def update_min_height(val):
         min_height_value.configure(text=f"{int(val)}")
     min_height_slider = ctk.CTkSlider(
-        frame_terrain_card,
+        terrain_group2,
         from_=0,
         to=500,
         width=220,
@@ -1198,20 +1226,17 @@ def main_window():
         button_hover_color="#4e84ae",
         command=update_min_height,
     )
-    min_height_slider.grid(row=2, column=1, sticky="ew", padx=0, pady=4)
+    min_height_slider.grid(row=0, column=1, sticky="ew", padx=0, pady=8)
     min_height_slider.set(100)
-
     # Max Height
-    max_height_label = ctk.CTkLabel(
-        frame_terrain_card, text="Max Height", font=ctk.CTkFont(size=13), anchor="e"
-    )
-    max_height_label.grid(row=3, column=0, sticky="e", padx=(16, 8), pady=(4, 16))
-    max_height_value = ctk.CTkLabel(frame_terrain_card, text="300", font=ctk.CTkFont(size=13), width=32, anchor="w")
-    max_height_value.grid(row=3, column=2, sticky="w", padx=(8, 16), pady=(4, 16))
+    max_height_label = ctk.CTkLabel(terrain_group2, text="Max Height", font=ctk.CTkFont(size=13), anchor="e")
+    max_height_label.grid(row=1, column=0, sticky="w", padx=(16, 8), pady=8)
+    max_height_value = ctk.CTkLabel(terrain_group2, text="300", font=ctk.CTkFont(size=13), width=32, anchor="w")
+    max_height_value.grid(row=1, column=2, sticky="w", padx=(8, 16), pady=8)
     def update_max_height(val):
         max_height_value.configure(text=f"{int(val)}")
     max_height_slider = ctk.CTkSlider(
-        frame_terrain_card,
+        terrain_group2,
         from_=0,
         to=500,
         width=220,
@@ -1220,7 +1245,7 @@ def main_window():
         button_hover_color="#4e84ae",
         command=update_max_height,
     )
-    max_height_slider.grid(row=3, column=1, sticky="ew", padx=0, pady=(4, 16))
+    max_height_slider.grid(row=1, column=1, sticky="ew", padx=0, pady=8)
     max_height_slider.set(300)
 
     ############################################################################################################
