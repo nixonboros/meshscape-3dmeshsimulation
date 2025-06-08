@@ -377,7 +377,7 @@ def main_window():
         )
 
     # Left Section
-    left_section = ctk.CTkFrame(root, corner_radius=16, border_width=1, border_color="#e0e6ed", fg_color="white")
+    left_section = ctk.CTkFrame(root, corner_radius=16, border_width=1, border_color="#e0e6ed", fg_color="#ffffff")
     left_section.grid(row=0, column=0, padx=(16, 16), pady=12, sticky="nsew")
     root.rowconfigure(0, weight=1)
 
@@ -542,7 +542,7 @@ def main_window():
         root.after(100, visualize_stl)
 
     # Setup right section and frame visualization
-    right_section = ctk.CTkFrame(root, fg_color="#dbdbdb")
+    right_section = ctk.CTkFrame(root, fg_color="#ffffff", corner_radius=16, border_width=1, border_color="#e0e6ed")
     right_section.grid(row=0, column=1, padx=(16, 16), pady=10, sticky="nsew")
     right_section.columnconfigure(0, weight=1)
 
@@ -557,7 +557,7 @@ def main_window():
     # FRAME_BASE_OBJECTS
     frame_objects_card = ctk.CTkScrollableFrame(
         tabview.tab("Objects"),
-        fg_color="white",
+        fg_color="#ffffff",
         corner_radius=14,
         border_width=1,
         border_color="#e0e6ed",
@@ -966,7 +966,7 @@ def main_window():
     # Noise Card
     frame_noise_card = ctk.CTkFrame(
         tabview.tab("Noise"),
-        fg_color="white",
+        fg_color="#ffffff",
         corner_radius=14,
         border_width=1,
         border_color="#e0e6ed"
@@ -978,7 +978,7 @@ def main_window():
     frame_noise_card.grid_columnconfigure(2, weight=0)
 
     # 1. Noise Type Group (left-aligned like other groups)
-    noise_type_group = ctk.CTkFrame(frame_noise_card, fg_color="#f7f9fb", corner_radius=10)
+    noise_type_group = ctk.CTkFrame(frame_noise_card, fg_color="transparent", corner_radius=10)
     noise_type_group.grid(row=0, column=0, columnspan=3, sticky="ew", padx=8, pady=(16, 0))
     noise_type_group.grid_columnconfigure(0, weight=0)
     noise_type_group.grid_columnconfigure(1, weight=0)
@@ -1001,7 +1001,7 @@ def main_window():
     noise_type_dropdown.set("Perlin")
 
     # 2. Mesh Size Group
-    mesh_size_group = ctk.CTkFrame(frame_noise_card, fg_color="#f7f9fb", corner_radius=10)
+    mesh_size_group = ctk.CTkFrame(frame_noise_card, fg_color="transparent", corner_radius=10)
     mesh_size_group.grid(row=1, column=0, columnspan=3, sticky="ew", padx=8, pady=(0, 0))
     mesh_size_group.grid_columnconfigure(0, weight=0)
     mesh_size_group.grid_columnconfigure(1, weight=1)
@@ -1049,7 +1049,7 @@ def main_window():
     height_slider.set(15)
 
     # 3. Scale Group
-    scale_group = ctk.CTkFrame(frame_noise_card, fg_color="#f7f9fb", corner_radius=10)
+    scale_group = ctk.CTkFrame(frame_noise_card, fg_color="transparent", corner_radius=10)
     scale_group.grid(row=2, column=0, columnspan=3, sticky="ew", padx=8, pady=(0, 0))
     scale_group.grid_columnconfigure(0, weight=0)
     scale_group.grid_columnconfigure(1, weight=1)
@@ -1076,7 +1076,7 @@ def main_window():
     scale_slider.set(100)
 
     # 4. Noise Detail Group
-    detail_group = ctk.CTkFrame(frame_noise_card, fg_color="#f7f9fb", corner_radius=10)
+    detail_group = ctk.CTkFrame(frame_noise_card, fg_color="transparent", corner_radius=10)
     detail_group.grid(row=3, column=0, columnspan=3, sticky="ew", padx=8, pady=(0, 16))
     detail_group.grid_columnconfigure(0, weight=0)
     detail_group.grid_columnconfigure(1, weight=1)
@@ -1145,7 +1145,7 @@ def main_window():
     # Terrain Card
     frame_terrain_card = ctk.CTkFrame(
         tabview.tab("Terrain"),
-        fg_color="white",
+        fg_color="#ffffff",
         corner_radius=14,
         border_width=1,
         border_color="#e0e6ed"
@@ -1157,7 +1157,7 @@ def main_window():
     # Section header for first group
     ctk.CTkLabel(frame_terrain_card, text="Mesh Resolution", font=ctk.CTkFont(size=12, weight="bold"), text_color="#4e84ae").grid(row=0, column=0, columnspan=3, sticky="w", padx=8, pady=(16, 0))
     # 1. Group: Resolution Factor and Base Elevation
-    terrain_group1 = ctk.CTkFrame(frame_terrain_card, fg_color="#f7f9fb", corner_radius=10)
+    terrain_group1 = ctk.CTkFrame(frame_terrain_card, fg_color="transparent", corner_radius=10)
     terrain_group1.grid(row=1, column=0, columnspan=3, sticky="ew", padx=8, pady=(0, 0))
     terrain_group1.grid_columnconfigure(0, weight=0)
     terrain_group1.grid_columnconfigure(1, weight=1)
@@ -1204,7 +1204,7 @@ def main_window():
     # Section header for second group
     ctk.CTkLabel(frame_terrain_card, text="Height Range", font=ctk.CTkFont(size=12, weight="bold"), text_color="#4e84ae").grid(row=2, column=0, columnspan=3, sticky="w", padx=8, pady=(16, 0))
     # 2. Group: Min Height and Max Height
-    terrain_group2 = ctk.CTkFrame(frame_terrain_card, fg_color="#f7f9fb", corner_radius=10)
+    terrain_group2 = ctk.CTkFrame(frame_terrain_card, fg_color="transparent", corner_radius=10)
     terrain_group2.grid(row=3, column=0, columnspan=3, sticky="ew", padx=8, pady=(0, 16))
     terrain_group2.grid_columnconfigure(0, weight=0)
     terrain_group2.grid_columnconfigure(1, weight=1)
