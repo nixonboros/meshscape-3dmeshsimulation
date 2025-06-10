@@ -555,6 +555,10 @@ def main_window():
             widget = canvas.get_tk_widget()
             widget.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
+            # Ensure right section maintains its width
+            right_section.configure(width=500)
+            right_section.grid_propagate(False)
+
         except Exception as e:
             print(e)
 
@@ -563,8 +567,9 @@ def main_window():
         root.after(100, visualize_stl)
 
     # Setup right section and frame visualization
-    right_section = ctk.CTkFrame(root, fg_color="#ffffff", corner_radius=16, border_width=1, border_color="#e0e6ed")
+    right_section = ctk.CTkFrame(root, fg_color="#ffffff", corner_radius=16, border_width=1, border_color="#e0e6ed", width=500)
     right_section.grid(row=0, column=1, padx=(16, 16), pady=10, sticky="nsew")
+    right_section.grid_propagate(False)  # Prevent the frame from shrinking
     right_section.columnconfigure(0, weight=1)
 
     frame_visualisation = ctk.CTkFrame(right_section, width=190, height=560, fg_color="white")
