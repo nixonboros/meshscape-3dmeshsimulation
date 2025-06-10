@@ -27,11 +27,27 @@ from Controller.ObGen.PlaceObjects import *
 
 matplotlib.use("TkAgg")
 
+# Get the application directory (works for both development and EXE)
+if getattr(sys, 'frozen', False):
+    # If running as EXE
+    APP_DIR = os.path.dirname(sys.executable)
+else:
+    # If running in development
+    APP_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
 # Set the application icon
-ICON_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets", "icon.ico")
+ICON_PATH = resource_path("assets/icon.ico")
 
 # Ensure data directory exists
-DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
+DATA_DIR = os.path.join(APP_DIR, "data")
 os.makedirs(DATA_DIR, exist_ok=True)
 
 def center_window(window, width=None, height=None):
@@ -133,10 +149,6 @@ root.columnconfigure(0, weight=1)
 # Set icon for main window if it exists
 if os.path.exists(ICON_PATH):
     root.iconbitmap(ICON_PATH)
-    # Set taskbar icon
-    root.wm_iconbitmap(ICON_PATH)
-    # Ensure the icon is visible in the taskbar
-    root.wm_attributes('-toolwindow', False)
 
 # Center the main window with explicit size
 center_window(root, 1366, 768)

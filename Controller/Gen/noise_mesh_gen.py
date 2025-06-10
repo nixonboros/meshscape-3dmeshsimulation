@@ -8,8 +8,16 @@ from scipy.interpolate import griddata
 from stl import mesh
 import os
 
+# Get the application directory (works for both development and EXE)
+if getattr(sys, 'frozen', False):
+    # If running as EXE
+    APP_DIR = os.path.dirname(sys.executable)
+else:
+    # If running in development
+    APP_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 # Get the data directory path
-DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data")
+DATA_DIR = os.path.join(APP_DIR, "data")
 os.makedirs(DATA_DIR, exist_ok=True)
 
 def load_image(image_path):

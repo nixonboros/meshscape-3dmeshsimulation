@@ -4,10 +4,19 @@ from PIL import Image
 from noise import pnoise2, snoise2
 from scipy.spatial import Voronoi, voronoi_plot_2d
 import os
+import sys
 import matplotlib.pyplot as plt
 
+# Get the application directory (works for both development and EXE)
+if getattr(sys, 'frozen', False):
+    # If running as EXE
+    APP_DIR = os.path.dirname(sys.executable)
+else:
+    # If running in development
+    APP_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 # Get the data directory path
-DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data")
+DATA_DIR = os.path.join(APP_DIR, "data")
 os.makedirs(DATA_DIR, exist_ok=True)
 
 def generate_noise_image(width, height, scale, octaves, persistence, lacunarity, seed, noise_type):
