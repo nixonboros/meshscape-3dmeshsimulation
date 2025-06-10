@@ -348,6 +348,7 @@ def main_window():
             trees_scale_slider,trees_scale_slider_label,
             frame = frame_trees,
         )
+        update_object_count()
 
     def toggle_rocks_visibility(*args):
         toggle_visibility(
@@ -358,7 +359,7 @@ def main_window():
             rocks_max_slider, rocks_max_slider_label,
             frame = frame_rocks,
         )
-
+        update_object_count()       
 
     def toggle_sticks_visibility(*args):
         toggle_visibility(
@@ -367,6 +368,7 @@ def main_window():
             sticks_scale_slider, sticks_scale_slider_label,
             frame = frame_sticks,
         )
+        update_object_count()
 
     def toggle_bushes_visibility(*args):
         toggle_visibility(
@@ -375,6 +377,7 @@ def main_window():
             bushes_scale_slider, bushes_scale_slider_label,
             frame = frame_bushes,
         )
+        update_object_count()
 
     def toggle_volcanos_visibility(*args):
         toggle_visibility(
@@ -383,7 +386,7 @@ def main_window():
             volcano_scale_slider, volcano_scale_slider_label,
             frame = frame_volcanos,
         )
-
+        update_object_count()
 
     def toggle_mushrooms_visibility(*args):
         toggle_visibility(
@@ -392,7 +395,8 @@ def main_window():
             mushroom_scale_slider, mushroom_scale_slider_label,
             frame = frame_mushrooms,
         )
-
+        update_object_count()
+        
     # Left Section
     left_section = ctk.CTkFrame(root, corner_radius=16, border_width=1, border_color="#e0e6ed", fg_color="#ffffff")
     left_section.grid(row=0, column=0, padx=(16, 16), pady=12, sticky="nsew")
