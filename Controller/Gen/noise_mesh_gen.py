@@ -5,6 +5,12 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout,
 import pyvista as pv
 from pyvistaqt import QtInteractor
 from scipy.interpolate import griddata
+from stl import mesh
+import os
+
+# Get the data directory path
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data")
+os.makedirs(DATA_DIR, exist_ok=True)
 
 def load_image(image_path):
     with Image.open(image_path) as img:
@@ -12,7 +18,10 @@ def load_image(image_path):
         heightmap = np.array(img)
     return heightmap
 
-def create_mesh(heightmap, height_scale, height_offset, resolution_factor, base_elevation, floor_elevation, filename='exported_mesh.stl'):
+def create_mesh(heightmap, height_scale, height_offset, resolution_factor, base_elevation, floor_elevation, filename=None):
+    if filename is None:
+        filename = os.path.join(DATA_DIR, 'exported_mesh.stl')
+    
     y_orig, x_orig = np.indices(heightmap.shape)
     x = np.linspace(0, heightmap.shape[1] - 1, int(heightmap.shape[1] * resolution_factor))
     y = np.linspace(0, heightmap.shape[0] - 1, int(heightmap.shape[0] * resolution_factor))

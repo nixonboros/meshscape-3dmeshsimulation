@@ -2,6 +2,7 @@ import numpy as np
 import trimesh
 import tkinter as tk
 from tkinter import filedialog
+import os
 
 from .OakGen import mushroom_mesh
 from .TreeGen import generate_tree, tree_to_trimesh
@@ -9,6 +10,10 @@ from .RockGen import rock_generator
 from .AntHillGen import generate_anthill_mesh
 from .StickGen import generate_wiggly_stick
 from .BushGen import create_bush
+
+# Get the data directory path
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data")
+os.makedirs(DATA_DIR, exist_ok=True)
 
 def place_objects_on_terrain(terrain_path, num_rocks=5, points_per_rock=1000, rock_scale_min=0.05, rock_scale_max=0.1, num_trees=5, tree_scale=0.1, num_mushrooms=5, mushroom_scale=0.1, num_anthills=3, anthill_scale=1.0, num_sticks=10, stick_scale=0.5, num_bushes=10, bushes_scale=0.2):
     # Load the terrain STL file
@@ -84,9 +89,11 @@ def position_object_on_terrain(object_mesh, terrain, min_x, max_x, min_y, max_y,
     object_mesh.apply_translation(translation)
     return object_mesh
 
-def save_combined_mesh(combined_mesh, file_name='combined_terrain_with_objects.stl'):
-    # Save the combined mesh to a new STL file for preview
+def save_combined_mesh(combined_mesh, file_name=None):
+    if file_name is None:
+        file_name = os.path.join(DATA_DIR, 'combined_terrain_with_objects.stl')
     combined_mesh.export(file_name)
+    print(f"Combined mesh saved to {file_name}")
 
     # Save the combined mesh in the location of user choice
     root = tk.Tk()

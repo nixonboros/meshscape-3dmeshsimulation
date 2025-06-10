@@ -30,6 +30,10 @@ matplotlib.use("TkAgg")
 # Set the application icon
 ICON_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets", "icon.ico")
 
+# Ensure data directory exists
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
+os.makedirs(DATA_DIR, exist_ok=True)
+
 def center_window(window, width=None, height=None):
     # Force window to update its geometry
     window.update_idletasks()
@@ -179,11 +183,14 @@ def main_window():
             num_mushrooms = 0
 
         progress_bar.set(0.6)
-        combined_mesh = place_objects_on_terrain('exported_mesh.stl', num_rocks, points_per_rock, 
-                                                rock_scale_min, rock_scale_max, num_trees, 
-                                                tree_scale, num_mushrooms, mushroom_scale, 
-                                                num_anthills, anthill_scale, num_sticks, 
-                                                stick_scale, num_bushes, bushes_scale)
+        combined_mesh = place_objects_on_terrain(
+            os.path.join(DATA_DIR, 'exported_mesh.stl'), 
+            num_rocks, points_per_rock, 
+            rock_scale_min, rock_scale_max, num_trees, 
+            tree_scale, num_mushrooms, mushroom_scale, 
+            num_anthills, anthill_scale, num_sticks, 
+            stick_scale, num_bushes, bushes_scale
+        )
         
         root.after(0, save_combined_mesh, combined_mesh)
 
@@ -521,7 +528,7 @@ def main_window():
     def visualize_stl():
         try:
             # Load the mesh
-            your_mesh = mesh.Mesh.from_file('combined_terrain_with_objects.stl')
+            your_mesh = mesh.Mesh.from_file(os.path.join(DATA_DIR, 'combined_terrain_with_objects.stl'))
 
             # Simplify the mesh by taking every nth face (adjust the value of n for more/less simplification)
             n = 2
