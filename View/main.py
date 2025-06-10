@@ -27,6 +27,9 @@ from Controller.ObGen.PlaceObjects import *
 
 matplotlib.use("TkAgg")
 
+# Set the application icon
+ICON_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets", "icon.ico")
+
 def center_window(window, width=None, height=None):
     # Force window to update its geometry
     window.update_idletasks()
@@ -56,6 +59,10 @@ splash_root.overrideredirect(True)
 transparent_color = "#e9ecef"
 splash_root.configure(bg=transparent_color)
 splash_root.wm_attributes("-transparentcolor", transparent_color)
+
+# Set icon for splash screen if it exists
+if os.path.exists(ICON_PATH):
+    splash_root.iconbitmap(ICON_PATH)
 
 # Center the splash window with explicit size
 center_window(splash_root, 320, 160)
@@ -118,6 +125,14 @@ ctk.set_appearance_mode("light")
 ctk.set_default_color_theme("blue")  
 root.configure(fg_color="#f7f9fb")   
 root.columnconfigure(0, weight=1)
+
+# Set icon for main window if it exists
+if os.path.exists(ICON_PATH):
+    root.iconbitmap(ICON_PATH)
+    # Set taskbar icon
+    root.wm_iconbitmap(ICON_PATH)
+    # Ensure the icon is visible in the taskbar
+    root.wm_attributes('-toolwindow', False)
 
 # Center the main window with explicit size
 center_window(root, 1366, 768)
